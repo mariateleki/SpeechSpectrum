@@ -1,6 +1,6 @@
 # 🗣️ SpeechSpectrum
 
-This repository contains all materials for SpeechSpectrum, a project exploring user and LLM preferences for transcript fidelity and format. The repo is organized into three main components:
+This repository contains all materials for SpeechSpectrum, a project exploring user and LLM preferences for transcript fidelity. The repo is organized into three main components:
 
 1. **LLM Experiment** -- Run large language model experiments with persona prompting.
 2. **Statistical Analysis & Visualization** -- Generate all plots and run statistical tests.
