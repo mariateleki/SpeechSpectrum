@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Legal-C</title>
+  <link rel="stylesheet" href="./assets/bootstrap-4.6.1-dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./main.css">
+
+<style>
+body {
+  margin: 0;
+  padding-top: 70px; /* offset for fixed navbar */
+}
+.navbar {
+  margin-top: 0 !important;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+.navbar-brand {
+  font-weight: bold;
+}
+.navbar .nav-link.active {
+  color: #007bff !important;
+  font-weight: bold;
+}
+.navbar .nav-link:hover {
+  color: #007bff !important;
+}
+.arrow-nav-wrapper {
+  width: 90vw;
+  max-width: 1700px;
+  margin: 0 auto 30px auto;
+  position: relative;
+}
+.arrow-nav {
+  position: relative;
+  text-align: center;
+}
+.arrow-nav svg {
+  display: block;
+  width: 100%;
+  height: 80px;
+}
+.arrow-nav .labels {
+  position: absolute;
+  top: 60px;
+  left: 0;
+  width: 100%;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+.arrow-nav .labels a {
+  position: absolute;
+  transform: translateX(-50%);
+  text-decoration: none;
+  color: black;
+  transition: color 0.3s;
+}
+.arrow-nav .labels a.active {
+  color: #007bff;
+  font-size: 1.2rem;
+}
+svg a circle {
+  cursor: pointer;
+}
+.row {
+  margin-top: 5px;
+}
+.card {
+  margin-bottom: 8px;
+  padding: 10px !important;
+}
+</style>
+
+</head>
+<body class="fixed-top-nav">
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container">
+    <a class="navbar-brand" href="pageLegalA.html">SpeechSpectrum</a>
+    <ul class="navbar-nav ms-auto">
+      <li class="nav-item"><a class="nav-link active" href="pageLegalA.html">Legal</a></li>
+      <li class="nav-item"><a class="nav-link " href="pageMedicalA.html">Medical</a></li>
+      <li class="nav-item"><a class="nav-link " href="pageBusinessA.html">Business</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="arrow-nav-wrapper">
+  <div class="arrow-nav">
+    <svg viewBox="0 0 1800 80" preserveAspectRatio="none">
+      <line x1="0" y1="40" x2="1800" y2="40"
+            stroke="black" stroke-width="3"
+            marker-start="url(#arrowheadLeft)"
+            marker-end="url(#arrowheadRight)" />
+      <a xlink:href="pageLegalA.html"><circle cx="150" cy="40" r="6" fill="black"/></a>
+      <a xlink:href="pageLegalB.html"><circle cx="600" cy="40" r="6" fill="black"/></a>
+      <a xlink:href="pageLegalC.html"><circle cx="1200" cy="40" r="6" fill="#007bff"/></a>
+      <a xlink:href="pageLegalD.html"><circle cx="1650" cy="40" r="6" fill="black"/></a>
+      <defs>
+        <marker id="arrowheadRight" markerWidth="10" markerHeight="7"
+                refX="10" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="black" />
+        </marker>
+        <marker id="arrowheadLeft" markerWidth="10" markerHeight="7"
+                refX="0" refY="3.5" orient="auto">
+          <polygon points="10 0, 0 3.5, 10 7" fill="black" />
+        </marker>
+      </defs>
+    </svg>
+    <div class="labels">
+      <a href="pageLegalA.html" class="" style="left:9%;">Verbatim</a>
+      <a href="pageLegalB.html" class="" style="left:33%;">Non-Verbatim</a>
+      <a href="pageLegalC.html" class="active" style="left:67%;">Enhanced</a>
+      <a href="pageLegalD.html" class="" style="left:91%;">Bullet Points</a>
+    </div>
+  </div>
+</div>
+<div class='container'>
+  <div class="row"><div class="col-12">
+    <div class="card shadow-sm mb-2 d-flex flex-row align-items-center justify-content-between" style="padding:10px;">
+      <a href="pageLegalB.html#Legal-B1" class="btn btn-outline-secondary btn-sm">←</a>
+      <div class="text-center flex-grow-1">
+        <p>I clearly remember that day because it was raining heavily and I was driving to work around 7:30 AM. </p>
+      </div>
+      <a href="pageLegalD.html#Legal-D1" class="btn btn-outline-primary btn-sm">→</a>
+    </div>
+  </div></div>
+
+  <div class="row"><div class="col-12">
+    <div class="card shadow-sm mb-2 d-flex flex-row align-items-center justify-content-between" style="padding:10px;">
+      <a href="pageLegalB.html#Legal-B2" class="btn btn-outline-secondary btn-sm">←</a>
+      <div class="text-center flex-grow-1">
+        <p>I was going down Main Street </p>
+      </div>
+      <a href="pageLegalD.html#Legal-D2" class="btn btn-outline-primary btn-sm">→</a>
+    </div>
+  </div></div>
+
+  <div class="row"><div class="col-12">
+    <div class="card shadow-sm mb-2 d-flex flex-row align-items-center justify-content-between" style="padding:10px;">
+      <a href="pageLegalB.html#Legal-B3" class="btn btn-outline-secondary btn-sm">←</a>
+      <div class="text-center flex-grow-1">
+        <p>when I observed a blue sedan speed through the intersection without stopping at the red light. </p>
+      </div>
+      <a href="pageLegalD.html#Legal-D3" class="btn btn-outline-primary btn-sm">→</a>
+    </div>
+  </div></div>
+
+  <div class="row"><div class="col-12">
+    <div class="card shadow-sm mb-2 d-flex flex-row align-items-center justify-content-between" style="padding:10px;">
+      <a href="pageLegalB.html#Legal-B4" class="btn btn-outline-secondary btn-sm">←</a>
+      <div class="text-center flex-grow-1">
+        <p>Following the crash, I pulled over to assess the situation.</p>
+      </div>
+      <a href="pageLegalD.html#Legal-D4" class="btn btn-outline-primary btn-sm">→</a>
+    </div>
+  </div></div>
+
+  <div class="row"><div class="col-12">
+    <div class="card shadow-sm mb-2 d-flex flex-row align-items-center justify-content-between" style="padding:10px;">
+      <a href="pageLegalB.html#Legal-B5" class="btn btn-outline-secondary btn-sm">←</a>
+      <div class="text-center flex-grow-1">
+        <p>The driver of the blue car exited and was shouting, but I could not hear clearly due to the rain and commotion. I believe it was a Honda or Toyota, though I am uncertain of the exact make.</p>
+      </div>
+      <a href="pageLegalD.html#Legal-D5" class="btn btn-outline-primary btn-sm">→</a>
+    </div>
+  </div></div>
+</div>
+<script src="./assets/jquery/dist/jquery.min.js"></script>
+<script src="./assets/bootstrap-4.6.1-dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
