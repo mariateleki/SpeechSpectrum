@@ -4,7 +4,9 @@ This repository contains all materials for SpeechSpectrum, a project exploring u
 
 1. **LLM Experiment** -- Run large language model experiments with persona prompting.
 2. **Statistical Analysis & Visualization** -- Generate all plots and run statistical tests.
-3. **Website** -- Code for the the interactive demo site.
+3. **docs** -- Code for the the interactive demo site.
+
+**View the demo at https://mariateleki.github.io/SpeechSpectrum.**
 
 
 ## 🚀 Quick Start
