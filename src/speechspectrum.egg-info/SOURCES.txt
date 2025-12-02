@@ -1,0 +1,11 @@
+LICENSE
+README.md
+pyproject.toml
+src/speechspectrum/__init__.py
+src/speechspectrum/client.py
+src/speechspectrum/operations.py
+src/speechspectrum.egg-info/PKG-INFO
+src/speechspectrum.egg-info/SOURCES.txt
+src/speechspectrum.egg-info/dependency_links.txt
+src/speechspectrum.egg-info/requires.txt
+src/speechspectrum.egg-info/top_level.txt

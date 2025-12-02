@@ -1,0 +1,32 @@
+[project]
+name = "speechspectrum"
+version = "1.0.0"
+description = "Tools for obtaining speech representations along the speechspectrum."
+readme = "README.md"
+requires-python = ">=3.8"
+license = {file = "LICENSE"}
+authors = [
+    { name = "Maria Teleki", email = "mariatelekiresearch@gmail.com" }
+]
+
+# Optional: add dependencies your project needs
+dependencies = [
+    "openai>=1.30,<2.0"
+]
+
+[project.urls]
+Homepage = "https://github.com/mariateleki/SpeechSpectrum"
+Repository = "https://github.com/mariateleki/SpeechSpectrum"
+Demo = "http://speechspectrum.org"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+# src laout
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+# Finds packages inside src/
+[tool.setuptools.packages.find]
+where = ["src"]
