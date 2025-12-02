@@ -1,1 +1,17 @@
+# Build artifacts
+dist/
+build/
+*.egg-info/
+src/speechspectrum.egg-info/PKG-INFO
+
+# Bytecode
+__pycache__/
+*.pyc
+
+# Virtual environments
+venv/
+.env/
+
+# macOS
 .DS_Store
+

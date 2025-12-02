@@ -5,6 +5,7 @@
 ## ⚙️ Requirements
 
 - Python 3.8+
+- `openai`
 - OpenAI API credentials (API key + organization/project IDs)
 
 ## 📦 Installation
@@ -93,8 +94,8 @@ SpeechSpectrum is designed to support user agency and transparency in transcript
 ```bibtex
 @inproceedings{choi2025speechspectrum,
   title     = {SpeechSpectrum: A Framework for Speech-to-Text Representation Along the Linguistic Fidelity Spectrum},
-  author    = {Choi, Anna Seo Gyeong and Teleki, Maria and Miguel del Rio and Corey Miller and James Caverlee and Allison Koenecke},
-  booktitle = {Under Review},
+  author    = {Anna Seo Gyeong Choi and Maria Teleki and Miguel del Rio and Corey Miller and James Caverlee and Allison Koenecke},
+  booktitle = {-},
   year      = {2025}
 }
 ```
