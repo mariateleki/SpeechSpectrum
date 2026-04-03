@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SpeechSpectrum</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: #F9FAFB;
+  color: #111827;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+.intro {
+  text-align: center;
+  padding: 36px 24px 12px;
+}
+.intro p {
+  color: #6B7280;
+  font-size: 1rem;
+  margin: 0;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+.arrow-nav-wrapper {
+  width: 90vw;
+  max-width: 1200px;
+  margin: 20px auto 40px auto;
+  position: relative;
+}
+.arrow-nav {
+  position: relative;
+  text-align: center;
+}
+.arrow-nav svg {
+  display: block;
+  width: 100%;
+  height: 80px;
+}
+.arrow-nav svg line {
+  stroke: #D1D5DB;
+  stroke-width: 2;
+}
+.arrow-nav svg circle {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  r: 8;
+}
+.arrow-nav svg circle:hover {
+  r: 10;
+}
+.arrow-nav svg polygon {
+  fill: #D1D5DB;
+}
+.arrow-nav .labels {
+  position: absolute;
+  top: 62px;
+  left: 0;
+  width: 100%;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+.arrow-nav .labels a {
+  position: absolute;
+  transform: translateX(-50%);
+  text-decoration: none;
+  color: #9CA3AF;
+  transition: all 0.2s ease;
+  padding: 4px 12px;
+  border-radius: 6px;
+}
+.arrow-nav .labels a:hover {
+  color: #4F46E5;
+}
+.arrow-nav .labels a.active {
+  color: #4F46E5;
+  font-weight: 600;
+  font-size: 1.05rem;
+  background: #EEF2FF;
+}
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 24px 48px;
+}
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  border: 1px solid #E5E7EB;
+  line-height: 1.8;
+  font-size: 1.05rem;
+  color: #374151;
+}
+.card p {
+  margin: 0;
+}
+</style>
+
+</head>
+<body>
+
+<div class="intro">
+  <p>This is the SpeechSpectrum tool. It presents four equivalent representations of the same transcript. Click on a label below to switch between them.</p>
+</div>
+
+<div class="arrow-nav-wrapper">
+  <div class="arrow-nav">
+    <svg viewBox="0 0 1800 80" preserveAspectRatio="none">
+      <line x1="0" y1="40" x2="1800" y2="40"
+            marker-start="url(#arrowheadLeft)"
+            marker-end="url(#arrowheadRight)" />
+      <a href="#" id="circle0"><circle cx="150" cy="40" r="8" fill="#D1D5DB"/></a>
+      <a href="#" id="circle1"><circle cx="600" cy="40" r="8" fill="#D1D5DB"/></a>
+      <a href="#" id="circle2"><circle cx="1200" cy="40" r="8" fill="#D1D5DB"/></a>
+      <a href="#" id="circle3"><circle cx="1650" cy="40" r="8" fill="#D1D5DB"/></a>
+      <defs>
+        <marker id="arrowheadRight" markerWidth="10" markerHeight="7"
+                refX="10" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" />
+        </marker>
+        <marker id="arrowheadLeft" markerWidth="10" markerHeight="7"
+                refX="0" refY="3.5" orient="auto">
+          <polygon points="10 0, 0 3.5, 10 7" />
+        </marker>
+      </defs>
+    </svg>
+    <div class="labels">
+      <a href="#" id="label0" style="left:9%;">Verbatim</a>
+      <a href="#" id="label1" style="left:33%;">Non-Verbatim</a>
+      <a href="#" id="label2" style="left:67%;">Enhanced</a>
+      <a href="#" id="label3" style="left:91%;">Bullet Points</a>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="card" id="text-content"></div>
+</div>
+
+<script src="./content.js"></script>
+<script>
+(function() {
+  var domains = ['legal', 'medical', 'business'];
+  var activeColor = '#4F46E5';
+  var inactiveColor = '#D1D5DB';
+
+  function parseHash() {
+    var hash = location.hash.replace('#', '') || 'legal/0';
+    var parts = hash.split('/');
+    var domain = parts[0];
+    var style = parseInt(parts[1], 10) || 0;
+    if (domains.indexOf(domain) === -1) domain = 'legal';
+    if (style < 0 || style > 3) style = 0;
+    return { domain: domain, style: style };
+  }
+
+  function render() {
+    var state = parseHash();
+
+    for (var i = 0; i < 4; i++) {
+      var href = '#' + state.domain + '/' + i;
+      document.getElementById('circle' + i).setAttribute('href', href);
+      document.getElementById('label' + i).setAttribute('href', href);
+
+      var circle = document.getElementById('circle' + i).querySelector('circle');
+      circle.setAttribute('fill', i === state.style ? activeColor : inactiveColor);
+
+      var label = document.getElementById('label' + i);
+      if (i === state.style) {
+        label.classList.add('active');
+      } else {
+        label.classList.remove('active');
+      }
+    }
+
+    document.getElementById('text-content').innerHTML = CONTENT[state.domain][state.style];
+
+    var styleNames = ['Verbatim', 'Non-Verbatim', 'Enhanced', 'Bullet Points'];
+    document.title = state.domain.charAt(0).toUpperCase() + state.domain.slice(1) + ' - ' + styleNames[state.style];
+  }
+
+  window.addEventListener('hashchange', render);
+  render();
+})();
+</script>
+</body>
+</html>

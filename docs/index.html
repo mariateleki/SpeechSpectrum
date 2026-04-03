@@ -1,9 +1,185 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta http-equiv="refresh" content="0; URL=pageLegalA.html">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SpeechSpectrum</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: #F9FAFB;
+  color: #111827;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+.header {
+  padding: 48px 0 24px;
+  text-align: center;
+}
+.header h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 8px;
+  letter-spacing: -0.02em;
+}
+.header p {
+  color: #6B7280;
+  font-size: 1.05rem;
+  margin: 0;
+}
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.section {
+  margin-bottom: 40px;
+}
+.section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.85rem;
+}
+.demo-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.btn-demo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 32px;
+  background: #4F46E5;
+  color: #fff;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  border: none;
+  box-shadow: 0 1px 3px rgba(79, 70, 229, 0.3);
+  transition: all 0.2s ease;
+  flex: 1;
+  min-width: 140px;
+}
+.btn-demo:hover {
+  background: #4338CA;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+  transform: translateY(-1px);
+  color: #fff;
+  text-decoration: none;
+}
+.domain-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  border: 1px solid #E5E7EB;
+}
+.domain-card h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 14px;
+}
+.style-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.btn-style {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  background: #fff;
+  color: #4F46E5;
+  border: 1.5px solid #C7D2FE;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+.btn-style:hover {
+  background: #EEF2FF;
+  border-color: #4F46E5;
+  color: #4F46E5;
+  text-decoration: none;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.15);
+}
+</style>
+
 </head>
 <body>
-  <p>.</p>
+
+<div class="container">
+  <div class="header">
+    <h1>SpeechSpectrum</h1>
+    <p>The same speech, transcribed under different conventions.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Interactive Demo</div>
+    <p style="color: #6B7280; margin: 0 0 16px; font-size: 0.95rem;">Click between all four transcription styles for each domain:</p>
+    <div class="demo-buttons">
+      <a class="btn-demo" href="./demo.html#legal/0">Legal</a>
+      <a class="btn-demo" href="./demo.html#medical/0">Medical</a>
+      <a class="btn-demo" href="./demo.html#business/0">Business</a>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Standalone Transcripts</div>
+    <p style="color: #6B7280; margin: 0 0 16px; font-size: 0.95rem;">Each button opens a single transcript version with no other UI.</p>
+
+    <div class="domain-card">
+      <h3>Legal</h3>
+      <div class="style-buttons">
+        <a class="btn-style" href="./standalone/legal-verbatim.html">Verbatim</a>
+        <a class="btn-style" href="./standalone/legal-non-verbatim.html">Non-Verbatim</a>
+        <a class="btn-style" href="./standalone/legal-enhanced.html">Enhanced</a>
+        <a class="btn-style" href="./standalone/legal-bullet-points.html">Bullet Points</a>
+      </div>
+    </div>
+
+    <div class="domain-card">
+      <h3>Medical</h3>
+      <div class="style-buttons">
+        <a class="btn-style" href="./standalone/medical-verbatim.html">Verbatim</a>
+        <a class="btn-style" href="./standalone/medical-non-verbatim.html">Non-Verbatim</a>
+        <a class="btn-style" href="./standalone/medical-enhanced.html">Enhanced</a>
+        <a class="btn-style" href="./standalone/medical-bullet-points.html">Bullet Points</a>
+      </div>
+    </div>
+
+    <div class="domain-card">
+      <h3>Business</h3>
+      <div class="style-buttons">
+        <a class="btn-style" href="./standalone/business-verbatim.html">Verbatim</a>
+        <a class="btn-style" href="./standalone/business-non-verbatim.html">Non-Verbatim</a>
+        <a class="btn-style" href="./standalone/business-enhanced.html">Enhanced</a>
+        <a class="btn-style" href="./standalone/business-bullet-points.html">Bullet Points</a>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
