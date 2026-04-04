@@ -688,6 +688,10 @@ textarea::placeholder {
   var styleStartTime = Date.now();
   // Track cumulative time per style per question: styleTimers[step][qId][styleIdx] = seconds
   var styleTimers = {};
+  // Track style visit order per question: styleVisitLog[step][qId] = [{ style, duration }, ...]
+  var styleVisitLog = {};
+  // Global switch counter
+  var styleSwitchCounter = 0;
 
   function logToSheets(eventType, data) {
     var payload = Object.assign({
@@ -732,16 +736,22 @@ textarea::placeholder {
 
         var handler = function(e) {
           e.preventDefault();
-          var styleDurSec = Math.round((Date.now() - styleStartTime) / 1000);
-          // Accumulate time for current style on current question
+          var styleDurSec = Math.round((Date.now() - styleStartTime) / 100) / 10;
+          var cqId = '';
+          // Accumulate time and track visit order for current question
           if (currentStepQuestions.length > 0) {
-            var cqId = currentStepQuestions[currentQuestionIdx].id;
+            cqId = currentStepQuestions[currentQuestionIdx].id;
             if (!styleTimers[currentStepNum]) styleTimers[currentStepNum] = {};
             if (!styleTimers[currentStepNum][cqId]) styleTimers[currentStepNum][cqId] = {};
             var oldSIdx = demoStyleIdx;
             styleTimers[currentStepNum][cqId][oldSIdx] = (styleTimers[currentStepNum][cqId][oldSIdx] || 0) + styleDurSec;
+            // Log visit
+            if (!styleVisitLog[currentStepNum]) styleVisitLog[currentStepNum] = {};
+            if (!styleVisitLog[currentStepNum][cqId]) styleVisitLog[currentStepNum][cqId] = [];
+            styleVisitLog[currentStepNum][cqId].push({ style: styleNames[demoStyleIdx], duration: styleDurSec });
           }
-          logToSheets('style_switch', { extra: JSON.stringify({ transcript: transcriptKey, from: styleNames[demoStyleIdx], to: styleNames[idx], from_duration_seconds: styleDurSec }) });
+          styleSwitchCounter++;
+          logToSheets('style_switch', { question_id: cqId, extra: JSON.stringify({ transcript: transcriptKey, from: styleNames[demoStyleIdx], to: styleNames[idx], from_duration_seconds: styleDurSec, switch_number: styleSwitchCounter }) });
           styleStartTime = Date.now();
           loadDemoContent(transcriptKey, idx);
         };
@@ -902,7 +912,7 @@ textarea::placeholder {
     // Log time spent on previous question
     if (currentQuestionIdx !== qIdx && currentStepQuestions[currentQuestionIdx]) {
       var prevQ = currentStepQuestions[currentQuestionIdx];
-      var qTimeSec = Math.round((Date.now() - questionStartTime) / 1000);
+      var qTimeSec = Math.round((Date.now() - questionStartTime) / 100) / 10;
       logToSheets('question_timing', {
         question_id: prevQ.id,
         extra: JSON.stringify({ transcript: currentTranscriptKey, step: step + 1, duration_seconds: qTimeSec })
@@ -1002,7 +1012,7 @@ textarea::placeholder {
         saveCurrentQuestion();
         // Log final question timing
         var lastQ = currentStepQuestions[currentQuestionIdx];
-        var qTimeSec = Math.round((Date.now() - questionStartTime) / 1000);
+        var qTimeSec = Math.round((Date.now() - questionStartTime) / 100) / 10;
         logToSheets('question_timing', {
           question_id: lastQ.id,
           extra: JSON.stringify({ transcript: currentTranscriptKey, step: currentStepNum + 1, duration_seconds: qTimeSec })
@@ -1030,12 +1040,16 @@ textarea::placeholder {
     // Save highlights from DOM
     saveHighlightsFromDOM(step, q.id, sIdx);
 
-    // Flush current style time for demo condition
+    // Flush current style time and visit log for demo condition
     if (isDemo) {
-      var styleDurSec = Math.round((Date.now() - styleStartTime) / 1000);
+      var styleDurSec = Math.round((Date.now() - styleStartTime) / 100) / 10;
       if (!styleTimers[step]) styleTimers[step] = {};
       if (!styleTimers[step][q.id]) styleTimers[step][q.id] = {};
       styleTimers[step][q.id][sIdx] = (styleTimers[step][q.id][sIdx] || 0) + styleDurSec;
+      // Log final visit segment
+      if (!styleVisitLog[step]) styleVisitLog[step] = {};
+      if (!styleVisitLog[step][q.id]) styleVisitLog[step][q.id] = [];
+      styleVisitLog[step][q.id].push({ style: styleNames[sIdx], duration: styleDurSec });
       styleStartTime = Date.now();
     }
   }
@@ -1099,13 +1113,16 @@ textarea::placeholder {
           highlights: allHighlights,
           style_time_seconds: isDemo && styleTimers[step] && styleTimers[step][q.id]
             ? { Verbatim: styleTimers[step][q.id][0] || 0, 'Non-Verbatim': styleTimers[step][q.id][1] || 0, Enhanced: styleTimers[step][q.id][2] || 0, 'Bullet Points': styleTimers[step][q.id][3] || 0 }
+            : undefined,
+          style_visit_order: isDemo && styleVisitLog[step] && styleVisitLog[step][q.id]
+            ? styleVisitLog[step][q.id]
             : undefined
         })
       });
     });
 
     // Add transcript timing row
-    var transcriptTimeSec = Math.round((Date.now() - transcriptStartTime) / 1000);
+    var transcriptTimeSec = Math.round((Date.now() - transcriptStartTime) / 100) / 10;
     rows.push({
       timestamp: new Date().toISOString(),
       event_type: 'transcript_timing',
@@ -1176,7 +1193,7 @@ textarea::placeholder {
   var origLoadStep = loadStep;
   loadStep = function(step) {
     if (step >= order.length) {
-      var totalTimeSec = Math.round((Date.now() - studyStartTime) / 1000);
+      var totalTimeSec = Math.round((Date.now() - studyStartTime) / 100) / 10;
       document.getElementById('task-area').style.display = 'none';
       document.getElementById('thank-you').style.display = 'block';
       document.getElementById('debrief').style.display = 'block';

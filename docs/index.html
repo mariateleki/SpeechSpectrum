@@ -140,6 +140,7 @@ body {
     <p style="color: #6B7280; margin: 0 0 16px; font-size: 0.95rem;">Participating in our Prolific study? Enter your ID, complete a short demographics survey, then read and evaluate a transcript.</p>
     <a class="btn-demo" href="./study.html" style="flex: none;">Enter Study</a>
     <a class="btn-style" href="#" id="test-btn" style="margin-left: 8px;">Test Random Condition</a>
+    <a class="btn-style" href="#" id="test-demo-btn" style="margin-left: 8px;">Test Demo Condition</a>
   </div>
 <script>
 document.getElementById('test-btn').addEventListener('click', function(e) {
@@ -156,6 +157,21 @@ document.getElementById('test-btn').addEventListener('click', function(e) {
   }
   sessionStorage.setItem('ss_prolific_id', pid);
   sessionStorage.setItem('ss_condition', style + ' / ' + order.map(function(t){ return t.replace('Transcr',''); }).join(','));
+  sessionStorage.setItem('ss_transcript_order', JSON.stringify(order));
+  sessionStorage.setItem('ss_current_step', '0');
+  window.location.href = './task.html?pid=' + pid;
+});
+document.getElementById('test-demo-btn').addEventListener('click', function(e) {
+  e.preventDefault();
+  var pid = 'TEST' + Math.random().toString(36).substring(2, 10);
+  var transcripts = ['TranscrA', 'TranscrB', 'TranscrC'];
+  var order = transcripts.slice();
+  for (var i = order.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = order[i]; order[i] = order[j]; order[j] = tmp;
+  }
+  sessionStorage.setItem('ss_prolific_id', pid);
+  sessionStorage.setItem('ss_condition', 'demo / ' + order.map(function(t){ return t.replace('Transcr',''); }).join(','));
   sessionStorage.setItem('ss_transcript_order', JSON.stringify(order));
   sessionStorage.setItem('ss_current_step', '0');
   window.location.href = './task.html?pid=' + pid;
