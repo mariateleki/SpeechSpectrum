@@ -4,19 +4,6 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SpeechSpectrum</title>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VHT4FP620K"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    // Read Prolific ID from URL or sessionStorage
-    var _pid = new URLSearchParams(window.location.search).get('pid') || sessionStorage.getItem('ss_prolific_id') || '';
-    var _gaConfig = { };
-    if (_pid) { _gaConfig.user_id = _pid; }
-    gtag('config', 'G-VHT4FP620K', _gaConfig);
-    if (_pid) { gtag('set', 'user_properties', { prolific_id: _pid }); }
-  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -41,15 +28,14 @@ body {
 .intro p {
   color: #6B7280;
   font-size: 1rem;
-  margin: 0;
-  max-width: 600px;
   margin: 0 auto;
+  max-width: 600px;
   line-height: 1.6;
 }
 .arrow-nav-wrapper {
   width: 90vw;
   max-width: 1200px;
-  margin: 20px auto 40px auto;
+  margin: 20px auto 32px auto;
   position: relative;
 }
 .arrow-nav {
@@ -102,23 +88,143 @@ body {
   font-size: 1.05rem;
   background: #EEF2FF;
 }
-.container {
-  max-width: 800px;
+
+/* Two-column layout */
+.page-layout {
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 24px 48px;
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+}
+.transcript-side {
+  flex: 1;
+  min-width: 0;
+  position: sticky;
+  top: 32px;
+}
+.survey-side {
+  flex: 1;
+  min-width: 0;
 }
 .card {
   background: #fff;
   border-radius: 12px;
-  padding: 32px;
+  padding: 28px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.08);
   border: 1px solid #E5E7EB;
   line-height: 1.8;
-  font-size: 1.05rem;
+  font-size: 1rem;
   color: #374151;
 }
 .card p {
   margin: 0;
+}
+
+/* Survey styles */
+.survey-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 20px;
+}
+.survey-question {
+  margin-bottom: 24px;
+}
+.question-text {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #111827;
+  margin: 0 0 10px;
+  line-height: 1.5;
+}
+.question-num {
+  color: #4F46E5;
+  font-weight: 600;
+}
+.option-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  margin-bottom: 4px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.option-label:hover {
+  background: #F3F4F6;
+}
+.option-label input[type="radio"] {
+  accent-color: #4F46E5;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  flex-shrink: 0;
+}
+.option-text {
+  font-size: 0.9rem;
+  color: #374151;
+}
+textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid #D1D5DB;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  color: #111827;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+textarea:focus {
+  border-color: #4F46E5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+textarea::placeholder {
+  color: #9CA3AF;
+}
+.submit-btn {
+  width: 100%;
+  padding: 14px;
+  background: #4F46E5;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 8px;
+}
+.submit-btn:hover {
+  background: #4338CA;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+}
+.thank-you-msg {
+  text-align: center;
+  padding: 48px 24px;
+}
+.thank-you-msg h2 {
+  font-size: 1.4rem;
+  color: #111827;
+  margin: 0 0 8px;
+}
+.thank-you-msg p {
+  color: #6B7280;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .page-layout {
+    flex-direction: column;
+  }
+  .transcript-side {
+    position: static;
+  }
 }
 </style>
 
@@ -159,11 +265,18 @@ body {
   </div>
 </div>
 
-<div class="container">
-  <div class="card" id="text-content"></div>
+<div class="page-layout">
+  <div class="transcript-side">
+    <div class="card" id="text-content"></div>
+  </div>
+  <div class="survey-side">
+    <div id="survey-container"></div>
+  </div>
 </div>
 
 <script src="./content.js"></script>
+<script src="./questions.js"></script>
+<script src="./survey.js"></script>
 <script>
 (function() {
   var domains = ['legal', 'medical', 'business'];
@@ -191,22 +304,21 @@ body {
     var now = Date.now();
     var domainName = state.domain.charAt(0).toUpperCase() + state.domain.slice(1);
 
-    // Send duration for the previous style before switching
-    if (lastDomain !== null && typeof gtag === 'function') {
+    // Log duration for the previous style before switching
+    if (lastDomain !== null && typeof window.ssLog === 'function') {
       var durationSec = Math.round((now - lastSwitchTime) / 1000);
-      gtag('event', 'style_duration', {
+      window.ssLog('style_duration', {
         domain: lastDomain,
         style: styleNames[lastStyle],
         duration_seconds: durationSec
       });
     }
 
-    // Send GA4 event for the new style
-    if (typeof gtag === 'function') {
-      gtag('event', 'style_switch', {
+    // Log the new style switch
+    if (typeof window.ssLog === 'function') {
+      window.ssLog('style_switch', {
         domain: state.domain,
-        style: styleNames[state.style],
-        page_label: domainName + ' - ' + styleNames[state.style]
+        style: styleNames[state.style]
       });
     }
 
@@ -236,15 +348,14 @@ body {
     document.title = domainName + ' - ' + styleNames[state.style];
   }
 
-  // Send duration for the last style when user leaves the page
+  // Log duration for the last style when user leaves the page
   window.addEventListener('beforeunload', function() {
-    if (lastDomain !== null && typeof gtag === 'function') {
+    if (lastDomain !== null && typeof window.ssLog === 'function') {
       var durationSec = Math.round((Date.now() - lastSwitchTime) / 1000);
-      gtag('event', 'style_duration', {
+      window.ssLog('style_duration', {
         domain: lastDomain,
         style: styleNames[lastStyle],
-        duration_seconds: durationSec,
-        transport_type: 'beacon'
+        duration_seconds: durationSec
       });
     }
   });

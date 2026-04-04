@@ -4,27 +4,21 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Legal - Non-Verbatim</title>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VHT4FP620K"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    // Read Prolific ID from URL or sessionStorage
-    var _pid = new URLSearchParams(window.location.search).get('pid') || sessionStorage.getItem('ss_prolific_id') || '';
-    var _gaConfig = { };
-    if (_pid) { _gaConfig.user_id = _pid; }
-    gtag('config', 'G-VHT4FP620K', _gaConfig);
-    if (_pid) { gtag('set', 'user_properties', { prolific_id: _pid }); }
-  </script>
   <link rel="stylesheet" href="./standalone.css">
 </head>
 <body>
-<div class="container">
-  <p>This is a transcript.</p>
-  <div class="card" id="text-content"></div>
+<div class="page-layout">
+  <div class="transcript-side">
+    <p>This is a transcript.</p>
+    <div class="card" id="text-content"></div>
+  </div>
+  <div class="survey-side">
+    <div id="survey-container"></div>
+  </div>
 </div>
 <script src="../content.js"></script>
+<script src="../questions.js"></script>
+<script src="../survey.js"></script>
 <script>
   document.getElementById('text-content').innerHTML = CONTENT['legal'][1];
 </script>

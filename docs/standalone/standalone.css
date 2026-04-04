@@ -5,33 +5,153 @@
 }
 body {
   margin: 0;
-  padding: 48px 24px;
+  padding: 32px 24px;
   font-family: 'Inter', sans-serif;
   background-color: #F9FAFB;
   color: #111827;
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
 }
-.container {
-  max-width: 800px;
+
+/* Two-column layout */
+.page-layout {
+  max-width: 1200px;
   margin: 0 auto;
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
 }
-.container > p {
+.transcript-side {
+  flex: 1;
+  min-width: 0;
+  position: sticky;
+  top: 32px;
+}
+.survey-side {
+  flex: 1;
+  min-width: 0;
+}
+.transcript-side > p {
   color: #6B7280;
-  font-size: 0.95rem;
-  margin: 0 0 20px;
-  line-height: 1.6;
+  font-size: 0.9rem;
+  margin: 0 0 12px;
 }
 .card {
   background: #fff;
   border: 1px solid #E5E7EB;
   border-radius: 12px;
-  padding: 32px;
+  padding: 28px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.08);
   line-height: 1.8;
-  font-size: 1.05rem;
+  font-size: 1rem;
   color: #374151;
 }
 .card p {
   margin: 0;
+}
+
+/* Survey styles */
+.survey-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 20px;
+}
+.survey-question {
+  margin-bottom: 24px;
+}
+.question-text {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #111827;
+  margin: 0 0 10px;
+  line-height: 1.5;
+}
+.question-num {
+  color: #4F46E5;
+  font-weight: 600;
+}
+.option-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  margin-bottom: 4px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.option-label:hover {
+  background: #F3F4F6;
+}
+.option-label input[type="radio"] {
+  accent-color: #4F46E5;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  flex-shrink: 0;
+}
+.option-text {
+  font-size: 0.9rem;
+  color: #374151;
+}
+textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid #D1D5DB;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  color: #111827;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+textarea:focus {
+  border-color: #4F46E5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+textarea::placeholder {
+  color: #9CA3AF;
+}
+.submit-btn {
+  width: 100%;
+  padding: 14px;
+  background: #4F46E5;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 8px;
+}
+.submit-btn:hover {
+  background: #4338CA;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+}
+.thank-you-msg {
+  text-align: center;
+  padding: 48px 24px;
+}
+.thank-you-msg h2 {
+  font-size: 1.4rem;
+  color: #111827;
+  margin: 0 0 8px;
+}
+.thank-you-msg p {
+  color: #6B7280;
+  margin: 0;
+}
+
+/* Responsive: stack on small screens */
+@media (max-width: 768px) {
+  .page-layout {
+    flex-direction: column;
+  }
+  .transcript-side {
+    position: static;
+  }
 }

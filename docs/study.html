@@ -4,14 +4,6 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SpeechSpectrum Study</title>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VHT4FP620K"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-VHT4FP620K');
-  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -186,14 +178,22 @@ body {
       localStorage.setItem(storageKey, JSON.stringify(condition));
     }
 
-    // Set GA4 user_id and user property to Prolific ID
-    if (typeof gtag === 'function') {
-      gtag('config', 'G-VHT4FP620K', { user_id: pid });
-      gtag('set', 'user_properties', { prolific_id: pid });
-      gtag('event', 'study_start', {
-        prolific_id: pid,
-        assigned_condition: condition.label
-      });
+    // Log study start to Google Sheets
+    var SHEETS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwhr3jb8UFugRfVbtCN7xbcXjiKSOfMEajOjuqYbLv9y4DISunCVqyqNvGl1n2XJKmJ/exec';
+    var payload = {
+      timestamp: new Date().toISOString(),
+      event_type: 'study_start',
+      prolific_id: pid,
+      assigned_condition: condition.label,
+      question_id: '',
+      question_text: '',
+      response: '',
+      extra: ''
+    };
+    if (SHEETS_WEBHOOK_URL && SHEETS_WEBHOOK_URL !== 'YOUR_APPS_SCRIPT_URL_HERE') {
+      navigator.sendBeacon(SHEETS_WEBHOOK_URL, JSON.stringify(payload));
+    } else {
+      console.log('[SpeechSpectrum log]', payload);
     }
 
     // Store PID in sessionStorage so destination pages can read it
