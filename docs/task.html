@@ -605,7 +605,7 @@ textarea::placeholder {
 
         var handler = function(e) {
           e.preventDefault();
-          logToSheets('style_switch', { domain: transcriptKey, style: styleNames[idx] });
+          logToSheets('style_switch', { extra: JSON.stringify({ transcript: transcriptKey, from: styleNames[demoStyleIdx], to: styleNames[idx] }) });
           loadDemoContent(transcriptKey, idx);
         };
 
