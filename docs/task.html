@@ -469,14 +469,35 @@ textarea::placeholder {
   }
 
   // --- Survey rendering ---
+  function shuffleArray(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+
+  // Store shuffled question orders per step so we can log them
+  var questionOrders = {};
+
   function renderSurvey(step, transcriptKey) {
     var container = document.getElementById('survey-area');
     var formId = 'survey-form-' + step;
 
+    // Shuffle question order for this step
+    var shuffledQuestions = shuffleArray(QUESTIONS);
+    questionOrders[step] = shuffledQuestions.map(function(q) { return q.id; });
+
+    // Log the question order
+    logToSheets('question_order', {
+      extra: JSON.stringify({ transcript: transcriptKey, step: step + 1, question_order: questionOrders[step] })
+    });
+
     var html = '<form id="' + formId + '">';
     html += '<h2 class="survey-title">Survey</h2>';
 
-    QUESTIONS.forEach(function(q, idx) {
+    shuffledQuestions.forEach(function(q, idx) {
       var qName = q.id + '_step' + step;
       html += '<div class="survey-question">';
       html += '<p class="question-text"><span class="question-num">' + (idx + 1) + '.</span> ' + q.text + '</p>';
