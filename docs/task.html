@@ -403,6 +403,120 @@ textarea::placeholder {
   line-height: 1.6;
 }
 
+/* Tutorial */
+.tutorial-overlay {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.tutorial-card {
+  background: #fff;
+  border: 1px solid #E5E7EB;
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+}
+.tutorial-card h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 8px;
+}
+.tutorial-card h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 24px 0 8px;
+}
+.tutorial-card p, .tutorial-card li {
+  color: #374151;
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+.tutorial-card ul {
+  padding-left: 20px;
+  margin: 8px 0;
+}
+.tutorial-sample {
+  background: #F9FAFB;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 12px 0;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: #374151;
+}
+.tutorial-sample mark {
+  background: #FDE68A;
+  border-radius: 2px;
+  padding: 1px 0;
+}
+.tutorial-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.tutorial-step-num {
+  background: #4F46E5;
+  color: #fff;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.btn-start-study {
+  width: 100%;
+  padding: 16px;
+  background: #4F46E5;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  margin-top: 24px;
+  transition: all 0.2s ease;
+}
+.btn-start-study:hover {
+  background: #4338CA;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+}
+
+/* Debrief */
+.debrief {
+  max-width: 700px;
+  margin: 60px auto;
+  padding: 0 24px;
+  display: none;
+}
+.debrief h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 16px;
+  text-align: center;
+}
+.debrief p {
+  color: #374151;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin: 0 0 12px;
+}
+.debrief .debrief-thanks {
+  color: #6B7280;
+  font-style: italic;
+  margin-top: 24px;
+}
+
 @media (max-width: 768px) {
   .page-layout {
     flex-direction: column;
@@ -416,8 +530,51 @@ textarea::placeholder {
 </head>
 <body>
 
+<!-- Tutorial -->
+<div id="tutorial-area">
+  <div class="instructions">
+    <h1>Before We Begin</h1>
+    <p>Here's a quick walkthrough of how this study works.</p>
+  </div>
+  <div class="tutorial-overlay">
+    <div class="tutorial-card">
+      <h2>What you'll do</h2>
+      <p>You'll read <strong>3 transcripts</strong> of spoken conversations. For each transcript, you'll answer a set of survey questions about it.</p>
+
+      <h2>How to answer questions</h2>
+      <div class="tutorial-step">
+        <div class="tutorial-step-num">1</div>
+        <p><strong>Read the question</strong> on the right side of the screen.</p>
+      </div>
+      <div class="tutorial-step">
+        <div class="tutorial-step-num">2</div>
+        <p><strong>Highlight the relevant text</strong> in the transcript on the left that helped you answer. Select text by clicking and dragging over it.</p>
+      </div>
+      <div class="tutorial-step">
+        <div class="tutorial-step-num">3</div>
+        <p><strong>Select your answer</strong> from the options. If there isn't enough information in the transcript, select "Not enough information to answer this question" — no highlight is needed in that case.</p>
+      </div>
+      <div class="tutorial-step">
+        <div class="tutorial-step-num">4</div>
+        <p><strong>Click Next</strong> to move to the next question. You can go back to change your answers.</p>
+      </div>
+
+      <h2>Example</h2>
+      <p>If the question asks "How clear is this transcript?" and you see relevant text, highlight it like this:</p>
+      <div class="tutorial-sample">
+        I was driving to work when I saw <mark>a blue sedan speed through the intersection without stopping at the red light</mark>. Then there was a loud crash.
+      </div>
+      <p>To remove a highlight, just click on it.</p>
+
+      <p id="tutorial-demo-note" style="display:none;"><strong>Note:</strong> In your condition, you'll see four different versions of each transcript (Verbatim, Non-Verbatim, Enhanced, Bullet Points). You can switch between them using the labels above the transcript. Feel free to highlight across multiple versions.</p>
+
+      <button class="btn-start-study" id="btn-start-study">Got it — Start the Study</button>
+    </div>
+  </div>
+</div>
+
 <!-- Main task area -->
-<div id="task-area">
+<div id="task-area" style="display:none;">
   <div class="instructions">
     <h1>Transcript Evaluation</h1>
     <p id="instructions-text"></p>
@@ -476,10 +633,19 @@ textarea::placeholder {
   </div>
 </div>
 
-<!-- Thank you screen -->
+<!-- Thank you + Debrief screen -->
 <div class="thank-you" id="thank-you">
   <h1>Thank you!</h1>
   <p>Your responses have been recorded. You may now return to Prolific and mark your submission as complete.</p>
+</div>
+
+<div class="debrief" id="debrief">
+  <h1>About This Study</h1>
+  <p>In this study, we investigated how different transcription styles affect people's ability to understand and evaluate spoken conversations. You were randomly assigned to one of five conditions: Verbatim, Non-Verbatim, Enhanced, Bullet Points, or an interactive tool (SpeechSpectrum) that lets you switch between all four.</p>
+  <p>We are interested in whether the way a transcript is formatted changes how people perceive its clarity, accuracy, and professionalism — and whether having access to multiple formats (via SpeechSpectrum) helps people answer evaluation questions more effectively.</p>
+  <p>Your highlights help us understand which parts of the transcript people rely on when forming their judgments, and how that differs across transcription styles.</p>
+  <p>If you have any questions about this research, please contact the research team through Prolific.</p>
+  <p class="debrief-thanks">Thank you for contributing to this research.</p>
 </div>
 
 <!-- Bug report footer -->
@@ -515,6 +681,11 @@ textarea::placeholder {
   // Demo state
   var demoStyleIdx = 0;
 
+  // Timing
+  var studyStartTime = Date.now();
+  var transcriptStartTime = Date.now();
+  var questionStartTime = Date.now();
+
   function logToSheets(eventType, data) {
     var payload = Object.assign({
       timestamp: new Date().toISOString(),
@@ -529,55 +700,8 @@ textarea::placeholder {
     navigator.sendBeacon(SHEETS_WEBHOOK_URL, JSON.stringify({ batch: rows }));
   }
 
-  // Set instructions text
-  if (isDemo) {
-    document.getElementById('instructions-text').textContent =
-      'Using an AI tool called SpeechSpectrum, we created four equivalent versions of the same transcript for you to use during this survey. Some versions might be more helpful for certain questions than others. Feel free to explore the transcripts by clicking the labels on the left, and answer the questions on the right however you think is best.';
-  } else {
-    document.getElementById('instructions-text').textContent =
-      'Please read the transcript on the left, then answer the survey questions on the right based on your reading.';
-  }
-
-  function loadStep(step) {
-    if (step >= order.length) {
-      // All done
-      document.getElementById('task-area').style.display = 'none';
-      document.getElementById('thank-you').style.display = 'block';
-      logToSheets('study_complete', { extra: JSON.stringify({ total_transcripts: order.length }) });
-      return;
-    }
-
-    var transcriptKey = order[step];
-    currentStep = step;
-    sessionStorage.setItem('ss_current_step', String(step));
-
-    // Update progress bar
-    for (var p = 0; p < 3; p++) {
-      var el = document.getElementById('step-' + p);
-      el.className = 'progress-step';
-      if (p < step) el.classList.add('done');
-      if (p === step) el.classList.add('active');
-    }
-    document.getElementById('progress-label').textContent = 'Transcript ' + (step + 1) + ' of 3';
-
-    // Load transcript content
-    if (isDemo) {
-      document.getElementById('demo-nav').style.display = 'block';
-      demoStyleIdx = 0;
-      loadDemoContent(transcriptKey, 0);
-      setupDemoNav(transcriptKey);
-    } else {
-      document.getElementById('demo-nav').style.display = 'none';
-      var idx = styleIndex[style];
-      document.getElementById('text-content').innerHTML = CONTENT[transcriptKey][idx];
-    }
-
-    // Render survey
-    renderSurvey(step, transcriptKey);
-
-    // Scroll to top
-    window.scrollTo(0, 0);
-  }
+  // loadStep is defined at the bottom after tutorial setup
+  function loadStep(step) {}
 
   // --- Demo navigation ---
   function loadDemoContent(transcriptKey, idx) {
@@ -761,7 +885,19 @@ textarea::placeholder {
     var step = currentStepNum;
     var q = currentStepQuestions[qIdx];
     var total = currentStepQuestions.length;
+
+    // Log time spent on previous question
+    if (currentQuestionIdx !== qIdx && currentStepQuestions[currentQuestionIdx]) {
+      var prevQ = currentStepQuestions[currentQuestionIdx];
+      var qTimeSec = Math.round((Date.now() - questionStartTime) / 1000);
+      logToSheets('question_timing', {
+        question_id: prevQ.id,
+        extra: JSON.stringify({ transcript: currentTranscriptKey, step: step + 1, duration_seconds: qTimeSec })
+      });
+    }
+
     currentQuestionIdx = qIdx;
+    questionStartTime = Date.now();
 
     // Save highlights from previous question before switching
     if (qIdx > 0 || answers[step][currentStepQuestions[0].id] !== undefined) {
@@ -851,6 +987,13 @@ textarea::placeholder {
       document.getElementById('btn-submit').addEventListener('click', function() {
         if (!validateCurrentQuestion()) return;
         saveCurrentQuestion();
+        // Log final question timing
+        var lastQ = currentStepQuestions[currentQuestionIdx];
+        var qTimeSec = Math.round((Date.now() - questionStartTime) / 1000);
+        logToSheets('question_timing', {
+          question_id: lastQ.id,
+          extra: JSON.stringify({ transcript: currentTranscriptKey, step: currentStepNum + 1, duration_seconds: qTimeSec })
+        });
         submitAllAnswers();
       });
     }
@@ -936,6 +1079,19 @@ textarea::placeholder {
       });
     });
 
+    // Add transcript timing row
+    var transcriptTimeSec = Math.round((Date.now() - transcriptStartTime) / 1000);
+    rows.push({
+      timestamp: new Date().toISOString(),
+      event_type: 'transcript_timing',
+      prolific_id: pid,
+      assigned_condition: conditionLabel,
+      question_id: '',
+      question_text: '',
+      response: '',
+      extra: JSON.stringify({ transcript: currentTranscriptKey, step: step + 1, duration_seconds: transcriptTimeSec })
+    });
+
     // Send all responses in one request
     logBatchToSheets(rows);
 
@@ -978,8 +1134,74 @@ textarea::placeholder {
     }, 3000);
   });
 
-  // Start
-  loadStep(currentStep);
+  // Show demo note in tutorial if demo condition
+  if (isDemo) {
+    document.getElementById('tutorial-demo-note').style.display = 'block';
+  }
+
+  // Tutorial → Start study
+  document.getElementById('btn-start-study').addEventListener('click', function() {
+    document.getElementById('tutorial-area').style.display = 'none';
+    document.getElementById('task-area').style.display = 'block';
+    studyStartTime = Date.now();
+    loadStep(currentStep);
+  });
+
+  // Update loadStep to show debrief on completion
+  var origLoadStep = loadStep;
+  loadStep = function(step) {
+    if (step >= order.length) {
+      var totalTimeSec = Math.round((Date.now() - studyStartTime) / 1000);
+      document.getElementById('task-area').style.display = 'none';
+      document.getElementById('thank-you').style.display = 'block';
+      document.getElementById('debrief').style.display = 'block';
+      logToSheets('study_complete', { extra: JSON.stringify({ total_transcripts: order.length, total_time_seconds: totalTimeSec }) });
+      return;
+    }
+    // Show task area in case it was hidden
+    document.getElementById('task-area').style.display = 'block';
+
+    var transcriptKey = order[step];
+    currentStep = step;
+    sessionStorage.setItem('ss_current_step', String(step));
+    transcriptStartTime = Date.now();
+
+    // Update progress bar
+    for (var p = 0; p < 3; p++) {
+      var el = document.getElementById('step-' + p);
+      el.className = 'progress-step';
+      if (p < step) el.classList.add('done');
+      if (p === step) el.classList.add('active');
+    }
+    document.getElementById('progress-label').textContent = 'Transcript ' + (step + 1) + ' of 3';
+
+    // Load transcript content
+    if (isDemo) {
+      document.getElementById('demo-nav').style.display = 'block';
+      demoStyleIdx = 0;
+      loadDemoContent(transcriptKey, 0);
+      setupDemoNav(transcriptKey);
+    } else {
+      document.getElementById('demo-nav').style.display = 'none';
+      var idx = styleIndex[style];
+      document.getElementById('text-content').innerHTML = CONTENT[transcriptKey][idx];
+    }
+
+    // Set instructions text
+    if (isDemo) {
+      document.getElementById('instructions-text').textContent =
+        'Using an AI tool called SpeechSpectrum, we created four equivalent versions of the same transcript for you to use during this survey. Some versions might be more helpful for certain questions than others. Feel free to explore the transcripts by clicking the labels on the left, and answer the questions on the right however you think is best.';
+    } else {
+      document.getElementById('instructions-text').textContent =
+        'Please read the transcript on the left, then answer the survey questions on the right based on your reading.';
+    }
+
+    // Render survey
+    renderSurvey(step, transcriptKey);
+
+    // Scroll to top
+    window.scrollTo(0, 0);
+  };
 })();
 </script>
 </body>
