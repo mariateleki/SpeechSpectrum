@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Transcript Evaluation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  padding: 32px 24px;
+  font-family: 'Inter', sans-serif;
+  background-color: #F9FAFB;
+  color: #111827;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Instructions banner */
+.instructions {
+  max-width: 1200px;
+  margin: 0 auto 24px;
+  text-align: center;
+}
+.instructions h1 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 8px;
+}
+.instructions p {
+  color: #6B7280;
+  font-size: 0.95rem;
+  margin: 0;
+  line-height: 1.6;
+}
+.progress-bar-wrapper {
+  max-width: 1200px;
+  margin: 0 auto 24px;
+}
+.progress-steps {
+  display: flex;
+  gap: 8px;
+}
+.progress-step {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: #E5E7EB;
+  transition: background 0.3s ease;
+}
+.progress-step.done {
+  background: #4F46E5;
+}
+.progress-step.active {
+  background: #818CF8;
+}
+.progress-label {
+  text-align: center;
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: #6B7280;
+  font-weight: 500;
+}
+.column-header {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #6B7280;
+  margin: 0 0 12px;
+}
+
+/* Two-column layout */
+.page-layout {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+}
+.transcript-side {
+  flex: 1;
+  min-width: 0;
+  position: sticky;
+  top: 32px;
+}
+.survey-side {
+  flex: 1;
+  min-width: 0;
+}
+.card {
+  background: #fff;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  padding: 28px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  line-height: 1.8;
+  font-size: 1rem;
+  color: #374151;
+}
+.card p {
+  margin: 0;
+}
+
+/* Arrow nav for demo condition */
+.arrow-nav-wrapper {
+  width: 100%;
+  margin: 12px 0 24px 0;
+  position: relative;
+}
+.arrow-nav {
+  position: relative;
+  text-align: center;
+}
+.arrow-nav svg {
+  display: block;
+  width: 100%;
+  height: 80px;
+}
+.arrow-nav svg line {
+  stroke: #D1D5DB;
+  stroke-width: 2;
+}
+.arrow-nav svg circle {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.arrow-nav svg circle:hover {
+  r: 10;
+}
+.arrow-nav svg polygon {
+  fill: #D1D5DB;
+}
+.arrow-nav .labels {
+  position: absolute;
+  top: 62px;
+  left: 0;
+  width: 100%;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+.arrow-nav .labels a {
+  position: absolute;
+  transform: translateX(-50%);
+  text-decoration: none;
+  color: #9CA3AF;
+  transition: all 0.2s ease;
+  padding: 4px 12px;
+  border-radius: 6px;
+}
+.arrow-nav .labels a:hover {
+  color: #4F46E5;
+}
+.arrow-nav .labels a.active {
+  color: #4F46E5;
+  font-weight: 600;
+  font-size: 1.05rem;
+  background: #EEF2FF;
+}
+
+/* Survey styles */
+.survey-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 20px;
+}
+.survey-question {
+  margin-bottom: 24px;
+}
+.question-text {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #111827;
+  margin: 0 0 10px;
+  line-height: 1.5;
+}
+.question-num {
+  color: #4F46E5;
+  font-weight: 600;
+}
+.option-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  margin-bottom: 4px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.option-label:hover {
+  background: #F3F4F6;
+}
+.option-label input[type="radio"] {
+  accent-color: #4F46E5;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  flex-shrink: 0;
+}
+.option-text {
+  font-size: 0.9rem;
+  color: #374151;
+}
+textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid #D1D5DB;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  color: #111827;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+textarea:focus {
+  border-color: #4F46E5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+textarea::placeholder {
+  color: #9CA3AF;
+}
+.submit-btn {
+  width: 100%;
+  padding: 14px;
+  background: #4F46E5;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 8px;
+}
+.submit-btn:hover {
+  background: #4338CA;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+}
+
+/* Thank you */
+.thank-you {
+  max-width: 600px;
+  margin: 80px auto;
+  text-align: center;
+  display: none;
+}
+.thank-you h1 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 12px;
+}
+.thank-you p {
+  color: #6B7280;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .page-layout {
+    flex-direction: column;
+  }
+  .transcript-side {
+    position: static;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<!-- Main task area -->
+<div id="task-area">
+  <div class="instructions">
+    <h1>Transcript Evaluation</h1>
+    <p id="instructions-text"></p>
+  </div>
+
+  <div class="progress-bar-wrapper">
+    <div class="progress-steps">
+      <div class="progress-step" id="step-0"></div>
+      <div class="progress-step" id="step-1"></div>
+      <div class="progress-step" id="step-2"></div>
+    </div>
+    <div class="progress-label" id="progress-label"></div>
+  </div>
+
+  <div class="page-layout">
+    <div class="transcript-side">
+      <p class="column-header">Transcript</p>
+      <!-- Demo arrow nav (hidden for non-demo conditions) -->
+      <div id="demo-nav" style="display:none;">
+        <div class="arrow-nav-wrapper">
+          <div class="arrow-nav">
+            <svg viewBox="0 0 1800 80" preserveAspectRatio="none">
+              <line x1="0" y1="40" x2="1800" y2="40"
+                    marker-start="url(#arrowheadLeft)"
+                    marker-end="url(#arrowheadRight)" />
+              <a href="#" id="circle0"><circle cx="150" cy="40" r="8" fill="#D1D5DB"/></a>
+              <a href="#" id="circle1"><circle cx="600" cy="40" r="8" fill="#D1D5DB"/></a>
+              <a href="#" id="circle2"><circle cx="1200" cy="40" r="8" fill="#D1D5DB"/></a>
+              <a href="#" id="circle3"><circle cx="1650" cy="40" r="8" fill="#D1D5DB"/></a>
+              <defs>
+                <marker id="arrowheadRight" markerWidth="10" markerHeight="7"
+                        refX="10" refY="3.5" orient="auto">
+                  <polygon points="0 0, 10 3.5, 0 7" />
+                </marker>
+                <marker id="arrowheadLeft" markerWidth="10" markerHeight="7"
+                        refX="0" refY="3.5" orient="auto">
+                  <polygon points="10 0, 0 3.5, 10 7" />
+                </marker>
+              </defs>
+            </svg>
+            <div class="labels">
+              <a href="#" id="label0" style="left:9%;">Verbatim</a>
+              <a href="#" id="label1" style="left:33%;">Non-Verbatim</a>
+              <a href="#" id="label2" style="left:67%;">Enhanced</a>
+              <a href="#" id="label3" style="left:91%;">Bullet Points</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card" id="text-content"></div>
+    </div>
+    <div class="survey-side">
+      <p class="column-header">Questions</p>
+      <div id="survey-area"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Thank you screen -->
+<div class="thank-you" id="thank-you">
+  <h1>Thank you!</h1>
+  <p>Your responses have been recorded. You may now return to Prolific and mark your submission as complete.</p>
+</div>
+
+<script src="./content.js"></script>
+<script src="./questions.js"></script>
+<script>
+(function() {
+  var SHEETS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwhr3jb8UFugRfVbtCN7xbcXjiKSOfMEajOjuqYbLv9y4DISunCVqyqNvGl1n2XJKmJ/exec';
+
+  // Read session data
+  var pid = sessionStorage.getItem('ss_prolific_id') || new URLSearchParams(window.location.search).get('pid') || '';
+  var style = sessionStorage.getItem('ss_condition') || '';
+  var order = JSON.parse(sessionStorage.getItem('ss_transcript_order') || '["TranscrA","TranscrB","TranscrC"]');
+  var currentStep = parseInt(sessionStorage.getItem('ss_current_step') || '0', 10);
+
+  var isDemo = (style === 'demo');
+  var styleIndex = { 'verbatim': 0, 'non-verbatim': 1, 'enhanced': 2, 'bullet-points': 3 };
+  var styleNames = ['Verbatim', 'Non-Verbatim', 'Enhanced', 'Bullet Points'];
+
+  // Demo state
+  var demoStyleIdx = 0;
+
+  function logToSheets(eventType, data) {
+    var payload = Object.assign({
+      timestamp: new Date().toISOString(),
+      event_type: eventType,
+      prolific_id: pid,
+      assigned_condition: style
+    }, data || {});
+    navigator.sendBeacon(SHEETS_WEBHOOK_URL, JSON.stringify(payload));
+  }
+
+  // Set instructions text
+  if (isDemo) {
+    document.getElementById('instructions-text').textContent =
+      'Using an AI tool called SpeechSpectrum, we created four equivalent versions of the same transcript for you to use during this survey. Some versions might be more helpful for certain questions than others. Feel free to explore the transcripts by clicking the labels on the left, and answer the questions on the right however you think is best.';
+  } else {
+    document.getElementById('instructions-text').textContent =
+      'Please read the transcript on the left, then answer the survey questions on the right based on your reading.';
+  }
+
+  function loadStep(step) {
+    if (step >= order.length) {
+      // All done
+      document.getElementById('task-area').style.display = 'none';
+      document.getElementById('thank-you').style.display = 'block';
+      logToSheets('study_complete', { extra: JSON.stringify({ total_transcripts: order.length }) });
+      return;
+    }
+
+    var transcriptKey = order[step];
+    currentStep = step;
+    sessionStorage.setItem('ss_current_step', String(step));
+
+    // Update progress bar
+    for (var p = 0; p < 3; p++) {
+      var el = document.getElementById('step-' + p);
+      el.className = 'progress-step';
+      if (p < step) el.classList.add('done');
+      if (p === step) el.classList.add('active');
+    }
+    document.getElementById('progress-label').textContent = 'Transcript ' + (step + 1) + ' of 3';
+
+    // Load transcript content
+    if (isDemo) {
+      document.getElementById('demo-nav').style.display = 'block';
+      demoStyleIdx = 0;
+      loadDemoContent(transcriptKey, 0);
+      setupDemoNav(transcriptKey);
+    } else {
+      document.getElementById('demo-nav').style.display = 'none';
+      var idx = styleIndex[style];
+      document.getElementById('text-content').innerHTML = CONTENT[transcriptKey][idx];
+    }
+
+    // Render survey
+    renderSurvey(step, transcriptKey);
+
+    // Scroll to top
+    window.scrollTo(0, 0);
+  }
+
+  // --- Demo navigation ---
+  function loadDemoContent(transcriptKey, idx) {
+    demoStyleIdx = idx;
+    document.getElementById('text-content').innerHTML = CONTENT[transcriptKey][idx];
+
+    var activeColor = '#4F46E5';
+    var inactiveColor = '#D1D5DB';
+    for (var i = 0; i < 4; i++) {
+      var circle = document.getElementById('circle' + i).querySelector('circle');
+      circle.setAttribute('fill', i === idx ? activeColor : inactiveColor);
+      var label = document.getElementById('label' + i);
+      if (i === idx) { label.classList.add('active'); } else { label.classList.remove('active'); }
+    }
+  }
+
+  function setupDemoNav(transcriptKey) {
+    for (var i = 0; i < 4; i++) {
+      (function(idx) {
+        var circleLink = document.getElementById('circle' + idx);
+        var labelLink = document.getElementById('label' + idx);
+
+        circleLink.setAttribute('href', '#');
+        labelLink.setAttribute('href', '#');
+
+        var handler = function(e) {
+          e.preventDefault();
+          logToSheets('style_switch', { domain: transcriptKey, style: styleNames[idx] });
+          loadDemoContent(transcriptKey, idx);
+        };
+
+        // Remove old listeners by cloning
+        var newCircle = circleLink.cloneNode(true);
+        circleLink.parentNode.replaceChild(newCircle, circleLink);
+        newCircle.addEventListener('click', handler);
+
+        var newLabel = labelLink.cloneNode(true);
+        labelLink.parentNode.replaceChild(newLabel, labelLink);
+        newLabel.addEventListener('click', handler);
+      })(i);
+    }
+  }
+
+  // --- Survey rendering ---
+  function renderSurvey(step, transcriptKey) {
+    var container = document.getElementById('survey-area');
+    var formId = 'survey-form-' + step;
+
+    var html = '<form id="' + formId + '">';
+    html += '<h2 class="survey-title">Survey</h2>';
+
+    QUESTIONS.forEach(function(q, idx) {
+      var qName = q.id + '_step' + step;
+      html += '<div class="survey-question">';
+      html += '<p class="question-text"><span class="question-num">' + (idx + 1) + '.</span> ' + q.text + '</p>';
+
+      if (q.type === 'multiple_choice') {
+        q.options.forEach(function(opt) {
+          var inputId = qName + '_' + opt.replace(/\s+/g, '_').toLowerCase();
+          html += '<label class="option-label" for="' + inputId + '">';
+          html += '<input type="radio" id="' + inputId + '" name="' + qName + '" value="' + opt + '" required>';
+          html += '<span class="option-text">' + opt + '</span>';
+          html += '</label>';
+        });
+      } else if (q.type === 'free_response') {
+        html += '<textarea name="' + qName + '" rows="3" placeholder="Type your answer here..."></textarea>';
+      }
+
+      html += '</div>';
+    });
+
+    var btnText = (step < order.length - 1) ? 'Submit & Continue to Next Transcript' : 'Submit Survey';
+    html += '<button type="submit" class="submit-btn">' + btnText + '</button>';
+    html += '</form>';
+
+    container.innerHTML = html;
+
+    // Handle submit
+    document.getElementById(formId).addEventListener('submit', function(e) {
+      e.preventDefault();
+      var form = e.target;
+
+      // Validate MC
+      var allAnswered = true;
+      QUESTIONS.forEach(function(q) {
+        if (q.type === 'multiple_choice') {
+          var qName = q.id + '_step' + step;
+          if (!form.querySelector('input[name="' + qName + '"]:checked')) allAnswered = false;
+        }
+      });
+      if (!allAnswered) {
+        alert('Please answer all multiple choice questions before continuing.');
+        return;
+      }
+
+      // Log each response
+      QUESTIONS.forEach(function(q) {
+        var qName = q.id + '_step' + step;
+        var response = '';
+        if (q.type === 'multiple_choice') {
+          var sel = form.querySelector('input[name="' + qName + '"]:checked');
+          response = sel ? sel.value : '';
+        } else if (q.type === 'free_response') {
+          response = form.querySelector('textarea[name="' + qName + '"]').value.trim();
+        }
+
+        logToSheets('survey_response', {
+          question_id: q.id,
+          question_text: q.text,
+          response: response,
+          extra: JSON.stringify({ transcript: transcriptKey, step: step + 1 })
+        });
+      });
+
+      // Move to next step
+      loadStep(step + 1);
+    });
+  }
+
+  // Start
+  loadStep(currentStep);
+})();
+</script>
+</body>
+</html>

@@ -190,25 +190,20 @@ body {
 document.getElementById('test-btn').addEventListener('click', function(e) {
   e.preventDefault();
   var pid = 'TEST' + Math.random().toString(36).substring(2, 10);
+  var styles = ['verbatim', 'non-verbatim', 'enhanced', 'bullet-points', 'demo'];
+  var transcripts = ['TranscrA', 'TranscrB', 'TranscrC'];
+  var style = styles[Math.floor(Math.random() * styles.length)];
+  // Shuffle transcript order
+  var order = transcripts.slice();
+  for (var i = order.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = order[i]; order[i] = order[j]; order[j] = tmp;
+  }
   sessionStorage.setItem('ss_prolific_id', pid);
-  var conditions = [
-    './standalone/TranscrA-verbatim.html','./standalone/TranscrA-non-verbatim.html',
-    './standalone/TranscrA-enhanced.html','./standalone/TranscrA-bullet-points.html',
-    './standalone/TranscrB-verbatim.html','./standalone/TranscrB-non-verbatim.html',
-    './standalone/TranscrB-enhanced.html','./standalone/TranscrB-bullet-points.html',
-    './standalone/TranscrC-verbatim.html','./standalone/TranscrC-non-verbatim.html',
-    './standalone/TranscrC-enhanced.html','./standalone/TranscrC-bullet-points.html',
-    './demo.html#TranscrA/0','./demo.html#TranscrB/0','./demo.html#TranscrC/0'
-  ];
-  var labels = [
-    'TranscrA-verbatim','TranscrA-non-verbatim','TranscrA-enhanced','TranscrA-bullet-points',
-    'TranscrB-verbatim','TranscrB-non-verbatim','TranscrB-enhanced','TranscrB-bullet-points',
-    'TranscrC-verbatim','TranscrC-non-verbatim','TranscrC-enhanced','TranscrC-bullet-points',
-    'demo-TranscrA','demo-TranscrB','demo-TranscrC'
-  ];
-  var i = Math.floor(Math.random() * conditions.length);
-  sessionStorage.setItem('ss_condition', labels[i]);
-  window.location.href = conditions[i] + (conditions[i].indexOf('?') >= 0 ? '&' : '?') + 'pid=' + pid;
+  sessionStorage.setItem('ss_condition', style);
+  sessionStorage.setItem('ss_transcript_order', JSON.stringify(order));
+  sessionStorage.setItem('ss_current_step', '0');
+  window.location.href = './task.html?pid=' + pid;
 });
 </script>
 </div>

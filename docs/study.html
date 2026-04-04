@@ -202,27 +202,22 @@ textarea::placeholder {
 (function() {
   var SHEETS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwhr3jb8UFugRfVbtCN7xbcXjiKSOfMEajOjuqYbLv9y4DISunCVqyqNvGl1n2XJKmJ/exec';
 
-  // 15 possible conditions
-  var conditions = [
-    { url: './standalone/TranscrA-verbatim.html', label: 'TranscrA-verbatim' },
-    { url: './standalone/TranscrA-non-verbatim.html', label: 'TranscrA-non-verbatim' },
-    { url: './standalone/TranscrA-enhanced.html', label: 'TranscrA-enhanced' },
-    { url: './standalone/TranscrA-bullet-points.html', label: 'TranscrA-bullet-points' },
-    { url: './standalone/TranscrB-verbatim.html', label: 'TranscrB-verbatim' },
-    { url: './standalone/TranscrB-non-verbatim.html', label: 'TranscrB-non-verbatim' },
-    { url: './standalone/TranscrB-enhanced.html', label: 'TranscrB-enhanced' },
-    { url: './standalone/TranscrB-bullet-points.html', label: 'TranscrB-bullet-points' },
-    { url: './standalone/TranscrC-verbatim.html', label: 'TranscrC-verbatim' },
-    { url: './standalone/TranscrC-non-verbatim.html', label: 'TranscrC-non-verbatim' },
-    { url: './standalone/TranscrC-enhanced.html', label: 'TranscrC-enhanced' },
-    { url: './standalone/TranscrC-bullet-points.html', label: 'TranscrC-bullet-points' },
-    { url: './demo.html#TranscrA/0', label: 'demo-TranscrA' },
-    { url: './demo.html#TranscrB/0', label: 'demo-TranscrB' },
-    { url: './demo.html#TranscrC/0', label: 'demo-TranscrC' }
-  ];
+  // 5 style-level conditions
+  var styles = ['verbatim', 'non-verbatim', 'enhanced', 'bullet-points', 'demo'];
+  var transcripts = ['TranscrA', 'TranscrB', 'TranscrC'];
+
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
 
   var pid = '';
-  var condition = null;
+  var assignedStyle = null;
+  var transcriptOrder = null;
 
   // --- Step 1: Prolific ID ---
   var pidInput = document.getElementById('prolific-id');
@@ -245,15 +240,17 @@ textarea::placeholder {
       return;
     }
 
-    // Assign condition
+    // Assign style level + randomize transcript order
     var storageKey = 'ss_assignment_' + pid;
     var existing = localStorage.getItem(storageKey);
     if (existing) {
-      condition = JSON.parse(existing);
+      var saved = JSON.parse(existing);
+      assignedStyle = saved.style;
+      transcriptOrder = saved.order;
     } else {
-      var index = Math.floor(Math.random() * conditions.length);
-      condition = conditions[index];
-      localStorage.setItem(storageKey, JSON.stringify(condition));
+      assignedStyle = styles[Math.floor(Math.random() * styles.length)];
+      transcriptOrder = shuffle(transcripts);
+      localStorage.setItem(storageKey, JSON.stringify({ style: assignedStyle, order: transcriptOrder }));
     }
 
     // Show demographics step
@@ -314,7 +311,7 @@ textarea::placeholder {
         timestamp: new Date().toISOString(),
         event_type: 'demographic',
         prolific_id: pid,
-        assigned_condition: condition.label,
+        assigned_condition: assignedStyle,
         question_id: q.id,
         question_text: q.text,
         response: response,
@@ -328,21 +325,22 @@ textarea::placeholder {
       timestamp: new Date().toISOString(),
       event_type: 'study_start',
       prolific_id: pid,
-      assigned_condition: condition.label,
+      assigned_condition: assignedStyle,
       question_id: '',
       question_text: '',
       response: '',
-      extra: ''
+      extra: JSON.stringify({ transcript_order: transcriptOrder })
     };
     navigator.sendBeacon(SHEETS_WEBHOOK_URL, JSON.stringify(startPayload));
 
-    // Store PID in sessionStorage
+    // Store everything in sessionStorage
     sessionStorage.setItem('ss_prolific_id', pid);
-    sessionStorage.setItem('ss_condition', condition.label);
+    sessionStorage.setItem('ss_condition', assignedStyle);
+    sessionStorage.setItem('ss_transcript_order', JSON.stringify(transcriptOrder));
+    sessionStorage.setItem('ss_current_step', '0');
 
-    // Redirect to assigned condition
-    var separator = condition.url.indexOf('?') >= 0 ? '&' : '?';
-    window.location.href = condition.url + separator + 'pid=' + encodeURIComponent(pid);
+    // Redirect to task page
+    window.location.href = './task.html?pid=' + encodeURIComponent(pid);
   });
 
   // Auto-fill PID from URL if provided by Prolific
