@@ -13,6 +13,33 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Instructions banner */
+.instructions {
+  max-width: 1200px;
+  margin: 0 auto 24px;
+  text-align: center;
+}
+.instructions h1 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 8px;
+}
+.instructions p {
+  color: #6B7280;
+  font-size: 0.95rem;
+  margin: 0;
+  line-height: 1.6;
+}
+.column-header {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #6B7280;
+  margin: 0 0 12px;
+}
+
 /* Two-column layout */
 .page-layout {
   max-width: 1200px;

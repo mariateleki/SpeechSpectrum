@@ -21,16 +21,6 @@ body {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
 }
-.intro {
-  text-align: center;
-  padding: 0 0 8px;
-}
-.intro p {
-  color: #6B7280;
-  font-size: 0.95rem;
-  margin: 0;
-  line-height: 1.6;
-}
 .arrow-nav-wrapper {
   width: 100%;
   margin: 12px 0 24px 0;
@@ -85,6 +75,34 @@ body {
   font-weight: 600;
   font-size: 1.05rem;
   background: #EEF2FF;
+}
+
+/* Instructions banner */
+.instructions {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 24px 0;
+  text-align: center;
+}
+.instructions h1 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 8px;
+}
+.instructions p {
+  color: #6B7280;
+  font-size: 0.95rem;
+  margin: 0;
+  line-height: 1.6;
+}
+.column-header {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #6B7280;
+  margin: 0 0 12px;
 }
 
 /* Two-column layout */
@@ -229,11 +247,13 @@ textarea::placeholder {
 </head>
 <body>
 
+<div class="instructions">
+  <h1>Transcript Evaluation</h1>
+  <p>Using an AI tool called SpeechSpectrum, we created four equivalent versions of the same transcript for you to use during this survey. Some versions might be more helpful for certain questions than others. Feel free to explore the transcripts by clicking the labels on the left, and answer the questions on the right however you think is best.</p>
+</div>
 <div class="page-layout">
   <div class="transcript-side">
-    <div class="intro">
-      <p>This is the SpeechSpectrum tool. It presents four equivalent representations of the same transcript. Click on a label below to switch between them.</p>
-    </div>
+    <p class="column-header">Transcript</p>
 
     <div class="arrow-nav-wrapper">
       <div class="arrow-nav">
@@ -268,6 +288,7 @@ textarea::placeholder {
     <div class="card" id="text-content"></div>
   </div>
   <div class="survey-side">
+    <p class="column-header">Questions</p>
     <div id="survey-container"></div>
   </div>
 </div>

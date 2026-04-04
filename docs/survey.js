@@ -58,7 +58,7 @@ var SHEETS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwhr3jb8UFugRf
     html += '<div id="ss-thank-you" style="display:none;">';
     html += '<div class="thank-you-msg">';
     html += '<h2>Thank you!</h2>';
-    html += '<p>Your responses have been recorded.</p>';
+    html += '<p>Your responses have been recorded. You may now return to Prolific and mark your submission as complete.</p>';
     html += '</div>';
     html += '</div>';
 
