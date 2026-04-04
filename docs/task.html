@@ -1069,9 +1069,19 @@ textarea::placeholder {
       // If "not enough info" selected, no highlight required
       if (sel.value === 'Not enough information to answer this question') return true;
 
-      // Otherwise, require at least one highlight
-      var marks = document.getElementById('text-content').querySelectorAll('mark');
-      if (marks.length === 0) {
+      // Otherwise, require at least one highlight (on current DOM or any stored style)
+      var hasHighlight = false;
+      // Check current DOM
+      if (document.getElementById('text-content').querySelectorAll('mark').length > 0) {
+        hasHighlight = true;
+      }
+      // For demo condition, also check stored highlights across all styles
+      if (!hasHighlight && isDemo && highlights[step] && highlights[step][q.id]) {
+        Object.keys(highlights[step][q.id]).forEach(function(sIdx) {
+          if (highlights[step][q.id][sIdx].length > 0) hasHighlight = true;
+        });
+      }
+      if (!hasHighlight) {
         document.getElementById('validation-error').style.display = 'block';
         return false;
       }
