@@ -311,7 +311,7 @@ textarea::placeholder {
         timestamp: new Date().toISOString(),
         event_type: 'demographic',
         prolific_id: pid,
-        assigned_condition: assignedStyle,
+        assigned_condition: assignedStyle + ' / ' + transcriptOrder.map(function(t){ return t.replace('Transcr',''); }).join(','),
         question_id: q.id,
         question_text: q.text,
         response: response,
@@ -335,7 +335,8 @@ textarea::placeholder {
 
     // Store everything in sessionStorage
     sessionStorage.setItem('ss_prolific_id', pid);
-    sessionStorage.setItem('ss_condition', assignedStyle);
+    var conditionLabel = assignedStyle + ' / ' + transcriptOrder.map(function(t){ return t.replace('Transcr',''); }).join(',');
+    sessionStorage.setItem('ss_condition', conditionLabel);
     sessionStorage.setItem('ss_transcript_order', JSON.stringify(transcriptOrder));
     sessionStorage.setItem('ss_current_step', '0');
 

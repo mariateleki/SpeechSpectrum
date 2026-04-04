@@ -354,7 +354,8 @@ textarea::placeholder {
 
   // Read session data
   var pid = sessionStorage.getItem('ss_prolific_id') || new URLSearchParams(window.location.search).get('pid') || '';
-  var style = sessionStorage.getItem('ss_condition') || '';
+  var conditionLabel = sessionStorage.getItem('ss_condition') || '';
+  var style = conditionLabel.split(' / ')[0]; // e.g. "enhanced" from "enhanced / A,C,B"
   var order = JSON.parse(sessionStorage.getItem('ss_transcript_order') || '["TranscrA","TranscrB","TranscrC"]');
   var currentStep = parseInt(sessionStorage.getItem('ss_current_step') || '0', 10);
 
@@ -370,7 +371,7 @@ textarea::placeholder {
       timestamp: new Date().toISOString(),
       event_type: eventType,
       prolific_id: pid,
-      assigned_condition: style
+      assigned_condition: conditionLabel
     }, data || {});
     navigator.sendBeacon(SHEETS_WEBHOOK_URL, JSON.stringify(payload));
   }

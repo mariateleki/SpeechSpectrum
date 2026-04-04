@@ -200,7 +200,7 @@ document.getElementById('test-btn').addEventListener('click', function(e) {
     var tmp = order[i]; order[i] = order[j]; order[j] = tmp;
   }
   sessionStorage.setItem('ss_prolific_id', pid);
-  sessionStorage.setItem('ss_condition', style);
+  sessionStorage.setItem('ss_condition', style + ' / ' + order.map(function(t){ return t.replace('Transcr',''); }).join(','));
   sessionStorage.setItem('ss_transcript_order', JSON.stringify(order));
   sessionStorage.setItem('ss_current_step', '0');
   window.location.href = './task.html?pid=' + pid;
