@@ -573,45 +573,61 @@ textarea::placeholder {
   </div>
 </div>
 
-<!-- Demo exploration screen (demo condition only) -->
+<!-- Demo exploration + practice screen (demo condition only) -->
 <div id="demo-explore" style="display:none;">
   <div class="instructions">
-    <h1>Explore the Transcript Versions</h1>
-    <p>Before we begin, take a moment to explore the four different versions of a transcript. Click on each label below to see how the same speech looks in each style. Once you've viewed all four, you can proceed.</p>
+    <h1>Practice Round</h1>
+    <p>Before we begin, try out the SpeechSpectrum tool with a practice transcript. Explore all four versions, then answer the practice question below. You'll need to highlight the relevant text to proceed.</p>
   </div>
-  <div style="max-width: 800px; margin: 0 auto; padding: 0 24px;">
-    <div class="arrow-nav-wrapper">
-      <div class="arrow-nav">
-        <svg viewBox="0 0 1800 80" preserveAspectRatio="none">
-          <line x1="0" y1="40" x2="1800" y2="40"
-                marker-start="url(#arrowheadLeft2)"
-                marker-end="url(#arrowheadRight2)" />
-          <a href="#" id="explore-circle0"><circle cx="150" cy="40" r="8" fill="#D1D5DB"/></a>
-          <a href="#" id="explore-circle1"><circle cx="600" cy="40" r="8" fill="#D1D5DB"/></a>
-          <a href="#" id="explore-circle2"><circle cx="1200" cy="40" r="8" fill="#D1D5DB"/></a>
-          <a href="#" id="explore-circle3"><circle cx="1650" cy="40" r="8" fill="#D1D5DB"/></a>
-          <defs>
-            <marker id="arrowheadRight2" markerWidth="10" markerHeight="7"
-                    refX="10" refY="3.5" orient="auto">
-              <polygon points="0 0, 10 3.5, 0 7" />
-            </marker>
-            <marker id="arrowheadLeft2" markerWidth="10" markerHeight="7"
-                    refX="0" refY="3.5" orient="auto">
-              <polygon points="10 0, 0 3.5, 10 7" />
-            </marker>
-          </defs>
-        </svg>
-        <div class="labels">
-          <a href="#" id="explore-label0" style="left:9%;">Verbatim</a>
-          <a href="#" id="explore-label1" style="left:33%;">Non-Verbatim</a>
-          <a href="#" id="explore-label2" style="left:67%;">Enhanced</a>
-          <a href="#" id="explore-label3" style="left:91%;">Bullet Points</a>
+  <div class="page-layout" style="max-width:1200px; margin:0 auto; padding:0 24px;">
+    <div class="transcript-side">
+      <p class="column-header">Practice Transcript</p>
+      <div class="arrow-nav-wrapper">
+        <div class="arrow-nav">
+          <svg viewBox="0 0 1800 80" preserveAspectRatio="none">
+            <line x1="0" y1="40" x2="1800" y2="40"
+                  marker-start="url(#arrowheadLeft2)"
+                  marker-end="url(#arrowheadRight2)" />
+            <a href="#" id="explore-circle0"><circle cx="150" cy="40" r="8" fill="#D1D5DB"/></a>
+            <a href="#" id="explore-circle1"><circle cx="600" cy="40" r="8" fill="#D1D5DB"/></a>
+            <a href="#" id="explore-circle2"><circle cx="1200" cy="40" r="8" fill="#D1D5DB"/></a>
+            <a href="#" id="explore-circle3"><circle cx="1650" cy="40" r="8" fill="#D1D5DB"/></a>
+            <defs>
+              <marker id="arrowheadRight2" markerWidth="10" markerHeight="7"
+                      refX="10" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" />
+              </marker>
+              <marker id="arrowheadLeft2" markerWidth="10" markerHeight="7"
+                      refX="0" refY="3.5" orient="auto">
+                <polygon points="10 0, 0 3.5, 10 7" />
+              </marker>
+            </defs>
+          </svg>
+          <div class="labels">
+            <a href="#" id="explore-label0" style="left:9%;">Verbatim</a>
+            <a href="#" id="explore-label1" style="left:33%;">Non-Verbatim</a>
+            <a href="#" id="explore-label2" style="left:67%;">Enhanced</a>
+            <a href="#" id="explore-label3" style="left:91%;">Bullet Points</a>
+          </div>
         </div>
       </div>
+      <div class="card" id="explore-text-content"></div>
+      <p class="highlight-hint">Select text in the transcript to highlight it. Click a highlight to remove it.</p>
     </div>
-    <div class="card" id="explore-text-content"></div>
-    <p id="explore-progress" style="text-align:center; color:#6B7280; font-size:0.85rem; margin-top:16px;">You've viewed 0 of 4 versions. Click each label above to explore.</p>
-    <button class="btn-start-study" id="btn-begin-task" style="margin-top:24px;" disabled>Begin the Study</button>
+    <div class="survey-side">
+      <p class="column-header">Practice Question</p>
+      <p id="explore-progress" style="color:#6B7280; font-size:0.85rem; margin:0 0 16px;">You've viewed 1 of 4 versions. Click each label to explore all four.</p>
+      <div class="survey-question">
+        <p class="question-text">The speaker initially says the wrong day for the appointment. What day did they incorrectly say before correcting themselves?</p>
+        <p class="highlight-instruction">Highlight the part of the transcript where the speaker makes this error. Some versions may show it differently — explore to find it.</p>
+        <label class="option-label" for="practice-tuesday"><input type="radio" id="practice-tuesday" name="practice-q" value="Tuesday"> <span class="option-text">Tuesday</span></label>
+        <label class="option-label" for="practice-wednesday"><input type="radio" id="practice-wednesday" name="practice-q" value="Wednesday"> <span class="option-text">Wednesday</span></label>
+        <label class="option-label" for="practice-thursday"><input type="radio" id="practice-thursday" name="practice-q" value="Thursday"> <span class="option-text">Thursday</span></label>
+        <label class="option-label" for="practice-friday"><input type="radio" id="practice-friday" name="practice-q" value="Friday"> <span class="option-text">Friday</span></label>
+      </div>
+      <p class="validation-error" id="explore-error">Please explore all 4 versions, select an answer, and highlight the relevant text.</p>
+      <button class="btn-start-study" id="btn-begin-task" disabled>Begin the Study</button>
+    </div>
   </div>
 </div>
 
@@ -1248,21 +1264,63 @@ textarea::placeholder {
   });
 
   // --- Demo explore screen ---
+  // Practice transcript content (synthetic — speaker says "Thursday" then corrects to "Friday")
+  var practiceContent = [
+    // Verbatim
+    '<p>So, um, I called the office and, and they said the appointment was on, uh, Thursday – no wait, not Thursday, it\'s on Friday. Friday at, at two o\'clock. And I, I asked if Dr. Peters was going to be there and they said, um, actually it\'s Dr. Peterson, not Peters. So yeah, Friday at two with, with Dr. Peterson.</p>',
+    // Non-Verbatim
+    '<p>I called the office and they said the appointment was on Thursday – no wait, not Thursday, it\'s on Friday. Friday at two o\'clock. I asked if Dr. Peters was going to be there and they said actually it\'s Dr. Peterson, not Peters. So Friday at two with Dr. Peterson.</p>',
+    // Enhanced
+    '<p>I called the office and confirmed the appointment is on Friday at 2:00 PM with Dr. Peterson. There was an initial mix-up about the day (Thursday was mentioned first) and the doctor\'s name (Peters vs. Peterson), but both were corrected during the call.</p>',
+    // Bullet Points
+    '<p>- Called the office to confirm the appointment.<br>- Appointment is on Friday at 2:00 PM.<br>- The doctor is Dr. Peterson.<br>- Initial errors were corrected during the call: Thursday → Friday, Dr. Peters → Dr. Peterson.</p>'
+  ];
+
   function setupExploreScreen() {
-    var exploreTranscript = order[0]; // Use first transcript for exploration
     var visited = { 0: false, 1: false, 2: false, 3: false };
     var visitCount = 0;
+    var currentExploreIdx = 0;
     var activeColor = '#4F46E5';
     var inactiveColor = '#D1D5DB';
     var visitedColor = '#818CF8';
 
     // Show first style
-    document.getElementById('explore-text-content').innerHTML = CONTENT[exploreTranscript][0];
+    document.getElementById('explore-text-content').innerHTML = practiceContent[0];
     visited[0] = true;
     visitCount = 1;
     updateExploreUI(0);
 
+    // Enable highlighting on the practice transcript
+    document.getElementById('explore-text-content').addEventListener('mouseup', function() {
+      var sel = window.getSelection();
+      if (!sel || sel.isCollapsed || !sel.rangeCount) return;
+      var range = sel.getRangeAt(0);
+      var card = document.getElementById('explore-text-content');
+      if (!card.contains(range.commonAncestorContainer)) return;
+      if (!sel.toString().trim()) return;
+      try {
+        var mark = document.createElement('mark');
+        range.surroundContents(mark);
+        mark.addEventListener('click', function() {
+          this.replaceWith(document.createTextNode(this.textContent));
+          card.normalize();
+        });
+      } catch (e) {
+        var fragment = range.extractContents();
+        var mark = document.createElement('mark');
+        mark.appendChild(fragment);
+        range.insertNode(mark);
+        mark.addEventListener('click', function() {
+          while (this.firstChild) this.parentNode.insertBefore(this.firstChild, this);
+          this.parentNode.removeChild(this);
+          card.normalize();
+        });
+      }
+      sel.removeAllRanges();
+    });
+
     function updateExploreUI(activeIdx) {
+      currentExploreIdx = activeIdx;
       for (var i = 0; i < 4; i++) {
         var circle = document.getElementById('explore-circle' + i).querySelector('circle');
         var label = document.getElementById('explore-label' + i);
@@ -1275,9 +1333,28 @@ textarea::placeholder {
         }
       }
       document.getElementById('explore-progress').textContent =
-        "You've viewed " + visitCount + ' of 4 versions.' + (visitCount < 4 ? ' Click each label above to explore.' : ' You can now begin the study.');
-      document.getElementById('btn-begin-task').disabled = (visitCount < 4);
+        "You've viewed " + visitCount + ' of 4 versions.' + (visitCount < 4 ? ' Click each label above to explore all four.' : '');
+      validateExplore();
     }
+
+    function validateExplore() {
+      var allVisited = visitCount >= 4;
+      var answered = document.querySelector('input[name="practice-q"]:checked');
+      var hasHighlight = document.getElementById('explore-text-content').querySelectorAll('mark').length > 0;
+      document.getElementById('btn-begin-task').disabled = !(allVisited && answered && hasHighlight);
+    }
+
+    // Validate on radio change
+    document.querySelectorAll('input[name="practice-q"]').forEach(function(r) {
+      r.addEventListener('change', function() {
+        document.getElementById('explore-error').style.display = 'none';
+        validateExplore();
+      });
+    });
+
+    // Re-validate after highlighting (via MutationObserver on the card)
+    var observer = new MutationObserver(function() { validateExplore(); });
+    observer.observe(document.getElementById('explore-text-content'), { childList: true, subtree: true });
 
     // Wire up explore nav
     for (var i = 0; i < 4; i++) {
@@ -1288,7 +1365,7 @@ textarea::placeholder {
             visited[idx] = true;
             visitCount++;
           }
-          document.getElementById('explore-text-content').innerHTML = CONTENT[exploreTranscript][idx];
+          document.getElementById('explore-text-content').innerHTML = practiceContent[idx];
           updateExploreUI(idx);
         };
         document.getElementById('explore-circle' + idx).addEventListener('click', handler);
@@ -1299,6 +1376,20 @@ textarea::placeholder {
 
   // Explore → Start study
   document.getElementById('btn-begin-task').addEventListener('click', function() {
+    // Validate before proceeding
+    var allVisited = true;
+    var answered = document.querySelector('input[name="practice-q"]:checked');
+    var hasHighlight = document.getElementById('explore-text-content').querySelectorAll('mark').length > 0;
+    if (!answered || !hasHighlight) {
+      document.getElementById('explore-error').style.display = 'block';
+      return;
+    }
+    // Log practice response
+    logToSheets('practice_response', {
+      question_id: 'practice',
+      response: answered.value,
+      extra: JSON.stringify({ correct: answered.value === 'Thursday' })
+    });
     document.getElementById('demo-explore').style.display = 'none';
     document.getElementById('task-area').style.display = 'block';
     studyStartTime = Date.now();
