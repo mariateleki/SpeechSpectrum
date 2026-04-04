@@ -490,7 +490,7 @@ textarea::placeholder {
 <script src="./questions.js"></script>
 <script>
 (function() {
-  var SHEETS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwhr3jb8UFugRfVbtCN7xbcXjiKSOfMEajOjuqYbLv9y4DISunCVqyqNvGl1n2XJKmJ/exec';
+  var SHEETS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxby0V4A5pWc4VZGkJyVYBFx2OHJXDmIKOGaD6J4ePap51s1uWz-jHafIFYtJlJLu7Gbg/exec';
 
   // Read session data
   var pid = sessionStorage.getItem('ss_prolific_id') || new URLSearchParams(window.location.search).get('pid') || '';
@@ -514,6 +514,10 @@ textarea::placeholder {
       assigned_condition: conditionLabel
     }, data || {});
     navigator.sendBeacon(SHEETS_WEBHOOK_URL, JSON.stringify(payload));
+  }
+
+  function logBatchToSheets(rows) {
+    navigator.sendBeacon(SHEETS_WEBHOOK_URL, JSON.stringify({ batch: rows }));
   }
 
   // Set instructions text
@@ -886,8 +890,9 @@ textarea::placeholder {
 
   function submitAllAnswers() {
     var step = currentStepNum;
+    var rows = [];
 
-    // Log each response with highlights
+    // Build all response rows
     currentStepQuestions.forEach(function(q) {
       var response = answers[step][q.id] || '';
 
@@ -902,7 +907,11 @@ textarea::placeholder {
         });
       }
 
-      logToSheets('survey_response', {
+      rows.push({
+        timestamp: new Date().toISOString(),
+        event_type: 'survey_response',
+        prolific_id: pid,
+        assigned_condition: conditionLabel,
         question_id: q.id,
         question_text: q.text,
         response: response,
@@ -913,6 +922,9 @@ textarea::placeholder {
         })
       });
     });
+
+    // Send all responses in one request
+    logBatchToSheets(rows);
 
     // Move to next transcript
     loadStep(step + 1);
