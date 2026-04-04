@@ -162,8 +162,14 @@ body {
 <script>
 (function() {
   var domains = ['legal', 'medical', 'business'];
+  var styleNames = ['Verbatim', 'Non-Verbatim', 'Enhanced', 'Bullet Points'];
   var activeColor = '#4F46E5';
   var inactiveColor = '#D1D5DB';
+
+  // Timing: track when each style was entered
+  var lastSwitchTime = Date.now();
+  var lastDomain = null;
+  var lastStyle = null;
 
   function parseHash() {
     var hash = location.hash.replace('#', '') || 'legal/0';
@@ -177,7 +183,34 @@ body {
 
   function render() {
     var state = parseHash();
+    var now = Date.now();
+    var domainName = state.domain.charAt(0).toUpperCase() + state.domain.slice(1);
 
+    // Send duration for the previous style before switching
+    if (lastDomain !== null && typeof gtag === 'function') {
+      var durationSec = Math.round((now - lastSwitchTime) / 1000);
+      gtag('event', 'style_duration', {
+        domain: lastDomain,
+        style: styleNames[lastStyle],
+        duration_seconds: durationSec
+      });
+    }
+
+    // Send GA4 event for the new style
+    if (typeof gtag === 'function') {
+      gtag('event', 'style_switch', {
+        domain: state.domain,
+        style: styleNames[state.style],
+        page_label: domainName + ' - ' + styleNames[state.style]
+      });
+    }
+
+    // Update timing trackers
+    lastSwitchTime = now;
+    lastDomain = state.domain;
+    lastStyle = state.style;
+
+    // Update UI
     for (var i = 0; i < 4; i++) {
       var href = '#' + state.domain + '/' + i;
       document.getElementById('circle' + i).setAttribute('href', href);
@@ -195,10 +228,21 @@ body {
     }
 
     document.getElementById('text-content').innerHTML = CONTENT[state.domain][state.style];
-
-    var styleNames = ['Verbatim', 'Non-Verbatim', 'Enhanced', 'Bullet Points'];
-    document.title = state.domain.charAt(0).toUpperCase() + state.domain.slice(1) + ' - ' + styleNames[state.style];
+    document.title = domainName + ' - ' + styleNames[state.style];
   }
+
+  // Send duration for the last style when user leaves the page
+  window.addEventListener('beforeunload', function() {
+    if (lastDomain !== null && typeof gtag === 'function') {
+      var durationSec = Math.round((Date.now() - lastSwitchTime) / 1000);
+      gtag('event', 'style_duration', {
+        domain: lastDomain,
+        style: styleNames[lastStyle],
+        duration_seconds: durationSec,
+        transport_type: 'beacon'
+      });
+    }
+  });
 
   window.addEventListener('hashchange', render);
   render();
