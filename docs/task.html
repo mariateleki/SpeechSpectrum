@@ -299,6 +299,82 @@ textarea::placeholder {
   margin-top: 8px;
 }
 
+/* Highlighting */
+#text-content mark {
+  background: #FDE68A;
+  border-radius: 2px;
+  cursor: pointer;
+  padding: 1px 0;
+  transition: background 0.15s ease;
+}
+#text-content mark:hover {
+  background: #FCA5A5;
+}
+.highlight-hint {
+  font-size: 0.8rem;
+  color: #9CA3AF;
+  margin-top: 8px;
+  font-style: italic;
+}
+
+/* Question stepper */
+.question-nav {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+.question-nav button {
+  flex: 1;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn-back {
+  background: #fff;
+  color: #374151;
+  border: 1.5px solid #D1D5DB;
+}
+.btn-back:hover {
+  background: #F3F4F6;
+}
+.btn-next {
+  background: #4F46E5;
+  color: #fff;
+  border: none;
+}
+.btn-next:hover {
+  background: #4338CA;
+}
+.btn-next:disabled {
+  background: #D1D5DB;
+  cursor: not-allowed;
+}
+.question-progress {
+  font-size: 0.8rem;
+  color: #9CA3AF;
+  text-align: center;
+  margin-top: 12px;
+}
+.highlight-instruction {
+  font-size: 0.85rem;
+  color: #6B7280;
+  margin: 0 0 12px;
+  padding: 8px 12px;
+  background: #FEF3C7;
+  border-radius: 6px;
+  line-height: 1.5;
+}
+.validation-error {
+  color: #DC2626;
+  font-size: 0.85rem;
+  margin-top: 8px;
+  display: none;
+}
+
 /* Thank you */
 .thank-you {
   max-width: 600px;
@@ -532,7 +608,101 @@ textarea::placeholder {
     }
   }
 
-  // --- Survey rendering ---
+  // --- Highlighting system ---
+  // highlights[step][questionId][styleIdx] = [{ text: "..." }, ...]
+  var highlights = {};
+  // answers[step][questionId] = "selected option" or "free text"
+  var answers = {};
+
+  function getHighlightsForQuestion(step, qId, sIdx) {
+    if (!highlights[step]) highlights[step] = {};
+    if (!highlights[step][qId]) highlights[step][qId] = {};
+    if (!highlights[step][qId][sIdx]) highlights[step][qId][sIdx] = [];
+    return highlights[step][qId][sIdx];
+  }
+
+  function saveHighlightsFromDOM(step, qId, sIdx) {
+    var marks = document.getElementById('text-content').querySelectorAll('mark');
+    var arr = [];
+    marks.forEach(function(m) { arr.push({ text: m.textContent }); });
+    if (!highlights[step]) highlights[step] = {};
+    if (!highlights[step][qId]) highlights[step][qId] = {};
+    highlights[step][qId][sIdx] = arr;
+  }
+
+  function applyHighlights(highlightArr) {
+    // Clear existing marks
+    var card = document.getElementById('text-content');
+    card.querySelectorAll('mark').forEach(function(m) {
+      m.replaceWith(document.createTextNode(m.textContent));
+    });
+    card.normalize();
+    if (!highlightArr || highlightArr.length === 0) return;
+
+    // Apply each highlight by finding the text in text nodes
+    highlightArr.forEach(function(h) {
+      applyOneHighlight(card, h.text);
+    });
+  }
+
+  function applyOneHighlight(root, searchText) {
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
+    var node;
+    while (node = walker.nextNode()) {
+      var idx = node.textContent.indexOf(searchText);
+      if (idx !== -1) {
+        var range = document.createRange();
+        range.setStart(node, idx);
+        range.setEnd(node, idx + searchText.length);
+        var mark = document.createElement('mark');
+        range.surroundContents(mark);
+        mark.addEventListener('click', function() {
+          this.replaceWith(document.createTextNode(this.textContent));
+          root.normalize();
+        });
+        return;
+      }
+    }
+  }
+
+  function setupHighlightListener() {
+    document.getElementById('text-content').addEventListener('mouseup', function() {
+      var sel = window.getSelection();
+      if (!sel || sel.isCollapsed || !sel.rangeCount) return;
+
+      var range = sel.getRangeAt(0);
+      var card = document.getElementById('text-content');
+      if (!card.contains(range.commonAncestorContainer)) return;
+
+      var selectedText = sel.toString().trim();
+      if (!selectedText) return;
+
+      // Handle selection spanning multiple nodes by wrapping each text node
+      try {
+        var mark = document.createElement('mark');
+        range.surroundContents(mark);
+        mark.addEventListener('click', function() {
+          this.replaceWith(document.createTextNode(this.textContent));
+          card.normalize();
+        });
+      } catch (e) {
+        // Selection spans elements — extract and wrap
+        var fragment = range.extractContents();
+        var mark = document.createElement('mark');
+        mark.appendChild(fragment);
+        range.insertNode(mark);
+        mark.addEventListener('click', function() {
+          while (this.firstChild) this.parentNode.insertBefore(this.firstChild, this);
+          this.parentNode.removeChild(this);
+          card.normalize();
+        });
+      }
+
+      sel.removeAllRanges();
+    });
+  }
+
+  // --- Survey rendering (one question at a time) ---
   function shuffleArray(arr) {
     var a = arr.slice();
     for (var i = a.length - 1; i > 0; i--) {
@@ -542,94 +712,232 @@ textarea::placeholder {
     return a;
   }
 
-  // Store shuffled question orders per step so we can log them
   var questionOrders = {};
+  var currentQuestionIdx = 0;
+  var currentStepQuestions = [];
+  var currentTranscriptKey = '';
+  var currentStepNum = 0;
 
   function renderSurvey(step, transcriptKey) {
-    var container = document.getElementById('survey-area');
-    var formId = 'survey-form-' + step;
+    currentStepNum = step;
+    currentTranscriptKey = transcriptKey;
+    currentQuestionIdx = 0;
 
     // Shuffle MC questions, keep free response at the end
     var mcQuestions = QUESTIONS.filter(function(q) { return q.type === 'multiple_choice'; });
     var frQuestions = QUESTIONS.filter(function(q) { return q.type === 'free_response'; });
-    var shuffledQuestions = shuffleArray(mcQuestions).concat(frQuestions);
-    questionOrders[step] = shuffledQuestions.map(function(q) { return q.id; });
+    currentStepQuestions = shuffleArray(mcQuestions).concat(frQuestions);
+    questionOrders[step] = currentStepQuestions.map(function(q) { return q.id; });
 
     // Log the question order
     logToSheets('question_order', {
       extra: JSON.stringify({ transcript: transcriptKey, step: step + 1, question_order: questionOrders[step] })
     });
 
-    var html = '<form id="' + formId + '">';
-    html += '<h2 class="survey-title">Survey</h2>';
+    // Init answers store for this step
+    if (!answers[step]) answers[step] = {};
 
-    shuffledQuestions.forEach(function(q, idx) {
-      var qName = q.id + '_step' + step;
-      html += '<div class="survey-question">';
-      html += '<p class="question-text"><span class="question-num">' + (idx + 1) + '.</span> ' + q.text + '</p>';
+    // Setup highlight listener
+    setupHighlightListener();
 
-      if (q.type === 'multiple_choice') {
-        q.options.forEach(function(opt) {
-          var inputId = qName + '_' + opt.replace(/\s+/g, '_').toLowerCase();
-          html += '<label class="option-label" for="' + inputId + '">';
-          html += '<input type="radio" id="' + inputId + '" name="' + qName + '" value="' + opt + '" required>';
-          html += '<span class="option-text">' + opt + '</span>';
-          html += '</label>';
-        });
-      } else if (q.type === 'free_response') {
-        html += '<textarea name="' + qName + '" rows="3" placeholder="Type your answer here..."></textarea>';
-      }
+    // Show first question
+    showQuestion(0);
+  }
 
-      html += '</div>';
-    });
+  function showQuestion(qIdx) {
+    var step = currentStepNum;
+    var q = currentStepQuestions[qIdx];
+    var total = currentStepQuestions.length;
+    currentQuestionIdx = qIdx;
 
-    var btnText = (step < order.length - 1) ? 'Submit & Continue to Next Transcript' : 'Submit Survey';
-    html += '<button type="submit" class="submit-btn">' + btnText + '</button>';
-    html += '</form>';
+    // Save highlights from previous question before switching
+    if (qIdx > 0 || answers[step][currentStepQuestions[0].id] !== undefined) {
+      // Highlights are saved on navigation
+    }
+
+    var container = document.getElementById('survey-area');
+    var html = '';
+
+    html += '<div class="question-progress">Question ' + (qIdx + 1) + ' of ' + total + '</div>';
+    html += '<div class="survey-question">';
+    html += '<p class="question-text"><span class="question-num">' + (qIdx + 1) + '.</span> ' + q.text + '</p>';
+
+    if (q.type === 'multiple_choice') {
+      html += '<p class="highlight-instruction">Highlight the relevant information in the transcript that you used to answer this question. Click a highlight to remove it.</p>';
+
+      var opts = q.options.slice();
+      opts.push('Not enough information to answer this question');
+      opts.forEach(function(opt) {
+        var inputId = q.id + '_' + opt.replace(/\s+/g, '_').toLowerCase();
+        var checked = (answers[step] && answers[step][q.id] === opt) ? ' checked' : '';
+        html += '<label class="option-label" for="' + inputId + '">';
+        html += '<input type="radio" id="' + inputId + '" name="' + q.id + '" value="' + opt + '"' + checked + '>';
+        html += '<span class="option-text">' + opt + '</span>';
+        html += '</label>';
+      });
+    } else if (q.type === 'free_response') {
+      var val = (answers[step] && answers[step][q.id]) || '';
+      html += '<textarea name="' + q.id + '" rows="3" placeholder="Type your answer here...">' + val + '</textarea>';
+    }
+
+    html += '</div>';
+    html += '<p class="validation-error" id="validation-error">Please select an answer and highlight relevant text (or select "Not enough information").</p>';
+
+    // Navigation buttons
+    html += '<div class="question-nav">';
+    if (qIdx > 0) {
+      html += '<button type="button" class="btn-back" id="btn-back">Back</button>';
+    }
+    if (qIdx < total - 1) {
+      html += '<button type="button" class="btn-next" id="btn-next">Next</button>';
+    } else {
+      var btnText = (step < order.length - 1) ? 'Submit & Continue to Next Transcript' : 'Submit Survey';
+      html += '<button type="button" class="btn-next" id="btn-submit">' + btnText + '</button>';
+    }
+    html += '</div>';
+
+    if (q.type === 'multiple_choice') {
+      html += '<p class="highlight-hint">Select text in the transcript to highlight it. Click a highlight to remove it.</p>';
+    }
 
     container.innerHTML = html;
 
-    // Handle submit
-    document.getElementById(formId).addEventListener('submit', function(e) {
-      e.preventDefault();
-      var form = e.target;
+    // Restore highlights for this question + current style
+    var sIdx = isDemo ? demoStyleIdx : styleIndex[style];
+    var hlArr = getHighlightsForQuestion(step, q.id, sIdx);
+    applyHighlights(hlArr);
 
-      // Validate MC
-      var allAnswered = true;
-      QUESTIONS.forEach(function(q) {
-        if (q.type === 'multiple_choice') {
-          var qName = q.id + '_step' + step;
-          if (!form.querySelector('input[name="' + qName + '"]:checked')) allAnswered = false;
-        }
+    // Wire up radio change to clear validation error
+    container.querySelectorAll('input[type="radio"]').forEach(function(radio) {
+      radio.addEventListener('change', function() {
+        document.getElementById('validation-error').style.display = 'none';
       });
-      if (!allAnswered) {
-        alert('Please answer all multiple choice questions before continuing.');
-        return;
+    });
+
+    // Wire up nav buttons
+    if (document.getElementById('btn-back')) {
+      document.getElementById('btn-back').addEventListener('click', function() {
+        saveCurrentQuestion();
+        showQuestion(qIdx - 1);
+        window.scrollTo(0, 0);
+      });
+    }
+    if (document.getElementById('btn-next')) {
+      document.getElementById('btn-next').addEventListener('click', function() {
+        if (!validateCurrentQuestion()) return;
+        saveCurrentQuestion();
+        showQuestion(qIdx + 1);
+        window.scrollTo(0, 0);
+      });
+    }
+    if (document.getElementById('btn-submit')) {
+      document.getElementById('btn-submit').addEventListener('click', function() {
+        if (!validateCurrentQuestion()) return;
+        saveCurrentQuestion();
+        submitAllAnswers();
+      });
+    }
+  }
+
+  function saveCurrentQuestion() {
+    var step = currentStepNum;
+    var q = currentStepQuestions[currentQuestionIdx];
+    var container = document.getElementById('survey-area');
+    var sIdx = isDemo ? demoStyleIdx : styleIndex[style];
+
+    // Save answer
+    if (q.type === 'multiple_choice') {
+      var sel = container.querySelector('input[name="' + q.id + '"]:checked');
+      if (sel) answers[step][q.id] = sel.value;
+    } else if (q.type === 'free_response') {
+      var ta = container.querySelector('textarea[name="' + q.id + '"]');
+      if (ta) answers[step][q.id] = ta.value.trim();
+    }
+
+    // Save highlights from DOM
+    saveHighlightsFromDOM(step, q.id, sIdx);
+  }
+
+  function validateCurrentQuestion() {
+    var step = currentStepNum;
+    var q = currentStepQuestions[currentQuestionIdx];
+    var container = document.getElementById('survey-area');
+
+    if (q.type === 'multiple_choice') {
+      var sel = container.querySelector('input[name="' + q.id + '"]:checked');
+      if (!sel) {
+        document.getElementById('validation-error').style.display = 'block';
+        return false;
       }
 
-      // Log each response
-      QUESTIONS.forEach(function(q) {
-        var qName = q.id + '_step' + step;
-        var response = '';
-        if (q.type === 'multiple_choice') {
-          var sel = form.querySelector('input[name="' + qName + '"]:checked');
-          response = sel ? sel.value : '';
-        } else if (q.type === 'free_response') {
-          response = form.querySelector('textarea[name="' + qName + '"]').value.trim();
-        }
+      // If "not enough info" selected, no highlight required
+      if (sel.value === 'Not enough information to answer this question') return true;
 
-        logToSheets('survey_response', {
-          question_id: q.id,
-          question_text: q.text,
-          response: response,
-          extra: JSON.stringify({ transcript: transcriptKey, step: step + 1 })
-        });
-      });
-
-      // Move to next step
-      loadStep(step + 1);
-    });
+      // Otherwise, require at least one highlight
+      var marks = document.getElementById('text-content').querySelectorAll('mark');
+      if (marks.length === 0) {
+        document.getElementById('validation-error').style.display = 'block';
+        return false;
+      }
+    }
+    // Free response doesn't require highlight or answer
+    return true;
   }
+
+  function submitAllAnswers() {
+    var step = currentStepNum;
+
+    // Log each response with highlights
+    currentStepQuestions.forEach(function(q) {
+      var response = answers[step][q.id] || '';
+
+      // Collect all highlights across all styles for this question
+      var allHighlights = [];
+      if (highlights[step] && highlights[step][q.id]) {
+        Object.keys(highlights[step][q.id]).forEach(function(sIdx) {
+          var styleName = styleNames[parseInt(sIdx)] || style;
+          highlights[step][q.id][sIdx].forEach(function(h) {
+            allHighlights.push({ text: h.text, style: styleName });
+          });
+        });
+      }
+
+      logToSheets('survey_response', {
+        question_id: q.id,
+        question_text: q.text,
+        response: response,
+        extra: JSON.stringify({
+          transcript: currentTranscriptKey,
+          step: step + 1,
+          highlights: allHighlights
+        })
+      });
+    });
+
+    // Move to next transcript
+    loadStep(step + 1);
+  }
+
+  // --- Demo style switch: save/restore highlights ---
+  var origLoadDemoContent = loadDemoContent;
+  loadDemoContent = function(transcriptKey, idx) {
+    // Save highlights for current style before switching
+    if (currentStepQuestions.length > 0) {
+      var q = currentStepQuestions[currentQuestionIdx];
+      var oldIdx = demoStyleIdx;
+      saveHighlightsFromDOM(currentStepNum, q.id, oldIdx);
+    }
+
+    origLoadDemoContent(transcriptKey, idx);
+
+    // Restore highlights for new style
+    if (currentStepQuestions.length > 0) {
+      var q = currentStepQuestions[currentQuestionIdx];
+      var hlArr = getHighlightsForQuestion(currentStepNum, q.id, idx);
+      applyHighlights(hlArr);
+      setupHighlightListener();
+    }
+  };
 
   // Bug report handler
   document.getElementById('bug-send-btn').addEventListener('click', function() {

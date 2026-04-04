@@ -42,6 +42,6 @@ const QUESTIONS = [
   {
     id: "q8",
     type: "free_response",
-    text: "Any additional comments or observations?"
+    text: "Was anything unclear about this study?"
   }
 ];
