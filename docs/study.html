@@ -186,9 +186,10 @@ body {
       localStorage.setItem(storageKey, JSON.stringify(condition));
     }
 
-    // Set GA4 user_id to Prolific ID
+    // Set GA4 user_id and user property to Prolific ID
     if (typeof gtag === 'function') {
       gtag('config', 'G-VHT4FP620K', { user_id: pid });
+      gtag('set', 'user_properties', { prolific_id: pid });
       gtag('event', 'study_start', {
         prolific_id: pid,
         assigned_condition: condition.label

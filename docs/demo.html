@@ -15,6 +15,7 @@
     var _gaConfig = { };
     if (_pid) { _gaConfig.user_id = _pid; }
     gtag('config', 'G-VHT4FP620K', _gaConfig);
+    if (_pid) { gtag('set', 'user_properties', { prolific_id: _pid }); }
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
