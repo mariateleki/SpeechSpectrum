@@ -573,6 +573,48 @@ textarea::placeholder {
   </div>
 </div>
 
+<!-- Demo exploration screen (demo condition only) -->
+<div id="demo-explore" style="display:none;">
+  <div class="instructions">
+    <h1>Explore the Transcript Versions</h1>
+    <p>Before we begin, take a moment to explore the four different versions of a transcript. Click on each label below to see how the same speech looks in each style. Once you've viewed all four, you can proceed.</p>
+  </div>
+  <div style="max-width: 800px; margin: 0 auto; padding: 0 24px;">
+    <div class="arrow-nav-wrapper">
+      <div class="arrow-nav">
+        <svg viewBox="0 0 1800 80" preserveAspectRatio="none">
+          <line x1="0" y1="40" x2="1800" y2="40"
+                marker-start="url(#arrowheadLeft2)"
+                marker-end="url(#arrowheadRight2)" />
+          <a href="#" id="explore-circle0"><circle cx="150" cy="40" r="8" fill="#D1D5DB"/></a>
+          <a href="#" id="explore-circle1"><circle cx="600" cy="40" r="8" fill="#D1D5DB"/></a>
+          <a href="#" id="explore-circle2"><circle cx="1200" cy="40" r="8" fill="#D1D5DB"/></a>
+          <a href="#" id="explore-circle3"><circle cx="1650" cy="40" r="8" fill="#D1D5DB"/></a>
+          <defs>
+            <marker id="arrowheadRight2" markerWidth="10" markerHeight="7"
+                    refX="10" refY="3.5" orient="auto">
+              <polygon points="0 0, 10 3.5, 0 7" />
+            </marker>
+            <marker id="arrowheadLeft2" markerWidth="10" markerHeight="7"
+                    refX="0" refY="3.5" orient="auto">
+              <polygon points="10 0, 0 3.5, 10 7" />
+            </marker>
+          </defs>
+        </svg>
+        <div class="labels">
+          <a href="#" id="explore-label0" style="left:9%;">Verbatim</a>
+          <a href="#" id="explore-label1" style="left:33%;">Non-Verbatim</a>
+          <a href="#" id="explore-label2" style="left:67%;">Enhanced</a>
+          <a href="#" id="explore-label3" style="left:91%;">Bullet Points</a>
+        </div>
+      </div>
+    </div>
+    <div class="card" id="explore-text-content"></div>
+    <p id="explore-progress" style="text-align:center; color:#6B7280; font-size:0.85rem; margin-top:16px;">You've viewed 0 of 4 versions. Click each label above to explore.</p>
+    <button class="btn-start-study" id="btn-begin-task" style="margin-top:24px;" disabled>Begin the Study</button>
+  </div>
+</div>
+
 <!-- Main task area -->
 <div id="task-area" style="display:none;">
   <div class="instructions">
@@ -1191,9 +1233,73 @@ textarea::placeholder {
     document.getElementById('tutorial-demo-note').style.display = 'block';
   }
 
-  // Tutorial → Start study
+  // Tutorial → next screen
   document.getElementById('btn-start-study').addEventListener('click', function() {
     document.getElementById('tutorial-area').style.display = 'none';
+    if (isDemo) {
+      // Show explore screen with first transcript's content
+      document.getElementById('demo-explore').style.display = 'block';
+      setupExploreScreen();
+    } else {
+      document.getElementById('task-area').style.display = 'block';
+      studyStartTime = Date.now();
+      loadStep(currentStep);
+    }
+  });
+
+  // --- Demo explore screen ---
+  function setupExploreScreen() {
+    var exploreTranscript = order[0]; // Use first transcript for exploration
+    var visited = { 0: false, 1: false, 2: false, 3: false };
+    var visitCount = 0;
+    var activeColor = '#4F46E5';
+    var inactiveColor = '#D1D5DB';
+    var visitedColor = '#818CF8';
+
+    // Show first style
+    document.getElementById('explore-text-content').innerHTML = CONTENT[exploreTranscript][0];
+    visited[0] = true;
+    visitCount = 1;
+    updateExploreUI(0);
+
+    function updateExploreUI(activeIdx) {
+      for (var i = 0; i < 4; i++) {
+        var circle = document.getElementById('explore-circle' + i).querySelector('circle');
+        var label = document.getElementById('explore-label' + i);
+        if (i === activeIdx) {
+          circle.setAttribute('fill', activeColor);
+          label.classList.add('active');
+        } else {
+          circle.setAttribute('fill', visited[i] ? visitedColor : inactiveColor);
+          label.classList.remove('active');
+        }
+      }
+      document.getElementById('explore-progress').textContent =
+        "You've viewed " + visitCount + ' of 4 versions.' + (visitCount < 4 ? ' Click each label above to explore.' : ' You can now begin the study.');
+      document.getElementById('btn-begin-task').disabled = (visitCount < 4);
+    }
+
+    // Wire up explore nav
+    for (var i = 0; i < 4; i++) {
+      (function(idx) {
+        var handler = function(e) {
+          e.preventDefault();
+          if (!visited[idx]) {
+            visited[idx] = true;
+            visitCount++;
+          }
+          document.getElementById('explore-text-content').innerHTML = CONTENT[exploreTranscript][idx];
+          updateExploreUI(idx);
+        };
+        document.getElementById('explore-circle' + idx).addEventListener('click', handler);
+        document.getElementById('explore-label' + idx).addEventListener('click', handler);
+      })(i);
+    }
+  }
+
+  // Explore → Start study
+  document.getElementById('btn-begin-task').addEventListener('click', function() {
+    document.getElementById('demo-explore').style.display = 'none';
     document.getElementById('task-area').style.display = 'block';
     studyStartTime = Date.now();
     loadStep(currentStep);
