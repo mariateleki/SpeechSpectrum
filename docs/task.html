@@ -685,6 +685,9 @@ textarea::placeholder {
   var studyStartTime = Date.now();
   var transcriptStartTime = Date.now();
   var questionStartTime = Date.now();
+  var styleStartTime = Date.now();
+  // Track cumulative time per style per question: styleTimers[step][qId][styleIdx] = seconds
+  var styleTimers = {};
 
   function logToSheets(eventType, data) {
     var payload = Object.assign({
@@ -729,7 +732,17 @@ textarea::placeholder {
 
         var handler = function(e) {
           e.preventDefault();
-          logToSheets('style_switch', { extra: JSON.stringify({ transcript: transcriptKey, from: styleNames[demoStyleIdx], to: styleNames[idx] }) });
+          var styleDurSec = Math.round((Date.now() - styleStartTime) / 1000);
+          // Accumulate time for current style on current question
+          if (currentStepQuestions.length > 0) {
+            var cqId = currentStepQuestions[currentQuestionIdx].id;
+            if (!styleTimers[currentStepNum]) styleTimers[currentStepNum] = {};
+            if (!styleTimers[currentStepNum][cqId]) styleTimers[currentStepNum][cqId] = {};
+            var oldSIdx = demoStyleIdx;
+            styleTimers[currentStepNum][cqId][oldSIdx] = (styleTimers[currentStepNum][cqId][oldSIdx] || 0) + styleDurSec;
+          }
+          logToSheets('style_switch', { extra: JSON.stringify({ transcript: transcriptKey, from: styleNames[demoStyleIdx], to: styleNames[idx], from_duration_seconds: styleDurSec }) });
+          styleStartTime = Date.now();
           loadDemoContent(transcriptKey, idx);
         };
 
@@ -1016,6 +1029,15 @@ textarea::placeholder {
 
     // Save highlights from DOM
     saveHighlightsFromDOM(step, q.id, sIdx);
+
+    // Flush current style time for demo condition
+    if (isDemo) {
+      var styleDurSec = Math.round((Date.now() - styleStartTime) / 1000);
+      if (!styleTimers[step]) styleTimers[step] = {};
+      if (!styleTimers[step][q.id]) styleTimers[step][q.id] = {};
+      styleTimers[step][q.id][sIdx] = (styleTimers[step][q.id][sIdx] || 0) + styleDurSec;
+      styleStartTime = Date.now();
+    }
   }
 
   function validateCurrentQuestion() {
@@ -1074,7 +1096,10 @@ textarea::placeholder {
         extra: JSON.stringify({
           transcript: currentTranscriptKey,
           step: step + 1,
-          highlights: allHighlights
+          highlights: allHighlights,
+          style_time_seconds: isDemo && styleTimers[step] && styleTimers[step][q.id]
+            ? { Verbatim: styleTimers[step][q.id][0] || 0, 'Non-Verbatim': styleTimers[step][q.id][1] || 0, Enhanced: styleTimers[step][q.id][2] || 0, 'Bullet Points': styleTimers[step][q.id][3] || 0 }
+            : undefined
         })
       });
     });
