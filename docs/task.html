@@ -248,6 +248,57 @@ textarea::placeholder {
   box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
 }
 
+/* Bug report footer */
+.bug-report-footer {
+  max-width: 1200px;
+  margin: 60px auto 24px;
+  padding: 0 24px;
+}
+.bug-report-footer details {
+  border-top: 1px solid #E5E7EB;
+  padding-top: 16px;
+}
+.bug-report-footer summary {
+  cursor: pointer;
+  color: #9CA3AF;
+  font-size: 0.85rem;
+  font-weight: 500;
+  user-select: none;
+}
+.bug-report-footer summary:hover {
+  color: #6B7280;
+}
+.bug-report-body {
+  margin-top: 12px;
+  max-width: 500px;
+}
+.bug-report-body p {
+  color: #6B7280;
+  font-size: 0.85rem;
+  margin: 0 0 8px;
+}
+.bug-send-btn {
+  padding: 8px 20px;
+  background: #6B7280;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background 0.2s ease;
+}
+.bug-send-btn:hover {
+  background: #4B5563;
+}
+.bug-thanks {
+  color: #059669;
+  font-size: 0.85rem;
+  margin-top: 8px;
+}
+
 /* Thank you */
 .thank-you {
   max-width: 600px;
@@ -345,6 +396,19 @@ textarea::placeholder {
   <h1>Thank you!</h1>
   <p>Your responses have been recorded. You may now return to Prolific and mark your submission as complete.</p>
 </div>
+
+<!-- Bug report footer -->
+<footer class="bug-report-footer">
+  <details id="bug-report">
+    <summary>Report a bug</summary>
+    <div class="bug-report-body">
+      <p>Encountered an issue? Describe it below and click Send.</p>
+      <textarea id="bug-text" rows="3" placeholder="Describe what went wrong..."></textarea>
+      <button class="bug-send-btn" id="bug-send-btn">Send Report</button>
+      <p class="bug-thanks" id="bug-thanks" style="display:none;">Thanks for the report!</p>
+    </div>
+  </details>
+</footer>
 
 <script src="./content.js"></script>
 <script src="./questions.js"></script>
@@ -566,6 +630,20 @@ textarea::placeholder {
       loadStep(step + 1);
     });
   }
+
+  // Bug report handler
+  document.getElementById('bug-send-btn').addEventListener('click', function() {
+    var bugText = document.getElementById('bug-text').value.trim();
+    if (!bugText) return;
+    logToSheets('bug_report', { response: bugText });
+    document.getElementById('bug-text').value = '';
+    document.getElementById('bug-send-btn').style.display = 'none';
+    document.getElementById('bug-thanks').style.display = 'block';
+    setTimeout(function() {
+      document.getElementById('bug-send-btn').style.display = '';
+      document.getElementById('bug-thanks').style.display = 'none';
+    }, 3000);
+  });
 
   // Start
   loadStep(currentStep);
