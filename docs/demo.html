@@ -23,19 +23,17 @@ body {
 }
 .intro {
   text-align: center;
-  padding: 36px 24px 12px;
+  padding: 0 0 8px;
 }
 .intro p {
   color: #6B7280;
-  font-size: 1rem;
-  margin: 0 auto;
-  max-width: 600px;
+  font-size: 0.95rem;
+  margin: 0;
   line-height: 1.6;
 }
 .arrow-nav-wrapper {
-  width: 90vw;
-  max-width: 1200px;
-  margin: 20px auto 32px auto;
+  width: 100%;
+  margin: 12px 0 24px 0;
   position: relative;
 }
 .arrow-nav {
@@ -93,7 +91,7 @@ body {
 .page-layout {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 24px 48px;
+  padding: 32px 24px 48px;
   display: flex;
   gap: 32px;
   align-items: flex-start;
@@ -231,42 +229,42 @@ textarea::placeholder {
 </head>
 <body>
 
-<div class="intro">
-  <p>This is the SpeechSpectrum tool. It presents four equivalent representations of the same transcript. Click on a label below to switch between them.</p>
-</div>
-
-<div class="arrow-nav-wrapper">
-  <div class="arrow-nav">
-    <svg viewBox="0 0 1800 80" preserveAspectRatio="none">
-      <line x1="0" y1="40" x2="1800" y2="40"
-            marker-start="url(#arrowheadLeft)"
-            marker-end="url(#arrowheadRight)" />
-      <a href="#" id="circle0"><circle cx="150" cy="40" r="8" fill="#D1D5DB"/></a>
-      <a href="#" id="circle1"><circle cx="600" cy="40" r="8" fill="#D1D5DB"/></a>
-      <a href="#" id="circle2"><circle cx="1200" cy="40" r="8" fill="#D1D5DB"/></a>
-      <a href="#" id="circle3"><circle cx="1650" cy="40" r="8" fill="#D1D5DB"/></a>
-      <defs>
-        <marker id="arrowheadRight" markerWidth="10" markerHeight="7"
-                refX="10" refY="3.5" orient="auto">
-          <polygon points="0 0, 10 3.5, 0 7" />
-        </marker>
-        <marker id="arrowheadLeft" markerWidth="10" markerHeight="7"
-                refX="0" refY="3.5" orient="auto">
-          <polygon points="10 0, 0 3.5, 10 7" />
-        </marker>
-      </defs>
-    </svg>
-    <div class="labels">
-      <a href="#" id="label0" style="left:9%;">Verbatim</a>
-      <a href="#" id="label1" style="left:33%;">Non-Verbatim</a>
-      <a href="#" id="label2" style="left:67%;">Enhanced</a>
-      <a href="#" id="label3" style="left:91%;">Bullet Points</a>
-    </div>
-  </div>
-</div>
-
 <div class="page-layout">
   <div class="transcript-side">
+    <div class="intro">
+      <p>This is the SpeechSpectrum tool. It presents four equivalent representations of the same transcript. Click on a label below to switch between them.</p>
+    </div>
+
+    <div class="arrow-nav-wrapper">
+      <div class="arrow-nav">
+        <svg viewBox="0 0 1800 80" preserveAspectRatio="none">
+          <line x1="0" y1="40" x2="1800" y2="40"
+                marker-start="url(#arrowheadLeft)"
+                marker-end="url(#arrowheadRight)" />
+          <a href="#" id="circle0"><circle cx="150" cy="40" r="8" fill="#D1D5DB"/></a>
+          <a href="#" id="circle1"><circle cx="600" cy="40" r="8" fill="#D1D5DB"/></a>
+          <a href="#" id="circle2"><circle cx="1200" cy="40" r="8" fill="#D1D5DB"/></a>
+          <a href="#" id="circle3"><circle cx="1650" cy="40" r="8" fill="#D1D5DB"/></a>
+          <defs>
+            <marker id="arrowheadRight" markerWidth="10" markerHeight="7"
+                    refX="10" refY="3.5" orient="auto">
+              <polygon points="0 0, 10 3.5, 0 7" />
+            </marker>
+            <marker id="arrowheadLeft" markerWidth="10" markerHeight="7"
+                    refX="0" refY="3.5" orient="auto">
+              <polygon points="10 0, 0 3.5, 10 7" />
+            </marker>
+          </defs>
+        </svg>
+        <div class="labels">
+          <a href="#" id="label0" style="left:9%;">Verbatim</a>
+          <a href="#" id="label1" style="left:33%;">Non-Verbatim</a>
+          <a href="#" id="label2" style="left:67%;">Enhanced</a>
+          <a href="#" id="label3" style="left:91%;">Bullet Points</a>
+        </div>
+      </div>
+    </div>
+
     <div class="card" id="text-content"></div>
   </div>
   <div class="survey-side">

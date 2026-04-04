@@ -25,30 +25,35 @@ body {
   justify-content: center;
   min-height: 100vh;
 }
+
+/* Shared card style */
 .study-card {
   background: #fff;
   border-radius: 16px;
   padding: 48px;
   box-shadow: 0 4px 24px rgba(0,0,0,0.08);
   border: 1px solid #E5E7EB;
-  max-width: 460px;
+  max-width: 520px;
   width: 100%;
   margin: 24px;
-  text-align: center;
 }
 .study-card h1 {
   font-size: 1.5rem;
   font-weight: 700;
   margin: 0 0 8px;
   color: #111827;
+  text-align: center;
 }
 .study-card .subtitle {
   color: #6B7280;
   font-size: 0.95rem;
   margin: 0 0 32px;
   line-height: 1.5;
+  text-align: center;
 }
-.study-card label {
+
+/* Step 1: Prolific ID */
+#step-pid label {
   display: block;
   text-align: left;
   font-weight: 500;
@@ -56,7 +61,7 @@ body {
   color: #374151;
   margin-bottom: 8px;
 }
-.study-card input {
+#step-pid input[type="text"] {
   width: 100%;
   padding: 12px 16px;
   border: 1.5px solid #D1D5DB;
@@ -67,11 +72,78 @@ body {
   outline: none;
   transition: border-color 0.2s ease;
 }
-.study-card input:focus {
+#step-pid input[type="text"]:focus {
   border-color: #4F46E5;
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
 }
-.study-card button {
+.error {
+  color: #DC2626;
+  font-size: 0.85rem;
+  margin-top: 8px;
+  display: none;
+}
+
+/* Step 2: Demographics */
+.demo-question {
+  margin-bottom: 24px;
+}
+.question-text {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #111827;
+  margin: 0 0 10px;
+  line-height: 1.5;
+}
+.question-num {
+  color: #4F46E5;
+  font-weight: 600;
+}
+.option-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  margin-bottom: 4px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.option-label:hover {
+  background: #F3F4F6;
+}
+.option-label input[type="radio"] {
+  accent-color: #4F46E5;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  flex-shrink: 0;
+}
+.option-text {
+  font-size: 0.9rem;
+  color: #374151;
+}
+textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid #D1D5DB;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  color: #111827;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+textarea:focus {
+  border-color: #4F46E5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+textarea::placeholder {
+  color: #9CA3AF;
+}
+
+/* Shared button */
+.btn-primary {
   width: 100%;
   padding: 14px;
   background: #4F46E5;
@@ -85,20 +157,14 @@ body {
   margin-top: 20px;
   transition: all 0.2s ease;
 }
-.study-card button:hover {
+.btn-primary:hover {
   background: #4338CA;
   box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
 }
-.study-card button:disabled {
+.btn-primary:disabled {
   background: #D1D5DB;
   cursor: not-allowed;
   box-shadow: none;
-}
-.error {
-  color: #DC2626;
-  font-size: 0.85rem;
-  margin-top: 8px;
-  display: none;
 }
 </style>
 
@@ -106,21 +172,38 @@ body {
 <body>
 
 <div class="study-card">
-  <h1>Welcome</h1>
-  <p class="subtitle">Please enter your Prolific ID to begin.</p>
 
-  <label for="prolific-id">Prolific ID</label>
-  <input type="text" id="prolific-id" placeholder="e.g. 5f3a8b2c1d4e..." autocomplete="off" autofocus>
-  <p class="error" id="error-msg">Please enter a valid Prolific ID.</p>
+  <!-- Step 1: Prolific ID -->
+  <div id="step-pid">
+    <h1>Welcome</h1>
+    <p class="subtitle">Please enter your Prolific ID to begin.</p>
 
-  <button id="start-btn" disabled>Start Study</button>
+    <label for="prolific-id">Prolific ID</label>
+    <input type="text" id="prolific-id" placeholder="e.g. 5f3a8b2c1d4e..." autocomplete="off" autofocus>
+    <p class="error" id="error-msg">Please enter a valid Prolific ID.</p>
+
+    <button class="btn-primary" id="pid-btn" disabled>Continue</button>
+  </div>
+
+  <!-- Step 2: Demographics -->
+  <div id="step-demographics" style="display:none;">
+    <h1>About You</h1>
+    <p class="subtitle">Please answer a few quick questions before we begin.</p>
+
+    <form id="demo-form"></form>
+
+    <button class="btn-primary" id="demo-btn">Start Study</button>
+  </div>
+
 </div>
 
+<script src="./demographics.js"></script>
 <script>
 (function() {
+  var SHEETS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwhr3jb8UFugRfVbtCN7xbcXjiKSOfMEajOjuqYbLv9y4DISunCVqyqNvGl1n2XJKmJ/exec';
+
   // 15 possible conditions
   var conditions = [
-    // 12 standalone pages
     { url: './standalone/legal-verbatim.html', label: 'legal-verbatim' },
     { url: './standalone/legal-non-verbatim.html', label: 'legal-non-verbatim' },
     { url: './standalone/legal-enhanced.html', label: 'legal-enhanced' },
@@ -133,54 +216,115 @@ body {
     { url: './standalone/business-non-verbatim.html', label: 'business-non-verbatim' },
     { url: './standalone/business-enhanced.html', label: 'business-enhanced' },
     { url: './standalone/business-bullet-points.html', label: 'business-bullet-points' },
-    // 3 interactive demos
     { url: './demo.html#legal/0', label: 'demo-legal' },
     { url: './demo.html#medical/0', label: 'demo-medical' },
     { url: './demo.html#business/0', label: 'demo-business' }
   ];
 
-  var input = document.getElementById('prolific-id');
-  var btn = document.getElementById('start-btn');
+  var pid = '';
+  var condition = null;
+
+  // --- Step 1: Prolific ID ---
+  var pidInput = document.getElementById('prolific-id');
+  var pidBtn = document.getElementById('pid-btn');
   var errorMsg = document.getElementById('error-msg');
 
-  // Enable button when input has content
-  input.addEventListener('input', function() {
-    btn.disabled = input.value.trim().length === 0;
+  pidInput.addEventListener('input', function() {
+    pidBtn.disabled = pidInput.value.trim().length === 0;
     errorMsg.style.display = 'none';
   });
 
-  // Allow Enter key to submit
-  input.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' && !btn.disabled) {
-      btn.click();
-    }
+  pidInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !pidBtn.disabled) pidBtn.click();
   });
 
-  btn.addEventListener('click', function() {
-    var pid = input.value.trim();
-
+  pidBtn.addEventListener('click', function() {
+    pid = pidInput.value.trim();
     if (pid.length < 5) {
       errorMsg.style.display = 'block';
       return;
     }
 
-    // Check if this PID already has an assignment
+    // Assign condition
     var storageKey = 'ss_assignment_' + pid;
     var existing = localStorage.getItem(storageKey);
-    var condition;
-
     if (existing) {
       condition = JSON.parse(existing);
     } else {
-      // Random assignment
       var index = Math.floor(Math.random() * conditions.length);
       condition = conditions[index];
       localStorage.setItem(storageKey, JSON.stringify(condition));
     }
 
-    // Log study start to Google Sheets
-    var SHEETS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwhr3jb8UFugRfVbtCN7xbcXjiKSOfMEajOjuqYbLv9y4DISunCVqyqNvGl1n2XJKmJ/exec';
-    var payload = {
+    // Show demographics step
+    document.getElementById('step-pid').style.display = 'none';
+    document.getElementById('step-demographics').style.display = 'block';
+  });
+
+  // --- Step 2: Demographics ---
+  // Render demographic questions
+  var formHtml = '';
+  DEMOGRAPHICS.forEach(function(q, idx) {
+    formHtml += '<div class="demo-question">';
+    formHtml += '<p class="question-text"><span class="question-num">' + (idx + 1) + '.</span> ' + q.text + '</p>';
+
+    if (q.type === 'multiple_choice') {
+      q.options.forEach(function(opt) {
+        var inputId = q.id + '_' + opt.replace(/\s+/g, '_').toLowerCase();
+        formHtml += '<label class="option-label" for="' + inputId + '">';
+        formHtml += '<input type="radio" id="' + inputId + '" name="' + q.id + '" value="' + opt + '" required>';
+        formHtml += '<span class="option-text">' + opt + '</span>';
+        formHtml += '</label>';
+      });
+    } else if (q.type === 'free_response') {
+      formHtml += '<textarea name="' + q.id + '" rows="2" placeholder="Type your answer here..."></textarea>';
+    }
+
+    formHtml += '</div>';
+  });
+  document.getElementById('demo-form').innerHTML = formHtml;
+
+  // Handle demographics submit
+  document.getElementById('demo-btn').addEventListener('click', function() {
+    var form = document.getElementById('demo-form');
+
+    // Validate multiple choice
+    var allAnswered = true;
+    DEMOGRAPHICS.forEach(function(q) {
+      if (q.type === 'multiple_choice') {
+        if (!form.querySelector('input[name="' + q.id + '"]:checked')) allAnswered = false;
+      }
+    });
+    if (!allAnswered) {
+      alert('Please answer all multiple choice questions.');
+      return;
+    }
+
+    // Log each demographic response
+    DEMOGRAPHICS.forEach(function(q) {
+      var response = '';
+      if (q.type === 'multiple_choice') {
+        var sel = form.querySelector('input[name="' + q.id + '"]:checked');
+        response = sel ? sel.value : '';
+      } else if (q.type === 'free_response') {
+        response = form.querySelector('textarea[name="' + q.id + '"]').value.trim();
+      }
+
+      var payload = {
+        timestamp: new Date().toISOString(),
+        event_type: 'demographic',
+        prolific_id: pid,
+        assigned_condition: condition.label,
+        question_id: q.id,
+        question_text: q.text,
+        response: response,
+        extra: ''
+      };
+      navigator.sendBeacon(SHEETS_WEBHOOK_URL, JSON.stringify(payload));
+    });
+
+    // Log study start
+    var startPayload = {
       timestamp: new Date().toISOString(),
       event_type: 'study_start',
       prolific_id: pid,
@@ -190,13 +334,9 @@ body {
       response: '',
       extra: ''
     };
-    if (SHEETS_WEBHOOK_URL && SHEETS_WEBHOOK_URL !== 'YOUR_APPS_SCRIPT_URL_HERE') {
-      navigator.sendBeacon(SHEETS_WEBHOOK_URL, JSON.stringify(payload));
-    } else {
-      console.log('[SpeechSpectrum log]', payload);
-    }
+    navigator.sendBeacon(SHEETS_WEBHOOK_URL, JSON.stringify(startPayload));
 
-    // Store PID in sessionStorage so destination pages can read it
+    // Store PID in sessionStorage
     sessionStorage.setItem('ss_prolific_id', pid);
     sessionStorage.setItem('ss_condition', condition.label);
 
@@ -205,12 +345,12 @@ body {
     window.location.href = condition.url + separator + 'pid=' + encodeURIComponent(pid);
   });
 
-  // If returning with a PID in URL, check for existing assignment
+  // Auto-fill PID from URL if provided by Prolific
   var urlParams = new URLSearchParams(window.location.search);
   var urlPid = urlParams.get('pid') || urlParams.get('PROLIFIC_PID');
   if (urlPid) {
-    input.value = urlPid;
-    btn.disabled = false;
+    pidInput.value = urlPid;
+    pidBtn.disabled = false;
   }
 })();
 </script>
