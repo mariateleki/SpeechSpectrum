@@ -139,9 +139,9 @@ body {
     <div class="section-title">Interactive Demo</div>
     <p style="color: #6B7280; margin: 0 0 16px; font-size: 0.95rem;">Click between all four transcription styles for each domain:</p>
     <div class="demo-buttons">
-      <a class="btn-demo" href="./demo.html#legal/0">Legal</a>
-      <a class="btn-demo" href="./demo.html#medical/0">Medical</a>
-      <a class="btn-demo" href="./demo.html#business/0">Business</a>
+      <a class="btn-demo" href="./demo.html#TranscrA/0">TranscrA</a>
+      <a class="btn-demo" href="./demo.html#TranscrB/0">TranscrB</a>
+      <a class="btn-demo" href="./demo.html#TranscrC/0">TranscrC</a>
     </div>
   </div>
 
@@ -150,32 +150,32 @@ body {
     <p style="color: #6B7280; margin: 0 0 16px; font-size: 0.95rem;">Each button opens a single transcript version with no other UI.</p>
 
     <div class="domain-card">
-      <h3>Legal</h3>
+      <h3>TranscrA</h3>
       <div class="style-buttons">
-        <a class="btn-style" href="./standalone/legal-verbatim.html">Verbatim</a>
-        <a class="btn-style" href="./standalone/legal-non-verbatim.html">Non-Verbatim</a>
-        <a class="btn-style" href="./standalone/legal-enhanced.html">Enhanced</a>
-        <a class="btn-style" href="./standalone/legal-bullet-points.html">Bullet Points</a>
+        <a class="btn-style" href="./standalone/TranscrA-verbatim.html">Verbatim</a>
+        <a class="btn-style" href="./standalone/TranscrA-non-verbatim.html">Non-Verbatim</a>
+        <a class="btn-style" href="./standalone/TranscrA-enhanced.html">Enhanced</a>
+        <a class="btn-style" href="./standalone/TranscrA-bullet-points.html">Bullet Points</a>
       </div>
     </div>
 
     <div class="domain-card">
-      <h3>Medical</h3>
+      <h3>TranscrB</h3>
       <div class="style-buttons">
-        <a class="btn-style" href="./standalone/medical-verbatim.html">Verbatim</a>
-        <a class="btn-style" href="./standalone/medical-non-verbatim.html">Non-Verbatim</a>
-        <a class="btn-style" href="./standalone/medical-enhanced.html">Enhanced</a>
-        <a class="btn-style" href="./standalone/medical-bullet-points.html">Bullet Points</a>
+        <a class="btn-style" href="./standalone/TranscrB-verbatim.html">Verbatim</a>
+        <a class="btn-style" href="./standalone/TranscrB-non-verbatim.html">Non-Verbatim</a>
+        <a class="btn-style" href="./standalone/TranscrB-enhanced.html">Enhanced</a>
+        <a class="btn-style" href="./standalone/TranscrB-bullet-points.html">Bullet Points</a>
       </div>
     </div>
 
     <div class="domain-card">
-      <h3>Business</h3>
+      <h3>TranscrC</h3>
       <div class="style-buttons">
-        <a class="btn-style" href="./standalone/business-verbatim.html">Verbatim</a>
-        <a class="btn-style" href="./standalone/business-non-verbatim.html">Non-Verbatim</a>
-        <a class="btn-style" href="./standalone/business-enhanced.html">Enhanced</a>
-        <a class="btn-style" href="./standalone/business-bullet-points.html">Bullet Points</a>
+        <a class="btn-style" href="./standalone/TranscrC-verbatim.html">Verbatim</a>
+        <a class="btn-style" href="./standalone/TranscrC-non-verbatim.html">Non-Verbatim</a>
+        <a class="btn-style" href="./standalone/TranscrC-enhanced.html">Enhanced</a>
+        <a class="btn-style" href="./standalone/TranscrC-bullet-points.html">Bullet Points</a>
       </div>
     </div>
   </div>
@@ -192,19 +192,19 @@ document.getElementById('test-btn').addEventListener('click', function(e) {
   var pid = 'TEST' + Math.random().toString(36).substring(2, 10);
   sessionStorage.setItem('ss_prolific_id', pid);
   var conditions = [
-    './standalone/legal-verbatim.html','./standalone/legal-non-verbatim.html',
-    './standalone/legal-enhanced.html','./standalone/legal-bullet-points.html',
-    './standalone/medical-verbatim.html','./standalone/medical-non-verbatim.html',
-    './standalone/medical-enhanced.html','./standalone/medical-bullet-points.html',
-    './standalone/business-verbatim.html','./standalone/business-non-verbatim.html',
-    './standalone/business-enhanced.html','./standalone/business-bullet-points.html',
-    './demo.html#legal/0','./demo.html#medical/0','./demo.html#business/0'
+    './standalone/TranscrA-verbatim.html','./standalone/TranscrA-non-verbatim.html',
+    './standalone/TranscrA-enhanced.html','./standalone/TranscrA-bullet-points.html',
+    './standalone/TranscrB-verbatim.html','./standalone/TranscrB-non-verbatim.html',
+    './standalone/TranscrB-enhanced.html','./standalone/TranscrB-bullet-points.html',
+    './standalone/TranscrC-verbatim.html','./standalone/TranscrC-non-verbatim.html',
+    './standalone/TranscrC-enhanced.html','./standalone/TranscrC-bullet-points.html',
+    './demo.html#TranscrA/0','./demo.html#TranscrB/0','./demo.html#TranscrC/0'
   ];
   var labels = [
-    'legal-verbatim','legal-non-verbatim','legal-enhanced','legal-bullet-points',
-    'medical-verbatim','medical-non-verbatim','medical-enhanced','medical-bullet-points',
-    'business-verbatim','business-non-verbatim','business-enhanced','business-bullet-points',
-    'demo-legal','demo-medical','demo-business'
+    'TranscrA-verbatim','TranscrA-non-verbatim','TranscrA-enhanced','TranscrA-bullet-points',
+    'TranscrB-verbatim','TranscrB-non-verbatim','TranscrB-enhanced','TranscrB-bullet-points',
+    'TranscrC-verbatim','TranscrC-non-verbatim','TranscrC-enhanced','TranscrC-bullet-points',
+    'demo-TranscrA','demo-TranscrB','demo-TranscrC'
   ];
   var i = Math.floor(Math.random() * conditions.length);
   sessionStorage.setItem('ss_condition', labels[i]);

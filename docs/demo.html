@@ -298,7 +298,7 @@ textarea::placeholder {
 <script src="./survey.js"></script>
 <script>
 (function() {
-  var domains = ['legal', 'medical', 'business'];
+  var domains = ['TranscrA', 'TranscrB', 'TranscrC'];
   var styleNames = ['Verbatim', 'Non-Verbatim', 'Enhanced', 'Bullet Points'];
   var activeColor = '#4F46E5';
   var inactiveColor = '#D1D5DB';
@@ -309,11 +309,11 @@ textarea::placeholder {
   var lastStyle = null;
 
   function parseHash() {
-    var hash = location.hash.replace('#', '') || 'legal/0';
+    var hash = location.hash.replace('#', '') || 'TranscrA/0';
     var parts = hash.split('/');
     var domain = parts[0];
     var style = parseInt(parts[1], 10) || 0;
-    if (domains.indexOf(domain) === -1) domain = 'legal';
+    if (domains.indexOf(domain) === -1) domain = 'TranscrA';
     if (style < 0 || style > 3) style = 0;
     return { domain: domain, style: style };
   }
