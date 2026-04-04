@@ -776,7 +776,11 @@ textarea::placeholder {
     html += '<p class="question-text"><span class="question-num">' + (qIdx + 1) + '.</span> ' + q.text + '</p>';
 
     if (q.type === 'multiple_choice') {
-      html += '<p class="highlight-instruction">Highlight the relevant information in the transcript that you used to answer this question. Click a highlight to remove it.</p>';
+      if (isDemo) {
+        html += '<p class="highlight-instruction">Highlight the relevant information you used to answer this question — whether that\'s from one version or across multiple versions. Click a highlight to remove it.</p>';
+      } else {
+        html += '<p class="highlight-instruction">Highlight the relevant information in the transcript that you used to answer this question. Click a highlight to remove it.</p>';
+      }
 
       var opts = q.options.slice();
       opts.push('Not enough information to answer this question');
