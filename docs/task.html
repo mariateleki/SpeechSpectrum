@@ -562,7 +562,7 @@ textarea::placeholder {
       </div>
 
       <h2>Example</h2>
-      <p>If the question asks "How clear is this transcript?" and you see relevant text, highlight it like this:</p>
+      <p>If the question asks "What did the witness see the blue car do?", you would highlight the relevant part like this:</p>
       <div class="tutorial-sample">
         I was driving to work when I saw <mark>a blue sedan speed through the intersection without stopping at the red light</mark>. Then there was a loud crash.
       </div>
@@ -1285,6 +1285,23 @@ textarea::placeholder {
     var activeColor = '#4F46E5';
     var inactiveColor = '#D1D5DB';
     var visitedColor = '#818CF8';
+    // Store highlights per style: exploreHighlights[styleIdx] = [{ text }, ...]
+    var exploreHighlights = { 0: [], 1: [], 2: [], 3: [] };
+
+    function saveExploreHighlights() {
+      var marks = document.getElementById('explore-text-content').querySelectorAll('mark');
+      var arr = [];
+      marks.forEach(function(m) { arr.push({ text: m.textContent }); });
+      exploreHighlights[currentExploreIdx] = arr;
+    }
+
+    function restoreExploreHighlights(idx) {
+      var card = document.getElementById('explore-text-content');
+      var hlArr = exploreHighlights[idx] || [];
+      hlArr.forEach(function(h) {
+        applyOneHighlight(card, h.text);
+      });
+    }
 
     // Show first style
     document.getElementById('explore-text-content').innerHTML = practiceContent[0];
@@ -1364,50 +1381,61 @@ textarea::placeholder {
       (function(idx) {
         var handler = function(e) {
           e.preventDefault();
+          // Save highlights from current style before switching
+          saveExploreHighlights();
           if (!visited[idx]) {
             visited[idx] = true;
             visitCount++;
           }
+          currentExploreIdx = idx;
           document.getElementById('explore-text-content').innerHTML = practiceContent[idx];
+          // Restore highlights for the new style
+          restoreExploreHighlights(idx);
           updateExploreUI(idx);
         };
         document.getElementById('explore-circle' + idx).addEventListener('click', handler);
         document.getElementById('explore-label' + idx).addEventListener('click', handler);
       })(i);
     }
-  }
 
-  // Explore → Start study
-  document.getElementById('btn-begin-task').addEventListener('click', function() {
-    // Validate before proceeding
-    var progressEl = document.getElementById('explore-progress');
-    var answered = document.querySelector('input[name="practice-q"]:checked');
-    var hasHighlight = document.getElementById('explore-text-content').querySelectorAll('mark').length > 0;
+    // Explore → Start study
+    document.getElementById('btn-begin-task').addEventListener('click', function() {
+      // Validate before proceeding
+      var progressEl = document.getElementById('explore-progress');
+      var answered = document.querySelector('input[name="practice-q"]:checked');
+      // Save current highlights before checking
+      saveExploreHighlights();
+      // Check for highlights across ALL styles
+      var hasHighlight = false;
+      for (var si = 0; si < 4; si++) {
+        if (exploreHighlights[si] && exploreHighlights[si].length > 0) { hasHighlight = true; break; }
+      }
 
-    var valid = true;
+      var valid = true;
 
-    // Check all 4 visited
-    if (progressEl.textContent.indexOf('4 of 4') === -1) {
-      progressEl.style.color = '#DC2626';
-      progressEl.style.fontWeight = '600';
-      valid = false;
-    }
-    if (!answered || !hasHighlight) {
-      document.getElementById('explore-error').style.display = 'block';
-      valid = false;
-    }
-    if (!valid) return;
+      // Check all 4 visited
+      if (progressEl.textContent.indexOf('4 of 4') === -1) {
+        progressEl.style.color = '#DC2626';
+        progressEl.style.fontWeight = '600';
+        valid = false;
+      }
+      if (!answered || !hasHighlight) {
+        document.getElementById('explore-error').style.display = 'block';
+        valid = false;
+      }
+      if (!valid) return;
     // Log practice response
     logToSheets('practice_response', {
       question_id: 'practice',
       response: answered.value,
       extra: JSON.stringify({ correct: answered.value === 'Thursday' })
     });
-    document.getElementById('demo-explore').style.display = 'none';
-    document.getElementById('task-area').style.display = 'block';
-    studyStartTime = Date.now();
-    loadStep(currentStep);
-  });
+      document.getElementById('demo-explore').style.display = 'none';
+      document.getElementById('task-area').style.display = 'block';
+      studyStartTime = Date.now();
+      loadStep(currentStep);
+    });
+  }
 
   // Update loadStep to show debrief on completion
   var origLoadStep = loadStep;
