@@ -124,11 +124,15 @@ var SHEETS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxby0V4A5pWc4V
     // Hide survey side in view-only mode
     var surveyEl = document.querySelector('.survey-side');
     if (surveyEl) surveyEl.style.display = 'none';
-    // Make transcript full width
+    // Constrain transcript to readable width
+    var layoutEl = document.querySelector('.page-layout');
+    if (layoutEl) layoutEl.style.maxWidth = '800px';
     var transcriptEl = document.querySelector('.transcript-side');
-    if (transcriptEl) transcriptEl.style.flex = 'none';
-    // Hide instructions banner
+    if (transcriptEl) { transcriptEl.style.flex = 'none'; transcriptEl.style.width = '100%'; }
+    // Hide instructions banner and column header
     var instrEl = document.querySelector('.instructions');
     if (instrEl) instrEl.style.display = 'none';
+    var colHeader = document.querySelector('.column-header');
+    if (colHeader) colHeader.style.display = 'none';
   }
 })();
