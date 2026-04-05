@@ -321,7 +321,7 @@ textarea::placeholder {
   function render() {
     var state = parseHash();
     var now = Date.now();
-    var domainName = state.domain.charAt(0).toUpperCase() + state.domain.slice(1);
+    var domainName = state.domain.replace('Transcr', 'Transcript ');
 
     // Log duration for the previous style before switching
     if (lastDomain !== null && typeof window.ssLog === 'function') {
