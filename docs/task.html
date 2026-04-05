@@ -14,6 +14,10 @@
 }
 body {
   margin: 0;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
   padding: 32px 24px;
   font-family: 'Inter', sans-serif;
   background-color: #F9FAFB;
@@ -107,6 +111,18 @@ body {
 }
 .card p {
   margin: 0;
+}
+#text-content, #explore-text-content {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+textarea, input {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
 }
 
 /* Arrow nav for demo condition */
@@ -1231,6 +1247,29 @@ textarea::placeholder {
       setupHighlightListener();
     }
   };
+
+  // Block copy on transcript text
+  document.addEventListener('copy', function(e) {
+    var sel = window.getSelection();
+    if (!sel || !sel.rangeCount) return;
+    var range = sel.getRangeAt(0);
+    var textContent = document.getElementById('text-content');
+    var exploreContent = document.getElementById('explore-text-content');
+    if ((textContent && textContent.contains(range.commonAncestorContainer)) ||
+        (exploreContent && exploreContent.contains(range.commonAncestorContainer))) {
+      e.preventDefault();
+    }
+  });
+
+  // Also block right-click context menu on transcripts
+  document.addEventListener('contextmenu', function(e) {
+    var textContent = document.getElementById('text-content');
+    var exploreContent = document.getElementById('explore-text-content');
+    if ((textContent && textContent.contains(e.target)) ||
+        (exploreContent && exploreContent.contains(e.target))) {
+      e.preventDefault();
+    }
+  });
 
   // Bug report handler
   document.getElementById('bug-send-btn').addEventListener('click', function() {
