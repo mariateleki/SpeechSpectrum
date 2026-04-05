@@ -143,6 +143,105 @@ body {
     <p style="color: #6B7280; margin: 0 0 12px; font-size: 0.85rem;">Skip demographics and jump straight into the task with a TEST Prolific ID. Use these to preview the participant experience.</p>
     <a class="btn-style" href="#" id="test-btn" style="margin-right: 8px;">Test Random Condition</a>
     <a class="btn-style" href="#" id="test-demo-btn">Test Demo Condition</a>
+
+    <p style="color: #9CA3AF; margin: 28px 0 8px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;">Study Design</p>
+
+    <div class="domain-card" style="padding: 28px;">
+      <h3 style="margin-top:0;">Counterbalancing & Randomization</h3>
+
+      <!-- Flow diagram -->
+      <svg viewBox="0 0 800 420" style="width:100%; max-width:800px; margin: 0 auto 24px; display:block;" xmlns="http://www.w3.org/2000/svg">
+        <!-- Participant entry -->
+        <rect x="300" y="10" width="200" height="40" rx="8" fill="#4F46E5" />
+        <text x="400" y="35" text-anchor="middle" fill="#fff" font-size="13" font-weight="600" font-family="Inter,sans-serif">Participant enters</text>
+
+        <line x1="400" y1="50" x2="400" y2="75" stroke="#D1D5DB" stroke-width="2" />
+
+        <!-- Random assignment -->
+        <rect x="250" y="75" width="300" height="36" rx="8" fill="#EEF2FF" stroke="#C7D2FE" stroke-width="1.5" />
+        <text x="400" y="98" text-anchor="middle" fill="#4F46E5" font-size="12" font-weight="600" font-family="Inter,sans-serif">Random assignment to 1 of 5 conditions</text>
+
+        <!-- Branches -->
+        <line x1="400" y1="111" x2="400" y2="130" stroke="#D1D5DB" stroke-width="2" />
+        <line x1="80" y1="130" x2="720" y2="130" stroke="#D1D5DB" stroke-width="2" />
+
+        <!-- 5 condition boxes -->
+        <line x1="80" y1="130" x2="80" y2="150" stroke="#D1D5DB" stroke-width="2" />
+        <rect x="20" y="150" width="120" height="32" rx="6" fill="#fff" stroke="#C7D2FE" stroke-width="1.5" />
+        <text x="80" y="170" text-anchor="middle" fill="#374151" font-size="11" font-weight="500" font-family="Inter,sans-serif">Verbatim</text>
+
+        <line x1="240" y1="130" x2="240" y2="150" stroke="#D1D5DB" stroke-width="2" />
+        <rect x="170" y="150" width="140" height="32" rx="6" fill="#fff" stroke="#C7D2FE" stroke-width="1.5" />
+        <text x="240" y="170" text-anchor="middle" fill="#374151" font-size="11" font-weight="500" font-family="Inter,sans-serif">Non-Verbatim</text>
+
+        <line x1="400" y1="130" x2="400" y2="150" stroke="#D1D5DB" stroke-width="2" />
+        <rect x="340" y="150" width="120" height="32" rx="6" fill="#fff" stroke="#C7D2FE" stroke-width="1.5" />
+        <text x="400" y="170" text-anchor="middle" fill="#374151" font-size="11" font-weight="500" font-family="Inter,sans-serif">Enhanced</text>
+
+        <line x1="560" y1="130" x2="560" y2="150" stroke="#D1D5DB" stroke-width="2" />
+        <rect x="490" y="150" width="140" height="32" rx="6" fill="#fff" stroke="#C7D2FE" stroke-width="1.5" />
+        <text x="560" y="170" text-anchor="middle" fill="#374151" font-size="11" font-weight="500" font-family="Inter,sans-serif">Bullet Points</text>
+
+        <line x1="720" y1="130" x2="720" y2="150" stroke="#D1D5DB" stroke-width="2" />
+        <rect x="640" y="150" width="160" height="32" rx="6" fill="#4F46E5" stroke="#4F46E5" stroke-width="1.5" />
+        <text x="720" y="170" text-anchor="middle" fill="#fff" font-size="11" font-weight="600" font-family="Inter,sans-serif">SpeechSpectrum Demo</text>
+
+        <!-- Converge -->
+        <line x1="80" y1="182" x2="80" y2="210" stroke="#D1D5DB" stroke-width="2" />
+        <line x1="240" y1="182" x2="240" y2="210" stroke="#D1D5DB" stroke-width="2" />
+        <line x1="400" y1="182" x2="400" y2="210" stroke="#D1D5DB" stroke-width="2" />
+        <line x1="560" y1="182" x2="560" y2="210" stroke="#D1D5DB" stroke-width="2" />
+        <line x1="720" y1="182" x2="720" y2="210" stroke="#D1D5DB" stroke-width="2" />
+        <line x1="80" y1="210" x2="720" y2="210" stroke="#D1D5DB" stroke-width="2" />
+        <line x1="400" y1="210" x2="400" y2="230" stroke="#D1D5DB" stroke-width="2" />
+
+        <!-- Randomized transcript order -->
+        <rect x="200" y="230" width="400" height="36" rx="8" fill="#EEF2FF" stroke="#C7D2FE" stroke-width="1.5" />
+        <text x="400" y="253" text-anchor="middle" fill="#4F46E5" font-size="12" font-weight="600" font-family="Inter,sans-serif">Randomized transcript order (A, B, C)</text>
+
+        <line x1="400" y1="266" x2="400" y2="285" stroke="#D1D5DB" stroke-width="2" />
+
+        <!-- 3 transcripts -->
+        <line x1="160" y1="285" x2="640" y2="285" stroke="#D1D5DB" stroke-width="2" />
+
+        <line x1="160" y1="285" x2="160" y2="305" stroke="#D1D5DB" stroke-width="2" />
+        <rect x="90" y="305" width="140" height="50" rx="8" fill="#fff" stroke="#E5E7EB" stroke-width="1.5" />
+        <text x="160" y="325" text-anchor="middle" fill="#374151" font-size="11" font-weight="600" font-family="Inter,sans-serif">Transcript ?</text>
+        <text x="160" y="345" text-anchor="middle" fill="#9CA3AF" font-size="10" font-family="Inter,sans-serif">+ survey (Q order shuffled)</text>
+
+        <line x1="400" y1="285" x2="400" y2="305" stroke="#D1D5DB" stroke-width="2" />
+        <rect x="330" y="305" width="140" height="50" rx="8" fill="#fff" stroke="#E5E7EB" stroke-width="1.5" />
+        <text x="400" y="325" text-anchor="middle" fill="#374151" font-size="11" font-weight="600" font-family="Inter,sans-serif">Transcript ?</text>
+        <text x="400" y="345" text-anchor="middle" fill="#9CA3AF" font-size="10" font-family="Inter,sans-serif">+ survey (Q order shuffled)</text>
+
+        <line x1="640" y1="285" x2="640" y2="305" stroke="#D1D5DB" stroke-width="2" />
+        <rect x="570" y="305" width="140" height="50" rx="8" fill="#fff" stroke="#E5E7EB" stroke-width="1.5" />
+        <text x="640" y="325" text-anchor="middle" fill="#374151" font-size="11" font-weight="600" font-family="Inter,sans-serif">Transcript ?</text>
+        <text x="640" y="345" text-anchor="middle" fill="#9CA3AF" font-size="10" font-family="Inter,sans-serif">+ survey (Q order shuffled)</text>
+
+        <!-- Arrows between transcripts -->
+        <text x="275" y="335" text-anchor="middle" fill="#D1D5DB" font-size="18" font-family="Inter,sans-serif">&rarr;</text>
+        <text x="515" y="335" text-anchor="middle" fill="#D1D5DB" font-size="18" font-family="Inter,sans-serif">&rarr;</text>
+
+        <!-- Converge to end -->
+        <line x1="160" y1="355" x2="160" y2="375" stroke="#D1D5DB" stroke-width="2" />
+        <line x1="400" y1="355" x2="400" y2="375" stroke="#D1D5DB" stroke-width="2" />
+        <line x1="640" y1="355" x2="640" y2="375" stroke="#D1D5DB" stroke-width="2" />
+        <line x1="160" y1="375" x2="640" y2="375" stroke="#D1D5DB" stroke-width="2" />
+        <line x1="400" y1="375" x2="400" y2="395" stroke="#D1D5DB" stroke-width="2" />
+
+        <rect x="300" y="395" width="200" height="30" rx="6" fill="#059669" />
+        <text x="400" y="415" text-anchor="middle" fill="#fff" font-size="12" font-weight="600" font-family="Inter,sans-serif">Complete</text>
+      </svg>
+
+      <p style="color: #374151; font-size: 0.9rem; line-height: 1.7; margin: 0 0 12px;"><strong>Condition assignment:</strong> Each participant is randomly assigned to one of 5 between-subjects conditions (Verbatim, Non-Verbatim, Enhanced, Bullet Points, or SpeechSpectrum Demo). The condition determines how transcripts are presented throughout the entire session.</p>
+
+      <p style="color: #374151; font-size: 0.9rem; line-height: 1.7; margin: 0 0 12px;"><strong>Transcript order:</strong> All participants see all 3 transcripts (A, B, C) in a randomized order (Fisher-Yates shuffle). This is a within-subjects factor — every participant evaluates every transcript.</p>
+
+      <p style="color: #374151; font-size: 0.9rem; line-height: 1.7; margin: 0 0 12px;"><strong>Question order:</strong> Multiple-choice questions are reshuffled for each transcript. Free-response questions always appear at the end. Question order is logged per transcript.</p>
+
+      <p style="color: #374151; font-size: 0.9rem; line-height: 1.7; margin: 0;"><strong>What gets logged:</strong> Condition assignment, transcript order, question order, per-question timing, per-transcript timing, total session time, style switch events with timing (demo condition), highlighted text per question with style attribution, all survey responses, and demographic data.</p>
+    </div>
   </div>
 <script>
 document.getElementById('test-btn').addEventListener('click', function(e) {
@@ -181,18 +280,8 @@ document.getElementById('test-demo-btn').addEventListener('click', function(e) {
 </script>
 
   <div class="section">
-    <div class="section-title">Interactive Demo</div>
-    <p style="color: #6B7280; margin: 0 0 16px; font-size: 0.95rem;">Click between all four transcription styles for each domain:</p>
-    <div class="demo-buttons">
-      <a class="btn-demo" href="./demo.html?view=true#TranscrA/0">Transcript A</a>
-      <a class="btn-demo" href="./demo.html?view=true#TranscrB/0">Transcript B</a>
-      <a class="btn-demo" href="./demo.html?view=true#TranscrC/0">Transcript C</a>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">Standalone Transcripts</div>
-    <p style="color: #6B7280; margin: 0 0 16px; font-size: 0.95rem;">Each button opens a single transcript version with no other UI.</p>
+    <div class="section-title">Transcripts</div>
+    <p style="color: #6B7280; margin: 0 0 16px; font-size: 0.95rem;">View each transcript in a single style, or use the SpeechSpectrum demo to switch between all four.</p>
 
     <div class="domain-card">
       <h3>Transcript A</h3>
@@ -201,6 +290,7 @@ document.getElementById('test-demo-btn').addEventListener('click', function(e) {
         <a class="btn-style" href="./standalone/TranscrA-non-verbatim.html?view=true">Non-Verbatim</a>
         <a class="btn-style" href="./standalone/TranscrA-enhanced.html?view=true">Enhanced</a>
         <a class="btn-style" href="./standalone/TranscrA-bullet-points.html?view=true">Bullet Points</a>
+        <a class="btn-demo" href="./demo.html?view=true#TranscrA/0" style="margin-left: 8px;">SpeechSpectrum Demo</a>
       </div>
     </div>
 
@@ -211,6 +301,7 @@ document.getElementById('test-demo-btn').addEventListener('click', function(e) {
         <a class="btn-style" href="./standalone/TranscrB-non-verbatim.html?view=true">Non-Verbatim</a>
         <a class="btn-style" href="./standalone/TranscrB-enhanced.html?view=true">Enhanced</a>
         <a class="btn-style" href="./standalone/TranscrB-bullet-points.html?view=true">Bullet Points</a>
+        <a class="btn-demo" href="./demo.html?view=true#TranscrB/0" style="margin-left: 8px;">SpeechSpectrum Demo</a>
       </div>
     </div>
 
@@ -221,6 +312,7 @@ document.getElementById('test-demo-btn').addEventListener('click', function(e) {
         <a class="btn-style" href="./standalone/TranscrC-non-verbatim.html?view=true">Non-Verbatim</a>
         <a class="btn-style" href="./standalone/TranscrC-enhanced.html?view=true">Enhanced</a>
         <a class="btn-style" href="./standalone/TranscrC-bullet-points.html?view=true">Bullet Points</a>
+        <a class="btn-demo" href="./demo.html?view=true#TranscrC/0" style="margin-left: 8px;">SpeechSpectrum Demo</a>
       </div>
     </div>
   </div>
