@@ -112,10 +112,23 @@ var SHEETS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxby0V4A5pWc4V
     });
   }
 
-  // Auto-render if survey container exists
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() { renderSurvey('survey-container'); });
+  // Auto-render if survey container exists (skip in view-only mode)
+  var isViewOnly = new URLSearchParams(window.location.search).get('view') === 'true';
+  if (!isViewOnly) {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() { renderSurvey('survey-container'); });
+    } else {
+      renderSurvey('survey-container');
+    }
   } else {
-    renderSurvey('survey-container');
+    // Hide survey side in view-only mode
+    var surveyEl = document.querySelector('.survey-side');
+    if (surveyEl) surveyEl.style.display = 'none';
+    // Make transcript full width
+    var transcriptEl = document.querySelector('.transcript-side');
+    if (transcriptEl) transcriptEl.style.flex = 'none';
+    // Hide instructions banner
+    var instrEl = document.querySelector('.instructions');
+    if (instrEl) instrEl.style.display = 'none';
   }
 })();
