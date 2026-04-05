@@ -454,22 +454,24 @@ textarea::placeholder {
 }
 .tutorial-step {
   display: flex;
-  align-items: flex-start;
+  align-items: baseline;
   gap: 12px;
   margin-bottom: 16px;
 }
 .tutorial-step-num {
   background: #4F46E5;
   color: #fff;
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   font-weight: 600;
   flex-shrink: 0;
+  position: relative;
+  top: -1px;
   margin-top: 2px;
 }
 .btn-start-study {
