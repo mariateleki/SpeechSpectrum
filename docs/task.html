@@ -626,7 +626,7 @@ textarea::placeholder {
         <label class="option-label" for="practice-friday"><input type="radio" id="practice-friday" name="practice-q" value="Friday"> <span class="option-text">Friday</span></label>
       </div>
       <p class="validation-error" id="explore-error">Please explore all 4 versions, select an answer, and highlight the relevant text.</p>
-      <button class="btn-start-study" id="btn-begin-task" disabled>Begin the Study</button>
+      <button class="btn-start-study" id="btn-begin-task">Begin the Study</button>
     </div>
   </div>
 </div>
@@ -1266,14 +1266,14 @@ textarea::placeholder {
   // --- Demo explore screen ---
   // Practice transcript content (synthetic — speaker says "Thursday" then corrects to "Friday")
   var practiceContent = [
-    // Verbatim
+    // Verbatim — error is visible ("Thursday – no wait, not Thursday")
     '<p>So, um, I called the office and, and they said the appointment was on, uh, Thursday – no wait, not Thursday, it\'s on Friday. Friday at, at two o\'clock. And I, I asked if Dr. Peters was going to be there and they said, um, actually it\'s Dr. Peterson, not Peters. So yeah, Friday at two with, with Dr. Peterson.</p>',
-    // Non-Verbatim
-    '<p>I called the office and they said the appointment was on Thursday – no wait, not Thursday, it\'s on Friday. Friday at two o\'clock. I asked if Dr. Peters was going to be there and they said actually it\'s Dr. Peterson, not Peters. So Friday at two with Dr. Peterson.</p>',
-    // Enhanced
-    '<p>I called the office and confirmed the appointment is on Friday at 2:00 PM with Dr. Peterson. There was an initial mix-up about the day (Thursday was mentioned first) and the doctor\'s name (Peters vs. Peterson), but both were corrected during the call.</p>',
-    // Bullet Points
-    '<p>- Called the office to confirm the appointment.<br>- Appointment is on Friday at 2:00 PM.<br>- The doctor is Dr. Peterson.<br>- Initial errors were corrected during the call: Thursday → Friday, Dr. Peters → Dr. Peterson.</p>'
+    // Non-Verbatim — error is visible ("Thursday – no, it\'s on Friday")
+    '<p>I called the office and they said the appointment was on Thursday – no, it\'s on Friday. Friday at two o\'clock. I asked if Dr. Peters was going to be there and they said it\'s actually Dr. Peterson. So Friday at two with Dr. Peterson.</p>',
+    // Enhanced — error is NOT visible, only the corrected version
+    '<p>I called the office and confirmed the appointment is on Friday at 2:00 PM with Dr. Peterson.</p>',
+    // Bullet Points — error is NOT visible, only the corrected version
+    '<p>- Called the office to confirm the appointment.<br>- Appointment is on Friday at 2:00 PM.<br>- The doctor is Dr. Peterson.</p>'
   ];
 
   function setupExploreScreen() {
@@ -1338,10 +1338,11 @@ textarea::placeholder {
     }
 
     function validateExplore() {
-      var allVisited = visitCount >= 4;
-      var answered = document.querySelector('input[name="practice-q"]:checked');
-      var hasHighlight = document.getElementById('explore-text-content').querySelectorAll('mark').length > 0;
-      document.getElementById('btn-begin-task').disabled = !(allVisited && answered && hasHighlight);
+      // Clear red styling on progress when they visit more versions
+      if (visitCount >= 4) {
+        document.getElementById('explore-progress').style.color = '#059669';
+        document.getElementById('explore-progress').style.fontWeight = '600';
+      }
     }
 
     // Validate on radio change
@@ -1377,13 +1378,23 @@ textarea::placeholder {
   // Explore → Start study
   document.getElementById('btn-begin-task').addEventListener('click', function() {
     // Validate before proceeding
-    var allVisited = true;
+    var progressEl = document.getElementById('explore-progress');
     var answered = document.querySelector('input[name="practice-q"]:checked');
     var hasHighlight = document.getElementById('explore-text-content').querySelectorAll('mark').length > 0;
+
+    var valid = true;
+
+    // Check all 4 visited
+    if (progressEl.textContent.indexOf('4 of 4') === -1) {
+      progressEl.style.color = '#DC2626';
+      progressEl.style.fontWeight = '600';
+      valid = false;
+    }
     if (!answered || !hasHighlight) {
       document.getElementById('explore-error').style.display = 'block';
-      return;
+      valid = false;
     }
+    if (!valid) return;
     // Log practice response
     logToSheets('practice_response', {
       question_id: 'practice',
