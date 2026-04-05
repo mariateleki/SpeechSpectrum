@@ -270,7 +270,7 @@ textarea::placeholder {
 .bug-report-footer summary {
   cursor: pointer;
   color: #DC2626;
-  font-size: 0.85rem;
+  font-size: 1rem;
   font-weight: 600;
   user-select: none;
 }
@@ -278,22 +278,22 @@ textarea::placeholder {
   color: #B91C1C;
 }
 .bug-report-body {
-  margin-top: 10px;
-  max-width: 500px;
+  margin-top: 12px;
+  max-width: 600px;
 }
 .bug-report-body p {
   color: #991B1B;
-  font-size: 0.85rem;
-  margin: 0 0 8px;
+  font-size: 0.95rem;
+  margin: 0 0 10px;
 }
 .bug-send-btn {
-  padding: 8px 20px;
+  padding: 10px 24px;
   background: #DC2626;
   color: #fff;
   border: none;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  font-weight: 500;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
   font-family: 'Inter', sans-serif;
   cursor: pointer;
   margin-top: 8px;
@@ -1234,7 +1234,7 @@ textarea::placeholder {
   document.getElementById('bug-send-btn').addEventListener('click', function() {
     var bugText = document.getElementById('bug-text').value.trim();
     if (!bugText) return;
-    logToSheets('bug_report', { response: bugText });
+    logToSheets('bug_report', { question_id: 'bug', response: bugText });
     document.getElementById('bug-text').value = '';
     document.getElementById('bug-send-btn').style.display = 'none';
     document.getElementById('bug-thanks').style.display = 'block';
