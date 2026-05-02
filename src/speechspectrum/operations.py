@@ -2,7 +2,7 @@
 # and returns the model’s generated output.
 def call_openai(client, prompt, text):
   completion = client.chat.completions.create(
-    model="gpt-5.1",
+    model="gpt-5.5",
     messages=[
       {"role": "developer", "content": "You are an expert in linguistics."},
       {"role": "user", "content": prompt.replace("[TEXT]", text)}
@@ -28,7 +28,7 @@ def audio_to_verbatim(client, audio_file):
 # VERBATIM → NON-VERBATIM
 #     Convert a verbatim transcript into a clean, fluent version by removing disfluencies.
 #     This stage uses a specialized prompt and a configuration similar to that of DRES
-#     (see https://arxiv.org/pdf/2509.20321), but implemented with gpt-5.1 (newer model).
+#     (see https://arxiv.org/pdf/2509.20321), but implemented with gpt-5.5 (newer model).
 #
 #     Disfluency definitions and structural categories follow Shriberg’s framework:
 #       - Reparandum: the segment to be deleted
@@ -81,8 +81,10 @@ def verbatim_to_nonverbatim(client, text):
 #     Produce a clearer, more readable version of the cleaned transcript using a refinement-oriented prompt.
 #     This step aligns with established summarization research, and meets the needs
 #     of downstream users who expect high-quality output (e.g., customer requests).
-nonverbatim_to_enhanced_prompt = """Rewrite the following transcription it so it is clear, readable, and well-structured, retaining single paragraph formatting. \
-Enhance grammar, flow, and clarity.
+nonverbatim_to_enhanced_prompt = """Rewrite the following transcript as a clear, well-structured summary in prose. \
+Condense repetition, tangents, and back-and-forth exchanges, providing a summary of the transcript which is focused on the most important information. \
+
+Improve grammar, flow, and clarity. Output a single paragraph; no bullets, no headings.
 
 Here is the text: [TEXT]"""
 
@@ -95,7 +97,7 @@ def nonverbatim_to_enhanced(client, text):
 #     demand for rapid distillation of spoken content (e.g., industry use cases).
 #     Similar techniques to medical-scribe workflows such as generating SOAP-note style summaries.
 enhanced_to_bulletpoints_prompt = """Extract the key points from the following text. \
-Deliver them as clear, concise bullet points. Not necessarily atomic facts, but condensed bullet points. \
+Deliver them as clear, concise bullet points. Not necessarily atomic facts, but condensed bullet points, focusing on the most important information. \
 Do not add anything that isn’t explicitly stated.
 
 Here is the text: [TEXT]"""

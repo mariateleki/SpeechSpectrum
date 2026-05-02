@@ -293,13 +293,27 @@ textarea::placeholder {
   </div>
 </div>
 
-<script src="./content.js"></script>
 <script src="./questions.js"></script>
 <script src="./survey.js"></script>
 <script>
 (function() {
-  var domains = ['TranscrA', 'TranscrB', 'TranscrC'];
+  var domains = ['TranscrA', 'TranscrB', 'TranscrC', 'TranscrD'];
   var styleNames = ['Verbatim', 'Non-Verbatim', 'Enhanced', 'Bullet Points'];
+  var styleFiles = ['verbatim', 'non-verbatim', 'enhanced', 'bullet-points'];
+  var CONTENT = { TranscrA: [null,null,null,null], TranscrB: [null,null,null,null], TranscrC: [null,null,null,null], TranscrD: [null,null,null,null] };
+  var transcriptsReady = (function() {
+    var promises = [];
+    domains.forEach(function(d) {
+      styleFiles.forEach(function(name, i) {
+        promises.push(
+          fetch('./transcripts/' + d + '_' + name + '.txt')
+            .then(function(r) { return r.text(); })
+            .then(function(t) { CONTENT[d][i] = t; })
+        );
+      });
+    });
+    return Promise.all(promises);
+  })();
   var activeColor = '#4F46E5';
   var inactiveColor = '#D1D5DB';
 
@@ -380,7 +394,8 @@ textarea::placeholder {
   });
 
   window.addEventListener('hashchange', render);
-  render();
+  document.getElementById('text-content').innerHTML = '<p style="color:#9CA3AF;">Loading…</p>';
+  transcriptsReady.then(render);
 })();
 </script>
 </body>

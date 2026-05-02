@@ -21,11 +21,10 @@
     <div id="survey-container"></div>
   </div>
 </div>
-<script src="../content.js"></script>
 <script src="../questions.js"></script>
 <script src="../survey.js"></script>
 <script>
-  document.getElementById('text-content').innerHTML = CONTENT['TranscrB'][3];
+  fetch('../transcripts/TranscrB_bullet-points.txt').then(function(r){return r.text();}).then(function(t){document.getElementById('text-content').innerHTML=t;});
 </script>
 </body>
 </html>

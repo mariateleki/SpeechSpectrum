@@ -63,7 +63,7 @@ print("Bullet points:", MEDICAL_EXAMPLE["bullet-points"])
 ```
 ## 📂 Repository Structure
 
-- **`src/speechspectrum/`** — Source code for our Python package, using `gpt-4o-transcribe` (audio → verbatim) and `gpt-5.1` (downstream text transformations).  
+- **`src/speechspectrum/`** — Source code for our Python package, using `gpt-4o-transcribe` (audio → verbatim) and `gpt-5.5` (downstream text transformations).  
 - **`notebooks/SpeechSpectrum_Tool.ipynb`** — Shows end-to-end transcript pipeline with results used in the website + user study.
 - **`docs/`** — Static website served at <https://speechspectrum.org>.
 - **`notebooks/run_llm_experiment.ipynb`** — Executes the persona-based prompting study modeling preference distributions across fidelity levels.  

@@ -1,5 +1,11 @@
 const DEMOGRAPHICS = [
   {
+    id: "demo_consent_content",
+    type: "multiple_choice",
+    text: "Content notice: This study uses transcripts from real parole/pardon hearings. The material discusses serious crimes and may include references to violence, sexual assault, child endangerment, domestic abuse, and substance use. Do you consent to read this type of content?",
+    options: ["I consent and wish to continue", "I do not consent — exit the study"]
+  },
+  {
     id: "demo_age",
     type: "multiple_choice",
     text: "What is your age range?",
@@ -12,6 +18,22 @@ const DEMOGRAPHICS = [
     options: ["Male", "Female", "Non-binary", "Prefer not to say"]
   },
   {
+    id: "demo_race",
+    type: "multiple_choice",
+    text: "What is your race/ethnicity?",
+    options: [
+      "American Indian or Alaska Native",
+      "Asian",
+      "Black or African American",
+      "Hispanic or Latino",
+      "Native Hawaiian or Other Pacific Islander",
+      "White",
+      "Two or more races",
+      "Other",
+      "Prefer not to say"
+    ]
+  },
+  {
     id: "demo_education",
     type: "multiple_choice",
     text: "What is your highest level of education?",
@@ -20,8 +42,8 @@ const DEMOGRAPHICS = [
   {
     id: "demo_english",
     type: "multiple_choice",
-    text: "Is English your first language?",
-    options: ["Yes", "No"]
+    text: "How would you rate your English fluency?",
+    options: ["Native speaker", "Fluent (near-native)", "Advanced", "Intermediate", "Beginner"]
   },
   {
     id: "demo_transcription_exp",
@@ -31,7 +53,12 @@ const DEMOGRAPHICS = [
   },
   {
     id: "demo_industry",
-    type: "free_response",
-    text: "What industry or field do you work in?"
+    type: "multiple_choice",
+    text: "Which of these best describes your professional or academic background?",
+    options: [
+      "Speech technology (e.g., speech recognition, NLP, audio/voice tools)",
+      "Legal (e.g., law, court reporting, paralegal work)",
+      "None of the above"
+    ]
   }
 ];

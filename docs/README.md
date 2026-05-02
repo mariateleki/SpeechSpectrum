@@ -60,7 +60,13 @@ docs/
   index.html            # Hub page linking to everything
   demo.html             # Interactive SpeechSpectrum demo
   study.html            # Prolific study entry + demographics
-  content.js            # All transcript texts (edit texts here)
+  transcripts/          # All transcript texts — one .txt per (transcript, style)
+    TranscrA_verbatim.txt
+    TranscrA_non-verbatim.txt
+    TranscrA_enhanced.txt
+    TranscrA_bullet-points.txt
+    TranscrB_*.txt
+    TranscrC_*.txt
   questions.js          # Survey questions (edit questions here)
   demographics.js       # Demographic questions (edit here)
   survey.js             # Survey rendering + Google Sheets logging
@@ -83,4 +89,4 @@ docs/
 
 ## Editing Content
 
-All transcript texts live in `docs/content.js`. Edit that single file and both the interactive demo and all standalone pages update automatically. Survey questions are in `docs/questions.js` and demographics in `docs/demographics.js`.
+All transcript texts live in `docs/transcripts/` as plain `.txt` files — one file per `(transcript, style)` pair (e.g. `TranscrA_verbatim.txt`, `TranscrB_bullet-points.txt`). Edit a file and the interactive demo, the study task page, and the standalone pages all pick up the new content. Survey questions are in `docs/questions.js` and demographics in `docs/demographics.js`.

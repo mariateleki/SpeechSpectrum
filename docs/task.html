@@ -546,7 +546,29 @@ textarea::placeholder {
 </style>
 
 </head>
+<style>
+.exit-study-bar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+  background: #FEF2F2; border-bottom: 1px solid #FCA5A5;
+  color: #991B1B; font-size: 0.85rem; padding: 8px 16px;
+  display: flex; align-items: center; justify-content: center; gap: 14px;
+  font-family: 'Inter', sans-serif;
+}
+.exit-study-bar .msg { line-height: 1.3; }
+.exit-study-bar button {
+  background: #DC2626; color: #fff; border: none; border-radius: 6px;
+  padding: 6px 12px; font-size: 0.8rem; font-weight: 600;
+  font-family: 'Inter', sans-serif; cursor: pointer; flex-shrink: 0;
+}
+.exit-study-bar button:hover { background: #B91C1C; }
+body { padding-top: 44px; }
+</style>
 <body>
+
+<div class="exit-study-bar" id="exit-study-bar">
+  <span class="msg">⚠️ This study contains difficult content. You may exit at any time without affecting your standing on Prolific. Your data will not be used.</span>
+  <button id="exit-study-btn" type="button">Exit study</button>
+</div>
 
 <!-- Tutorial -->
 <div id="tutorial-area">
@@ -557,7 +579,7 @@ textarea::placeholder {
   <div class="tutorial-overlay">
     <div class="tutorial-card">
       <h2>What you'll do</h2>
-      <p>You'll read <strong>3 transcripts</strong> of spoken conversations. For each transcript, you'll answer a set of survey questions about it.</p>
+      <p>You'll read <strong>4 transcripts</strong> of spoken conversations. For each transcript, you'll answer a set of survey questions about it.</p>
 
       <h2>How to answer questions</h2>
       <div class="tutorial-step">
@@ -661,6 +683,7 @@ textarea::placeholder {
       <div class="progress-step" id="step-0"></div>
       <div class="progress-step" id="step-1"></div>
       <div class="progress-step" id="step-2"></div>
+      <div class="progress-step" id="step-3"></div>
     </div>
     <div class="progress-label" id="progress-label"></div>
   </div>
@@ -737,17 +760,53 @@ textarea::placeholder {
   </details>
 </footer>
 
-<script src="./content.js"></script>
 <script src="./questions.js"></script>
 <script>
 (function() {
+  var CONTENT = { TranscrA: [null,null,null,null], TranscrB: [null,null,null,null], TranscrC: [null,null,null,null], TranscrD: [null,null,null,null] };
+  var STYLE_FILE_NAMES = ['verbatim', 'non-verbatim', 'enhanced', 'bullet-points'];
+  function loadAllTranscripts() {
+    var keys = ['TranscrA', 'TranscrB', 'TranscrC', 'TranscrD'];
+    var promises = [];
+    keys.forEach(function(k) {
+      STYLE_FILE_NAMES.forEach(function(name, i) {
+        promises.push(
+          fetch('./transcripts/' + k + '_' + name + '.txt')
+            .then(function(r) { return r.text(); })
+            .then(function(t) { CONTENT[k][i] = t; })
+        );
+      });
+    });
+    return Promise.all(promises);
+  }
+
   var SHEETS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxby0V4A5pWc4VZGkJyVYBFx2OHJXDmIKOGaD6J4ePap51s1uWz-jHafIFYtJlJLu7Gbg/exec';
+
+  var transcriptsReady = loadAllTranscripts();
+
+  // Persistent exit-study button
+  document.getElementById('exit-study-btn').addEventListener('click', function() {
+    if (!confirm('Are you sure you want to exit the study? Your progress will not be saved and you can close this tab afterward.')) return;
+    try {
+      navigator.sendBeacon(SHEETS_WEBHOOK_URL, JSON.stringify({
+        timestamp: new Date().toISOString(),
+        event_type: 'study_exit',
+        prolific_id: sessionStorage.getItem('ss_prolific_id') || '',
+        assigned_condition: sessionStorage.getItem('ss_condition') || '',
+        question_id: '',
+        question_text: '',
+        response: 'user_exit_button',
+        extra: 'from_task_html'
+      }));
+    } catch (e) {}
+    document.body.innerHTML = '<div style="max-width:560px;margin:80px auto;padding:32px;font-family:Inter,sans-serif;text-align:center;"><h1 style="color:#111827;">You have exited the study</h1><p style="color:#6B7280;">Thank you for your time. You may now close this tab.</p></div>';
+  });
 
   // Read session data
   var pid = sessionStorage.getItem('ss_prolific_id') || new URLSearchParams(window.location.search).get('pid') || '';
   var conditionLabel = sessionStorage.getItem('ss_condition') || '';
   var style = conditionLabel.split(' / ')[0]; // e.g. "enhanced" from "enhanced / A,C,B"
-  var order = JSON.parse(sessionStorage.getItem('ss_transcript_order') || '["TranscrA","TranscrB","TranscrC"]');
+  var order = JSON.parse(sessionStorage.getItem('ss_transcript_order') || '["TranscrA","TranscrB","TranscrC","TranscrD"]');
   var currentStep = parseInt(sessionStorage.getItem('ss_current_step') || '0', 10);
 
   var isDemo = (style === 'demo');
@@ -1292,16 +1351,20 @@ textarea::placeholder {
 
   // Tutorial → next screen
   document.getElementById('btn-start-study').addEventListener('click', function() {
-    document.getElementById('tutorial-area').style.display = 'none';
-    if (isDemo) {
-      // Show explore screen with first transcript's content
-      document.getElementById('demo-explore').style.display = 'block';
-      setupExploreScreen();
-    } else {
-      document.getElementById('task-area').style.display = 'block';
-      studyStartTime = Date.now();
-      loadStep(currentStep);
-    }
+    var btn = this;
+    btn.disabled = true;
+    transcriptsReady.then(function() {
+      btn.disabled = false;
+      document.getElementById('tutorial-area').style.display = 'none';
+      if (isDemo) {
+        document.getElementById('demo-explore').style.display = 'block';
+        setupExploreScreen();
+      } else {
+        document.getElementById('task-area').style.display = 'block';
+        studyStartTime = Date.now();
+        loadStep(currentStep);
+      }
+    });
   });
 
   // --- Demo explore screen ---
@@ -1496,13 +1559,13 @@ textarea::placeholder {
     transcriptStartTime = Date.now();
 
     // Update progress bar
-    for (var p = 0; p < 3; p++) {
+    for (var p = 0; p < 4; p++) {
       var el = document.getElementById('step-' + p);
       el.className = 'progress-step';
       if (p < step) el.classList.add('done');
       if (p === step) el.classList.add('active');
     }
-    document.getElementById('progress-label').textContent = 'Transcript ' + (step + 1) + ' of 3';
+    document.getElementById('progress-label').textContent = 'Transcript ' + (step + 1) + ' of 4';
 
     // Load transcript content
     if (isDemo) {
