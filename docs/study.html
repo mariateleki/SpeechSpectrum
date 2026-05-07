@@ -548,7 +548,31 @@ body { padding-top: 44px; }
     // Show demographics step
     document.getElementById('step-pid').style.display = 'none';
     document.getElementById('step-demographics').style.display = 'block';
+
+    // Auto-fill demographics for TEST PIDs so internal testing skips quickly
+    if (pid.toUpperCase().indexOf('TEST') === 0) {
+      prefillTestDemographics();
+    }
   });
+
+  function prefillTestDemographics() {
+    DEMOGRAPHICS.forEach(function(q) {
+      var inputs = document.querySelectorAll('input[name="' + q.id + '"]');
+      // Skip the self-describe options when picking defaults to avoid extra typing
+      var pickable = [];
+      inputs.forEach(function(el) { if (!el.dataset.selfDescribe) pickable.push(el); });
+      if (!pickable.length) return;
+
+      if (q.type === 'multi_select' || q.type === 'multi_select_with_other') {
+        // Pick 1 random checkbox
+        var idx = Math.floor(Math.random() * pickable.length);
+        pickable[idx].checked = true;
+      } else {
+        var idx2 = Math.floor(Math.random() * pickable.length);
+        pickable[idx2].checked = true;
+      }
+    });
+  }
 
   // --- Step 2: Demographics ---
   function escapeHtml(s) {

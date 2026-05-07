@@ -1648,6 +1648,15 @@ body { padding-top: 44px; }
     container.innerHTML = html;
     document.getElementById('post-survey').style.display = 'block';
     window.scrollTo(0, 0);
+
+    // Auto-fill for TEST PIDs so internal testing skips quickly
+    if ((pid || '').toUpperCase().indexOf('TEST') === 0) {
+      for (var i = 0; i < order.length; i++) {
+        var radios = document.querySelectorAll('input[name="ps_realism_' + i + '"]');
+        if (radios.length) radios[Math.floor(Math.random() * radios.length)].checked = true;
+      }
+      document.getElementById('ps_last_transcript').value = '[TEST] Auto-filled comprehension response.';
+    }
   }
 
   document.getElementById('post-survey-btn').addEventListener('click', function() {
