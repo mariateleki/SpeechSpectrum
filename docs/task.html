@@ -738,13 +738,45 @@ body { padding-top: 44px; }
   <p>Your responses have been recorded. You may now return to Prolific and mark your submission as complete.</p>
 </div>
 
-<div class="debrief" id="debrief">
-  <h1>About This Study</h1>
-  <p>In this study, we investigated how different transcription styles affect people's ability to understand and evaluate spoken conversations. You were randomly assigned to one of five conditions: Verbatim, Non-Verbatim, Enhanced, Bullet Points, or an interactive tool (SpeechSpectrum) that lets you switch between all four.</p>
-  <p>We are interested in whether the way a transcript is formatted changes how people perceive its clarity, accuracy, and professionalism — and whether having access to multiple formats (via SpeechSpectrum) helps people answer evaluation questions more effectively.</p>
-  <p>Your highlights help us understand which parts of the transcript people rely on when forming their judgments, and how that differs across transcription styles.</p>
-  <p>If you have any questions about this research, please contact the research team through Prolific.</p>
-  <p class="debrief-thanks">Thank you for contributing to this research.</p>
+<!-- Page 5: Post-Survey -->
+<div class="debrief" id="post-survey" style="display:none;">
+  <h1>A Few Final Questions</h1>
+  <p>You have now completed all four transcripts. Before we finish, we have a few questions about the transcripts themselves.</p>
+  <form id="post-survey-form" style="margin-top:18px;">
+    <div id="post-survey-realism"></div>
+
+    <div class="demo-question" style="margin-top:24px;">
+      <p class="question-text">If any transcript felt unrealistic, what specifically felt off? <span style="color:#9CA3AF; font-weight:400;">(Optional)</span></p>
+      <textarea id="ps_realism_explanation" name="ps_realism_explanation" rows="3" placeholder="Optional — type here..."></textarea>
+    </div>
+
+    <div class="demo-question" style="margin-top:24px;">
+      <p class="question-text">Briefly describe what happened in the <strong>last transcript</strong> you read. <span style="color:#DC2626; font-weight:400;">(Required)</span></p>
+      <textarea id="ps_last_transcript" name="ps_last_transcript" rows="4" placeholder="Required — describe what happened..." required></textarea>
+    </div>
+  </form>
+  <button class="btn-primary" id="post-survey-btn" style="margin-top:18px; padding: 14px 28px; background:#4F46E5; color:#fff; border:none; border-radius:10px; font-size:1rem; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif;">Submit and Finish</button>
+</div>
+
+<!-- Page 6: Completion -->
+<div class="debrief" id="completion" style="display:none;">
+  <h1>Thank you for completing this study.</h1>
+  <p><strong>What this study was about:</strong> We were testing whether the format of a written transcript — how much detail it preserves from the original spoken interaction — affects how accurately people can answer questions about what happened in a conversation. This is part of a broader research project on designing better transcript interfaces for legal, clinical, and collaborative work settings.</p>
+
+  <div style="background:#EEF2FF; border:1.5px solid #C7D2FE; border-radius:10px; padding:16px 20px; margin:18px 0;">
+    <p style="margin:0 0 6px; color:#4F46E5; font-weight:600; font-size:0.9rem;">Your Prolific completion code:</p>
+    <p style="margin:0; font-family:'SFMono-Regular',Consolas,monospace; font-size:1.1rem; font-weight:700; color:#1F2937; letter-spacing:0.05em;" id="completion-code">[INSERT CODE]</p>
+    <p style="margin:8px 0 0; color:#6B7280; font-size:0.85rem;">Please copy this code and return to Prolific to submit your completion and receive payment.</p>
+  </div>
+
+  <p><strong>Support resources:</strong> If any of the content in this study was distressing, the following free and confidential resources are available:</p>
+  <ul style="margin: 6px 0 14px 22px;">
+    <li>National Domestic Violence Hotline: 1-800-799-7233 (24/7)</li>
+    <li>RAINN Sexual Assault Hotline: 1-800-656-4673 (24/7)</li>
+    <li>Crisis Text Line: Text HOME to 741741</li>
+  </ul>
+
+  <p><strong>Questions?</strong> Contact Anna Choi at <a href="mailto:sc2359@cornell.edu">sc2359@cornell.edu</a></p>
 </div>
 
 <!-- Bug report footer -->
@@ -1545,9 +1577,9 @@ body { padding-top: 44px; }
     if (step >= order.length) {
       var totalTimeSec = Math.round((Date.now() - studyStartTime) / 100) / 10;
       document.getElementById('task-area').style.display = 'none';
-      document.getElementById('thank-you').style.display = 'block';
-      document.getElementById('debrief').style.display = 'block';
+      var ty = document.getElementById('thank-you'); if (ty) ty.style.display = 'none';
       logToSheets('study_complete', { extra: JSON.stringify({ total_transcripts: order.length, total_time_seconds: totalTimeSec }) });
+      showPostSurvey();
       return;
     }
     // Show task area in case it was hidden
@@ -1594,6 +1626,80 @@ body { padding-top: 44px; }
     // Scroll to top
     window.scrollTo(0, 0);
   };
+
+  // --- Page 5: Post-Survey ---
+  function showPostSurvey() {
+    var container = document.getElementById('post-survey-realism');
+    var html = '';
+    order.forEach(function(t, i) {
+      var label = 'Transcript ' + (i + 1) + ' (' + t.replace('Transcr','') + ')';
+      html += '<div class="demo-question" style="margin-top:18px;">';
+      html += '<p class="question-text">How realistic did <strong>' + label + '</strong> feel as a record of an actual legal proceeding?</p>';
+      html += '<div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center; font-size:0.85rem;">';
+      var labels = ['1 — Does not feel real at all', '2', '3', '4', '5 — Feels authentic'];
+      labels.forEach(function(lbl, j) {
+        var id = 'ps_realism_' + i + '_' + (j + 1);
+        html += '<label class="option-label" style="display:inline-flex; padding:6px 10px;" for="' + id + '">';
+        html += '<input type="radio" id="' + id + '" name="ps_realism_' + i + '" value="' + (j + 1) + '" required> ';
+        html += '<span class="option-text">' + lbl + '</span></label>';
+      });
+      html += '</div></div>';
+    });
+    container.innerHTML = html;
+    document.getElementById('post-survey').style.display = 'block';
+    window.scrollTo(0, 0);
+  }
+
+  document.getElementById('post-survey-btn').addEventListener('click', function() {
+    var lastTextEl = document.getElementById('ps_last_transcript');
+    var lastText = lastTextEl.value.trim();
+    if (!lastText) {
+      alert('Please briefly describe what happened in the last transcript you read.');
+      lastTextEl.focus();
+      return;
+    }
+    // Validate realism ratings (one per transcript)
+    for (var i = 0; i < order.length; i++) {
+      if (!document.querySelector('input[name="ps_realism_' + i + '"]:checked')) {
+        alert('Please rate the realism of every transcript.');
+        return;
+      }
+    }
+
+    // Log realism ratings
+    order.forEach(function(t, i) {
+      var sel = document.querySelector('input[name="ps_realism_' + i + '"]:checked');
+      logToSheets('post_survey', {
+        question_id: 'ps_realism_' + t,
+        question_text: 'Realism rating — ' + t,
+        response: sel.value,
+        extra: ''
+      });
+    });
+    // Open responses
+    var explanation = document.getElementById('ps_realism_explanation').value.trim();
+    if (explanation) {
+      logToSheets('post_survey', {
+        question_id: 'ps_realism_explanation',
+        question_text: 'If any transcript felt unrealistic, what specifically felt off?',
+        response: explanation,
+        extra: ''
+      });
+    }
+    logToSheets('post_survey', {
+      question_id: 'ps_last_transcript',
+      question_text: 'Briefly describe what happened in the last transcript you read.',
+      response: lastText,
+      extra: 'comprehension_check'
+    });
+
+    // Show completion
+    document.getElementById('post-survey').style.display = 'none';
+    document.getElementById('completion').style.display = 'block';
+    var bar = document.getElementById('exit-study-bar'); if (bar) bar.remove();
+    document.body.style.paddingTop = '0';
+    window.scrollTo(0, 0);
+  });
 })();
 </script>
 </body>

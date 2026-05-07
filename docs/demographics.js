@@ -1,64 +1,90 @@
 const DEMOGRAPHICS = [
   {
-    id: "demo_consent_content",
+    id: "demo_education",
     type: "multiple_choice",
-    text: "Content notice: This study uses transcripts from real parole/pardon hearings. The material discusses serious crimes and may include references to violence, sexual assault, child endangerment, domestic abuse, and substance use. Do you consent to read this type of content?",
-    options: ["I consent and wish to continue", "I do not consent — exit the study"]
-  },
-  {
-    id: "demo_age",
-    type: "multiple_choice",
-    text: "What is your age range?",
-    options: ["18-24", "25-34", "35-44", "45-54", "55-64", "65+"]
-  },
-  {
-    id: "demo_gender",
-    type: "multiple_choice",
-    text: "What is your gender?",
-    options: ["Male", "Female", "Non-binary", "Prefer not to say"]
-  },
-  {
-    id: "demo_race",
-    type: "multiple_choice",
-    text: "What is your race/ethnicity?",
+    text: "What is the highest level of education you have completed?",
     options: [
-      "American Indian or Alaska Native",
-      "Asian",
-      "Black or African American",
-      "Hispanic or Latino",
-      "Native Hawaiian or Other Pacific Islander",
-      "White",
-      "Two or more races",
-      "Other",
+      "High school diploma or GED",
+      "Some college",
+      "Bachelor's degree",
+      "Graduate or professional degree",
       "Prefer not to say"
     ]
   },
   {
-    id: "demo_education",
-    type: "multiple_choice",
-    text: "What is your highest level of education?",
-    options: ["High school or less", "Some college", "Bachelor's degree", "Master's degree", "Doctoral or professional degree"]
-  },
-  {
-    id: "demo_english",
-    type: "multiple_choice",
-    text: "How would you rate your English fluency?",
-    options: ["Native speaker", "Fluent (near-native)", "Advanced", "Intermediate", "Beginner"]
-  },
-  {
-    id: "demo_transcription_exp",
-    type: "multiple_choice",
-    text: "How much experience do you have reading or working with transcripts?",
-    options: ["None", "A little", "Some", "A lot", "It's part of my job"]
-  },
-  {
-    id: "demo_industry",
-    type: "multiple_choice",
-    text: "Which of these best describes your professional or academic background?",
+    id: "demo_gender",
+    type: "multiple_choice_with_other",
+    text: "What is your gender?",
     options: [
-      "Speech technology (e.g., speech recognition, NLP, audio/voice tools)",
-      "Legal (e.g., law, court reporting, paralegal work)",
-      "None of the above"
+      "Man",
+      "Woman",
+      "Non-binary",
+      { value: "Prefer to self-describe", self_describe: true },
+      "Prefer not to say"
+    ]
+  },
+  {
+    id: "demo_race",
+    type: "multi_select_with_other",
+    text: "What is your race or ethnicity? (Select all that apply)",
+    options: [
+      "American Indian or Alaska Native",
+      "Asian or Asian American",
+      "Black or African American",
+      "Hispanic or Latino/a/x",
+      "Middle Eastern or North African",
+      "Native Hawaiian or Pacific Islander",
+      "White or European American",
+      "Multiracial",
+      { value: "Prefer to self-describe", self_describe: true },
+      "Prefer not to say"
+    ]
+  },
+  {
+    id: "demo_occupation",
+    type: "multiple_choice",
+    text: "Which occupation domain most closely matches your current work?",
+    options: [
+      "Legal",
+      "Technology or Engineering",
+      "Healthcare or Medical",
+      "Business or Management",
+      "Other"
+    ]
+  },
+  {
+    id: "demo_transcripts_in_work",
+    type: "multiple_choice",
+    text: "Does your work regularly involve reading transcripts or written records of spoken interaction? (e.g. meeting minutes, deposition transcripts, clinical notes, call logs)",
+    options: [
+      "Yes, it's a core part of my job",
+      "Occasionally — a few times a month or less",
+      "Rarely or never"
+    ]
+  },
+  {
+    id: "demo_voice_tech_frequency",
+    type: "multiple_choice",
+    text: "How often do you use voice or speech technology in your daily life or work? (e.g. voice assistants, dictation, auto-captions)",
+    options: [
+      "Multiple times a day",
+      "About once a day",
+      "A few times a week",
+      "About once a week",
+      "Rarely or never"
+    ]
+  },
+  {
+    id: "demo_voice_tech_accuracy",
+    type: "multiple_choice",
+    text: "For the voice technology you use most often: how accurate do you find it?",
+    options: [
+      "1 — Very inaccurate",
+      "2",
+      "3",
+      "4",
+      "5 — Highly accurate",
+      "I don't use voice technology"
     ]
   }
 ];

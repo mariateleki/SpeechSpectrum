@@ -122,6 +122,16 @@ body {
   font-size: 0.9rem;
   color: #374151;
 }
+.self-describe-input {
+  margin-left: 6px;
+  padding: 4px 8px;
+  border: 1px solid #D1D5DB;
+  border-radius: 6px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  width: 200px;
+}
+.self-describe-input:disabled { background: #F9FAFB; color: #9CA3AF; }
 textarea {
   width: 100%;
   padding: 12px 14px;
@@ -173,6 +183,73 @@ textarea::placeholder {
 }
 .exit-study-bar button:hover { background: #B91C1C; }
 body { padding-top: 44px; }
+
+/* IRB consent page */
+.consent-doc {
+  text-align: left;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: #374151;
+}
+.consent-doc h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 18px 0 6px;
+}
+.consent-doc h2:first-of-type { margin-top: 8px; }
+.consent-doc .meta { color: #6B7280; font-size: 0.85rem; margin: 0 0 18px; }
+.consent-doc .meta strong { color: #374151; font-weight: 600; }
+.consent-doc ul { margin: 6px 0 10px 22px; padding: 0; }
+.consent-doc li { margin: 4px 0; }
+.consent-doc .content-warning-box {
+  background: #FEF2F2;
+  border: 2px solid #DC2626;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin: 14px 0;
+}
+.consent-doc .content-warning-box::before {
+  content: "⚠️ CONTENT NOTICE";
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #DC2626;
+  margin-bottom: 6px;
+}
+.consent-doc .content-warning-box p { color: #991B1B; margin: 0; }
+.consent-doc .resources {
+  background: #F9FAFB;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin: 8px 0 0;
+}
+.consent-doc .resources li { color: #111827; }
+.consent-doc .agree-line {
+  margin: 18px 0 10px;
+  padding: 12px 14px;
+  background: #EEF2FF;
+  border-left: 3px solid #4F46E5;
+  border-radius: 6px;
+  color: #1F2937;
+}
+.consent-actions { display: flex; gap: 10px; margin-top: 18px; }
+.btn-decline {
+  flex: 1;
+  padding: 14px;
+  background: #fff;
+  color: #DC2626;
+  border: 1.5px solid #DC2626;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+}
+.btn-decline:hover { background: #FEF2F2; }
+.btn-primary.btn-agree { flex: 1; margin-top: 0; }
 
 /* Content notice (consent question) */
 .demo-question.content-warning {
@@ -240,8 +317,65 @@ body { padding-top: 44px; }
 
 <div class="study-card">
 
+  <!-- Step 0: IRB Consent -->
+  <div id="step-consent">
+    <h1>Informed Consent</h1>
+    <div class="consent-doc">
+      <p class="meta">
+        <strong>Study Title:</strong> Comprehension of Collaborative Speech Across Transcript Fidelity Levels<br>
+        <strong>Principal Investigator:</strong> Anna Seo Gyeong Choi, Cornell University<br>
+        <strong>Faculty Advisor:</strong> Dr. Allison Koenecke, Cornell Tech<br>
+        <strong>Contact:</strong> sc2359@cornell.edu
+      </p>
+
+      <h2>What is this study about?</h2>
+      <p>We are studying how the format of a written transcript affects how well people can understand conversations they did not witness. You will read transcripts of legal proceedings and answer comprehension questions about each one.</p>
+
+      <h2>What will you do?</h2>
+      <p>If you agree to participate, you will:</p>
+      <ul>
+        <li>Answer a few brief background questions (about 3–4 minutes)</li>
+        <li>Read four transcripts of legal proceedings and answer 8 multiple-choice questions about each one (about 30–38 minutes)</li>
+        <li>Rate how realistic the transcripts felt and answer one open-ended question at the end (about 3–4 minutes)</li>
+      </ul>
+      <p>Total time: approximately 35–45 minutes in a single session. Please do not begin if you cannot complete the study in one sitting.</p>
+
+      <div class="content-warning-box">
+        <p>The transcripts in this study are drawn from real public legal proceedings and contain detailed descriptions of violent criminal offenses, including domestic violence and sexual assault. On the next screen you will be given a full description of the content. You may exit the study at that point and receive partial payment if you prefer not to continue.</p>
+      </div>
+
+      <h2>Are there any risks?</h2>
+      <p>You may experience psychological discomfort from reading descriptions of violent offenses. You can stop at any time without penalty. If you are affected by the content, the following free and confidential resources are available:</p>
+      <ul class="resources">
+        <li>National Domestic Violence Hotline: 1-800-799-7233 (24/7)</li>
+        <li>RAINN Sexual Assault Hotline: 1-800-656-4673 (24/7)</li>
+        <li>Crisis Text Line: Text HOME to 741741</li>
+      </ul>
+      <p style="margin-top:10px;">Beyond potential distress from the content, this study involves no other risks.</p>
+
+      <h2>Are there any benefits?</h2>
+      <p>There are no direct benefits to you. Your participation will help improve the design of speech-to-text interfaces that support comprehension of multi-party spoken interaction.</p>
+
+      <h2>Will your information be kept confidential?</h2>
+      <p>We will not collect your name, email address, IP address, or any other directly identifying information. Your Prolific participant ID is used only to confirm completion and process payment through Prolific — it is not linked to your survey responses in our records. All responses are stored anonymously. Only aggregate data will be reported in any research publications.</p>
+
+      <h2>Is participation voluntary?</h2>
+      <p>Yes. Participation is completely voluntary. You may skip any question or stop at any time without penalty. Stopping will not affect your Prolific account standing. If you stop before completing the study, you will receive partial payment proportional to the time you spent.</p>
+
+      <h2>Who do I contact with questions?</h2>
+      <p>For questions about this study, contact Anna Choi at sc2359@cornell.edu. For questions about your rights as a research participant, contact Cornell's IRB office at irbhp@cornell.edu or 607-255-6182.</p>
+
+      <p class="agree-line">By clicking <strong>“I agree”</strong> below, you confirm that you are 18 or older, that you have read and understood this information, and that you agree to participate.</p>
+    </div>
+
+    <div class="consent-actions">
+      <button class="btn-decline" id="consent-decline-btn" type="button">I do not agree — exit study</button>
+      <button class="btn-primary btn-agree" id="consent-agree-btn" type="button">I agree and wish to continue</button>
+    </div>
+  </div>
+
   <!-- Step 1: Prolific ID -->
-  <div id="step-pid">
+  <div id="step-pid" style="display:none;">
     <h1>Welcome</h1>
     <p class="subtitle">Please enter your Prolific ID to begin.</p>
 
@@ -254,37 +388,65 @@ body { padding-top: 44px; }
 
   <!-- Step 2: Demographics -->
   <div id="step-demographics" style="display:none;">
-    <h1>About You</h1>
+    <h1>Participant Information</h1>
     <p class="subtitle">Please answer a few quick questions before we begin.</p>
 
     <form id="demo-form"></form>
 
-    <button class="btn-primary" id="demo-btn">Start Study</button>
+    <button class="btn-primary" id="demo-btn">Continue</button>
+  </div>
+
+  <!-- Step 3: Content Acknowledgement -->
+  <div id="step-content-ack" style="display:none;">
+    <h1>Content Acknowledgement</h1>
+    <div class="consent-doc">
+      <p>Before continuing, please read the following carefully.</p>
+      <p>The transcripts in this study are drawn from real public parole hearings and contain detailed descriptions of criminal offenses. Specifically, the four transcripts include discussions of:</p>
+      <ul>
+        <li>Domestic violence, including strangulation and threatening with weapons</li>
+        <li>Sexual assault</li>
+        <li>Physical assault</li>
+        <li>Probation violations</li>
+      </ul>
+      <p>This content may be distressing for some participants. If you would prefer not to continue, you may exit now. Please contact the researcher at <strong>sc2359@cornell.edu</strong> to arrange partial payment for the time you have already spent.</p>
+      <p>If you are affected by any of this content at any point during the study, the following free and confidential resources are available:</p>
+      <ul class="resources">
+        <li>National Domestic Violence Hotline: 1-800-799-7233 (available 24/7)</li>
+        <li>RAINN Sexual Assault Hotline: 1-800-656-4673 (available 24/7)</li>
+        <li>Crisis Text Line: Text HOME to 741741</li>
+      </ul>
+      <p class="agree-line"><strong>Are you comfortable proceeding with this study?</strong></p>
+    </div>
+
+    <div class="consent-actions">
+      <button class="btn-decline" id="content-ack-decline-btn" type="button">No — exit and email for partial payment</button>
+      <button class="btn-primary btn-agree" id="content-ack-agree-btn" type="button">Yes, I am comfortable proceeding</button>
+    </div>
   </div>
 
 </div>
 
-<script src="./demographics.js"></script>
+<script src="./demographics.js?v=2"></script>
 <script>
 (function() {
   var SHEETS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxby0V4A5pWc4VZGkJyVYBFx2OHJXDmIKOGaD6J4ePap51s1uWz-jHafIFYtJlJLu7Gbg/exec';
 
   // 5 style-level conditions
   var styles = ['verbatim', 'non-verbatim', 'enhanced', 'bullet-points', 'demo'];
-  var transcripts = ['TranscrA', 'TranscrB', 'TranscrC', 'TranscrD'];
-
-  function shuffle(arr) {
-    var a = arr.slice();
-    for (var i = a.length - 1; i > 0; i--) {
-      var j = Math.floor(Math.random() * (i + 1));
-      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
-    }
-    return a;
-  }
+  // Conversations: TranscrA = Davis, TranscrB = Bates, TranscrC = Lorenze, TranscrD = Feliciano
+  // Conversation order is a 4x4 Latin square. Each participant gets one of the 4 orders.
+  var LATIN_SQUARE_ORDERS = {
+    'A': ['TranscrA', 'TranscrB', 'TranscrC', 'TranscrD'], // Davis  → Bates  → Lorenze  → Feliciano
+    'B': ['TranscrB', 'TranscrC', 'TranscrD', 'TranscrA'], // Bates  → Lorenze → Feliciano → Davis
+    'C': ['TranscrC', 'TranscrD', 'TranscrA', 'TranscrB'], // Lorenze → Feliciano → Davis  → Bates
+    'D': ['TranscrD', 'TranscrA', 'TranscrB', 'TranscrC']  // Feliciano → Davis → Bates → Lorenze
+  };
+  var ORDER_KEYS = ['A', 'B', 'C', 'D'];
 
   var pid = '';
   var assignedStyle = null;
   var transcriptOrder = null;
+  var assignedOrderKey = null;
 
   // Persistent exit button
   document.getElementById('exit-study-btn').addEventListener('click', function() {
@@ -304,6 +466,45 @@ body { padding-top: 44px; }
     document.querySelector('.study-card').innerHTML =
       '<h1>You have exited the study</h1>' +
       '<p class="subtitle">Thank you for your time. You may now close this tab.</p>';
+    var bar = document.getElementById('exit-study-bar'); if (bar) bar.remove();
+    document.body.style.paddingTop = '0';
+  });
+
+  // --- Step 0: IRB Consent ---
+  document.getElementById('consent-agree-btn').addEventListener('click', function() {
+    try {
+      navigator.sendBeacon(SHEETS_WEBHOOK_URL, JSON.stringify({
+        timestamp: new Date().toISOString(),
+        event_type: 'irb_consent',
+        prolific_id: '',
+        assigned_condition: '',
+        question_id: 'irb_consent',
+        question_text: 'IRB informed consent',
+        response: 'agreed',
+        extra: ''
+      }));
+    } catch (e) {}
+    document.getElementById('step-consent').style.display = 'none';
+    document.getElementById('step-pid').style.display = 'block';
+    var inp = document.getElementById('prolific-id'); if (inp) inp.focus();
+  });
+
+  document.getElementById('consent-decline-btn').addEventListener('click', function() {
+    try {
+      navigator.sendBeacon(SHEETS_WEBHOOK_URL, JSON.stringify({
+        timestamp: new Date().toISOString(),
+        event_type: 'irb_consent',
+        prolific_id: '',
+        assigned_condition: '',
+        question_id: 'irb_consent',
+        question_text: 'IRB informed consent',
+        response: 'declined',
+        extra: ''
+      }));
+    } catch (e) {}
+    document.querySelector('.study-card').innerHTML =
+      '<h1>Thank you</h1>' +
+      '<p class="subtitle">You have chosen not to participate. You may close this tab and return your Prolific submission. No data has been collected.</p>';
     var bar = document.getElementById('exit-study-bar'); if (bar) bar.remove();
     document.body.style.paddingTop = '0';
   });
@@ -329,17 +530,19 @@ body { padding-top: 44px; }
       return;
     }
 
-    // Assign style level + randomize transcript order
+    // Assign style condition + Latin-square order
     var storageKey = 'ss_assignment_' + pid;
     var existing = localStorage.getItem(storageKey);
     if (existing) {
       var saved = JSON.parse(existing);
       assignedStyle = saved.style;
       transcriptOrder = saved.order;
+      assignedOrderKey = saved.orderKey || null;
     } else {
       assignedStyle = styles[Math.floor(Math.random() * styles.length)];
-      transcriptOrder = shuffle(transcripts);
-      localStorage.setItem(storageKey, JSON.stringify({ style: assignedStyle, order: transcriptOrder }));
+      assignedOrderKey = ORDER_KEYS[Math.floor(Math.random() * ORDER_KEYS.length)];
+      transcriptOrder = LATIN_SQUARE_ORDERS[assignedOrderKey].slice();
+      localStorage.setItem(storageKey, JSON.stringify({ style: assignedStyle, order: transcriptOrder, orderKey: assignedOrderKey }));
     }
 
     // Show demographics step
@@ -348,89 +551,109 @@ body { padding-top: 44px; }
   });
 
   // --- Step 2: Demographics ---
-  // Render demographic questions
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function(c) {
+      return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];
+    });
+  }
+  function optValue(opt) { return typeof opt === 'string' ? opt : opt.value; }
+  function isSelfDescribe(opt) { return typeof opt === 'object' && opt.self_describe; }
+
   var formHtml = '';
   DEMOGRAPHICS.forEach(function(q, idx) {
-    var qClass = 'demo-question' + (q.id === 'demo_consent_content' ? ' content-warning' : '');
-    formHtml += '<div class="' + qClass + '">';
-    formHtml += '<p class="question-text"><span class="question-num">' + (idx + 1) + '.</span> ' + q.text + '</p>';
+    formHtml += '<div class="demo-question">';
+    formHtml += '<p class="question-text"><span class="question-num">' + (idx + 1) + '.</span> ' + escapeHtml(q.text) + '</p>';
 
-    if (q.type === 'multiple_choice') {
-      q.options.forEach(function(opt) {
-        var inputId = q.id + '_' + opt.replace(/\s+/g, '_').toLowerCase();
-        formHtml += '<label class="option-label" for="' + inputId + '">';
-        formHtml += '<input type="radio" id="' + inputId + '" name="' + q.id + '" value="' + opt + '" required>';
-        formHtml += '<span class="option-text">' + opt + '</span>';
-        formHtml += '</label>';
-      });
-    } else if (q.type === 'free_response') {
-      formHtml += '<textarea name="' + q.id + '" rows="2" placeholder="Type your answer here..."></textarea>';
-    }
+    var inputType = (q.type === 'multi_select' || q.type === 'multi_select_with_other') ? 'checkbox' : 'radio';
+    q.options.forEach(function(opt, i) {
+      var val = optValue(opt);
+      var inputId = q.id + '_' + i;
+      formHtml += '<label class="option-label" for="' + inputId + '">';
+      formHtml += '<input type="' + inputType + '" id="' + inputId + '" name="' + q.id + '" value="' + escapeHtml(val) + '"' + (isSelfDescribe(opt) ? ' data-self-describe="1"' : '') + '>';
+      formHtml += '<span class="option-text">' + escapeHtml(val) + (isSelfDescribe(opt) ? ': <input type="text" class="self-describe-input" name="' + q.id + '__self_describe" placeholder="please describe" disabled>' : '') + '</span>';
+      formHtml += '</label>';
+    });
 
     formHtml += '</div>';
   });
   document.getElementById('demo-form').innerHTML = formHtml;
 
-  // Handle demographics submit
+  // Enable/disable self-describe text input based on its checkbox/radio state
+  document.getElementById('demo-form').addEventListener('change', function(e) {
+    if (e.target.matches('input[data-self-describe]')) {
+      var label = e.target.closest('.option-label');
+      var txt = label.querySelector('.self-describe-input');
+      if (txt) txt.disabled = !e.target.checked;
+    } else if (e.target.matches('input[type="radio"]')) {
+      // For radios, ensure self-describe text in the same group is disabled when another radio is selected
+      var name = e.target.name;
+      document.querySelectorAll('input[name="' + name + '"][data-self-describe]').forEach(function(sd) {
+        var t = sd.closest('.option-label').querySelector('.self-describe-input');
+        if (t) t.disabled = !sd.checked;
+      });
+    }
+  });
+
+  // Handle demographics submit -> show content ack (Page 3)
   document.getElementById('demo-btn').addEventListener('click', function() {
     var form = document.getElementById('demo-form');
-
-    // Validate multiple choice
     var allAnswered = true;
     DEMOGRAPHICS.forEach(function(q) {
-      if (q.type === 'multiple_choice') {
-        if (!form.querySelector('input[name="' + q.id + '"]:checked')) allAnswered = false;
-      }
+      var hasAny = !!form.querySelector('input[name="' + q.id + '"]:checked');
+      if (!hasAny) allAnswered = false;
     });
     if (!allAnswered) {
-      alert('Please answer all multiple choice questions.');
+      alert('Please answer every question.');
       return;
     }
 
-    // Content consent gate
-    var consentSel = form.querySelector('input[name="demo_consent_content"]:checked');
-    if (consentSel && consentSel.value.indexOf('do not consent') !== -1) {
+    var conditionLabel = assignedStyle + ' / ' + transcriptOrder.map(function(t){ return t.replace('Transcr',''); }).join(',');
+
+    DEMOGRAPHICS.forEach(function(q) {
+      var checked = form.querySelectorAll('input[name="' + q.id + '"]:checked');
+      var values = [];
+      checked.forEach(function(el) {
+        var v = el.value;
+        if (el.dataset.selfDescribe) {
+          var t = el.closest('.option-label').querySelector('.self-describe-input');
+          var typed = t ? t.value.trim() : '';
+          if (typed) v = v + ': ' + typed;
+        }
+        values.push(v);
+      });
+
       navigator.sendBeacon(SHEETS_WEBHOOK_URL, JSON.stringify({
         timestamp: new Date().toISOString(),
         event_type: 'demographic',
         prolific_id: pid,
-        assigned_condition: assignedStyle + ' / ' + transcriptOrder.map(function(t){ return t.replace('Transcr',''); }).join(','),
-        question_id: 'demo_consent_content',
-        question_text: 'content consent',
-        response: consentSel.value,
-        extra: 'declined'
-      }));
-      document.querySelector('.study-card').innerHTML =
-        '<h1>Thank you</h1>' +
-        '<p class="subtitle">You have chosen not to continue. You may close this tab and return your Prolific submission. No further data will be collected.</p>';
-      return;
-    }
-
-    // Log each demographic response
-    DEMOGRAPHICS.forEach(function(q) {
-      var response = '';
-      if (q.type === 'multiple_choice') {
-        var sel = form.querySelector('input[name="' + q.id + '"]:checked');
-        response = sel ? sel.value : '';
-      } else if (q.type === 'free_response') {
-        response = form.querySelector('textarea[name="' + q.id + '"]').value.trim();
-      }
-
-      var payload = {
-        timestamp: new Date().toISOString(),
-        event_type: 'demographic',
-        prolific_id: pid,
-        assigned_condition: assignedStyle + ' / ' + transcriptOrder.map(function(t){ return t.replace('Transcr',''); }).join(','),
+        assigned_condition: conditionLabel,
         question_id: q.id,
         question_text: q.text,
-        response: response,
+        response: values.join(' | '),
         extra: ''
-      };
-      navigator.sendBeacon(SHEETS_WEBHOOK_URL, JSON.stringify(payload));
+      }));
     });
 
-    // Log study start
-    var startPayload = {
+    document.getElementById('step-demographics').style.display = 'none';
+    document.getElementById('step-content-ack').style.display = 'block';
+  });
+
+  // --- Step 3: Content Acknowledgement ---
+  document.getElementById('content-ack-agree-btn').addEventListener('click', function() {
+    var conditionLabel = assignedStyle + ' / ' + transcriptOrder.map(function(t){ return t.replace('Transcr',''); }).join(',');
+
+    navigator.sendBeacon(SHEETS_WEBHOOK_URL, JSON.stringify({
+      timestamp: new Date().toISOString(),
+      event_type: 'content_ack',
+      prolific_id: pid,
+      assigned_condition: conditionLabel,
+      question_id: 'content_ack',
+      question_text: 'Are you comfortable proceeding with this study?',
+      response: 'agreed',
+      extra: ''
+    }));
+
+    navigator.sendBeacon(SHEETS_WEBHOOK_URL, JSON.stringify({
       timestamp: new Date().toISOString(),
       event_type: 'study_start',
       prolific_id: pid,
@@ -438,19 +661,35 @@ body { padding-top: 44px; }
       question_id: '',
       question_text: '',
       response: '',
-      extra: JSON.stringify({ transcript_order: transcriptOrder })
-    };
-    navigator.sendBeacon(SHEETS_WEBHOOK_URL, JSON.stringify(startPayload));
+      extra: JSON.stringify({ transcript_order: transcriptOrder, latin_square_order: assignedOrderKey })
+    }));
 
-    // Store everything in sessionStorage
     sessionStorage.setItem('ss_prolific_id', pid);
-    var conditionLabel = assignedStyle + ' / ' + transcriptOrder.map(function(t){ return t.replace('Transcr',''); }).join(',');
     sessionStorage.setItem('ss_condition', conditionLabel);
     sessionStorage.setItem('ss_transcript_order', JSON.stringify(transcriptOrder));
     sessionStorage.setItem('ss_current_step', '0');
 
     // Redirect to task page
     window.location.href = './task.html?pid=' + encodeURIComponent(pid);
+  });
+
+  document.getElementById('content-ack-decline-btn').addEventListener('click', function() {
+    var conditionLabel = assignedStyle + ' / ' + transcriptOrder.map(function(t){ return t.replace('Transcr',''); }).join(',');
+    navigator.sendBeacon(SHEETS_WEBHOOK_URL, JSON.stringify({
+      timestamp: new Date().toISOString(),
+      event_type: 'content_ack',
+      prolific_id: pid,
+      assigned_condition: conditionLabel,
+      question_id: 'content_ack',
+      question_text: 'Are you comfortable proceeding with this study?',
+      response: 'declined',
+      extra: ''
+    }));
+    document.querySelector('.study-card').innerHTML =
+      '<h1>You have exited the study</h1>' +
+      '<p class="subtitle">Thank you for your time. To arrange partial payment for the time you spent on the consent and demographics, please email <strong>sc2359@cornell.edu</strong> with your Prolific ID. You may now close this tab.</p>';
+    var bar = document.getElementById('exit-study-bar'); if (bar) bar.remove();
+    document.body.style.paddingTop = '0';
   });
 
   // Auto-fill PID from URL if provided by Prolific

@@ -140,7 +140,7 @@ body {
     <p style="color: #6B7280; margin: 0 0 16px; font-size: 0.95rem;">Participating in our Prolific study? Enter your ID, complete a short demographics survey, then read and evaluate a transcript.</p>
     <a class="btn-demo" href="./study.html" style="flex: none;">Enter Study</a>
     <p style="color: #9CA3AF; margin: 16px 0 8px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;">Internal Testing</p>
-    <p style="color: #6B7280; margin: 0 0 12px; font-size: 0.85rem;">Skip demographics and jump straight into the task with a TEST Prolific ID. Use these to preview the participant experience.</p>
+    <p style="color: #6B7280; margin: 0 0 12px; font-size: 0.85rem;">Run the full participant flow (consent → demographics → content acknowledgement → study) with an auto-generated TEST Prolific ID.</p>
     <a class="btn-style" href="#" id="test-btn" style="margin-right: 8px;">Test Random Condition</a>
     <a class="btn-style" href="#" id="test-demo-btn">Test Demo Condition</a>
 
@@ -150,7 +150,7 @@ body {
       <h3 style="margin-top:0;">Counterbalancing & Randomization</h3>
 
       <!-- Flow diagram -->
-      <svg viewBox="0 0 800 440" style="width:100%; max-width:800px; margin: 0 auto 24px; display:block;" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="0 0 800 460" style="width:100%; max-width:800px; margin: 0 auto 24px; display:block;" xmlns="http://www.w3.org/2000/svg">
         <!-- Participant entry -->
         <rect x="300" y="10" width="200" height="40" rx="8" fill="#4F46E5" />
         <text x="400" y="35" text-anchor="middle" fill="#fff" font-size="13" font-weight="600" font-family="Inter,sans-serif">Participant enters</text>
@@ -158,8 +158,8 @@ body {
         <line x1="400" y1="50" x2="400" y2="75" stroke="#D1D5DB" stroke-width="2" />
 
         <!-- Random assignment -->
-        <rect x="250" y="75" width="300" height="36" rx="8" fill="#EEF2FF" stroke="#C7D2FE" stroke-width="1.5" />
-        <text x="400" y="98" text-anchor="middle" fill="#4F46E5" font-size="12" font-weight="600" font-family="Inter,sans-serif">Random assignment to 1 of 5 conditions</text>
+        <rect x="170" y="75" width="460" height="36" rx="8" fill="#EEF2FF" stroke="#C7D2FE" stroke-width="1.5" />
+        <text x="400" y="98" text-anchor="middle" fill="#4F46E5" font-size="12" font-weight="600" font-family="Inter,sans-serif">Random assignment to 1 of 5 conditions (between-subjects)</text>
 
         <!-- Branches -->
         <line x1="400" y1="111" x2="400" y2="130" stroke="#D1D5DB" stroke-width="2" />
@@ -168,23 +168,23 @@ body {
         <!-- 5 condition boxes -->
         <line x1="80" y1="130" x2="80" y2="150" stroke="#D1D5DB" stroke-width="2" />
         <rect x="20" y="150" width="120" height="32" rx="6" fill="#fff" stroke="#C7D2FE" stroke-width="1.5" />
-        <text x="80" y="170" text-anchor="middle" fill="#374151" font-size="11" font-weight="500" font-family="Inter,sans-serif">Verbatim</text>
+        <text x="80" y="170" text-anchor="middle" fill="#374151" font-size="11" font-weight="500" font-family="Inter,sans-serif">A: Verbatim</text>
 
         <line x1="240" y1="130" x2="240" y2="150" stroke="#D1D5DB" stroke-width="2" />
         <rect x="170" y="150" width="140" height="32" rx="6" fill="#fff" stroke="#C7D2FE" stroke-width="1.5" />
-        <text x="240" y="170" text-anchor="middle" fill="#374151" font-size="11" font-weight="500" font-family="Inter,sans-serif">Non-Verbatim</text>
+        <text x="240" y="170" text-anchor="middle" fill="#374151" font-size="11" font-weight="500" font-family="Inter,sans-serif">B: Non-Verbatim</text>
 
         <line x1="400" y1="130" x2="400" y2="150" stroke="#D1D5DB" stroke-width="2" />
         <rect x="340" y="150" width="120" height="32" rx="6" fill="#fff" stroke="#C7D2FE" stroke-width="1.5" />
-        <text x="400" y="170" text-anchor="middle" fill="#374151" font-size="11" font-weight="500" font-family="Inter,sans-serif">Enhanced</text>
+        <text x="400" y="170" text-anchor="middle" fill="#374151" font-size="11" font-weight="500" font-family="Inter,sans-serif">C: Enhanced</text>
 
         <line x1="560" y1="130" x2="560" y2="150" stroke="#D1D5DB" stroke-width="2" />
         <rect x="490" y="150" width="140" height="32" rx="6" fill="#fff" stroke="#C7D2FE" stroke-width="1.5" />
-        <text x="560" y="170" text-anchor="middle" fill="#374151" font-size="11" font-weight="500" font-family="Inter,sans-serif">Bullet Points</text>
+        <text x="560" y="170" text-anchor="middle" fill="#374151" font-size="11" font-weight="500" font-family="Inter,sans-serif">D: Bullet Points</text>
 
         <line x1="720" y1="130" x2="720" y2="150" stroke="#D1D5DB" stroke-width="2" />
         <rect x="640" y="150" width="160" height="32" rx="6" fill="#4F46E5" stroke="#4F46E5" stroke-width="1.5" />
-        <text x="720" y="170" text-anchor="middle" fill="#fff" font-size="11" font-weight="600" font-family="Inter,sans-serif">SpeechSpectrum Demo</text>
+        <text x="720" y="170" text-anchor="middle" fill="#fff" font-size="11" font-weight="600" font-family="Inter,sans-serif">E: SpeechSpectrum</text>
 
         <!-- Converge -->
         <line x1="80" y1="182" x2="80" y2="210" stroke="#D1D5DB" stroke-width="2" />
@@ -195,55 +195,80 @@ body {
         <line x1="80" y1="210" x2="720" y2="210" stroke="#D1D5DB" stroke-width="2" />
         <line x1="400" y1="210" x2="400" y2="230" stroke="#D1D5DB" stroke-width="2" />
 
-        <!-- Randomized transcript order -->
-        <rect x="200" y="230" width="400" height="36" rx="8" fill="#EEF2FF" stroke="#C7D2FE" stroke-width="1.5" />
-        <text x="400" y="253" text-anchor="middle" fill="#4F46E5" font-size="12" font-weight="600" font-family="Inter,sans-serif">Randomized transcript order (A, B, C, D)</text>
+        <!-- Latin-square assignment label -->
+        <rect x="150" y="230" width="500" height="36" rx="8" fill="#EEF2FF" stroke="#C7D2FE" stroke-width="1.5" />
+        <text x="400" y="253" text-anchor="middle" fill="#4F46E5" font-size="12" font-weight="600" font-family="Inter,sans-serif">Random assignment to 1 of 4 Latin-square orders (within-subjects)</text>
 
         <line x1="400" y1="266" x2="400" y2="285" stroke="#D1D5DB" stroke-width="2" />
 
-        <!-- 4 transcripts -->
-        <line x1="100" y1="285" x2="700" y2="285" stroke="#D1D5DB" stroke-width="2" />
+        <!-- 4 Latin-square order rows -->
+        <!-- Row A -->
+        <text x="60" y="298" fill="#4F46E5" font-size="11" font-weight="700" font-family="Inter,sans-serif">Order A</text>
+        <rect x="135" y="285" width="115" height="22" rx="4" fill="#fff" stroke="#E5E7EB" stroke-width="1" />
+        <text x="192" y="300" text-anchor="middle" fill="#374151" font-size="10.5" font-family="Inter,sans-serif">Davis</text>
+        <text x="262" y="300" text-anchor="middle" fill="#9CA3AF" font-size="13" font-family="Inter,sans-serif">→</text>
+        <rect x="275" y="285" width="115" height="22" rx="4" fill="#fff" stroke="#E5E7EB" stroke-width="1" />
+        <text x="332" y="300" text-anchor="middle" fill="#374151" font-size="10.5" font-family="Inter,sans-serif">Bates</text>
+        <text x="402" y="300" text-anchor="middle" fill="#9CA3AF" font-size="13" font-family="Inter,sans-serif">→</text>
+        <rect x="415" y="285" width="115" height="22" rx="4" fill="#fff" stroke="#E5E7EB" stroke-width="1" />
+        <text x="472" y="300" text-anchor="middle" fill="#374151" font-size="10.5" font-family="Inter,sans-serif">Lorenze</text>
+        <text x="542" y="300" text-anchor="middle" fill="#9CA3AF" font-size="13" font-family="Inter,sans-serif">→</text>
+        <rect x="555" y="285" width="115" height="22" rx="4" fill="#fff" stroke="#E5E7EB" stroke-width="1" />
+        <text x="612" y="300" text-anchor="middle" fill="#374151" font-size="10.5" font-family="Inter,sans-serif">Feliciano</text>
 
-        <line x1="100" y1="285" x2="100" y2="305" stroke="#D1D5DB" stroke-width="2" />
-        <rect x="35" y="305" width="130" height="50" rx="8" fill="#fff" stroke="#E5E7EB" stroke-width="1.5" />
-        <text x="100" y="325" text-anchor="middle" fill="#374151" font-size="11" font-weight="600" font-family="Inter,sans-serif">Transcript ?</text>
-        <text x="100" y="345" text-anchor="middle" fill="#9CA3AF" font-size="10" font-family="Inter,sans-serif">+ survey (Q order shuffled)</text>
+        <!-- Row B -->
+        <text x="60" y="328" fill="#4F46E5" font-size="11" font-weight="700" font-family="Inter,sans-serif">Order B</text>
+        <rect x="135" y="315" width="115" height="22" rx="4" fill="#fff" stroke="#E5E7EB" stroke-width="1" />
+        <text x="192" y="330" text-anchor="middle" fill="#374151" font-size="10.5" font-family="Inter,sans-serif">Bates</text>
+        <text x="262" y="330" text-anchor="middle" fill="#9CA3AF" font-size="13" font-family="Inter,sans-serif">→</text>
+        <rect x="275" y="315" width="115" height="22" rx="4" fill="#fff" stroke="#E5E7EB" stroke-width="1" />
+        <text x="332" y="330" text-anchor="middle" fill="#374151" font-size="10.5" font-family="Inter,sans-serif">Lorenze</text>
+        <text x="402" y="330" text-anchor="middle" fill="#9CA3AF" font-size="13" font-family="Inter,sans-serif">→</text>
+        <rect x="415" y="315" width="115" height="22" rx="4" fill="#fff" stroke="#E5E7EB" stroke-width="1" />
+        <text x="472" y="330" text-anchor="middle" fill="#374151" font-size="10.5" font-family="Inter,sans-serif">Feliciano</text>
+        <text x="542" y="330" text-anchor="middle" fill="#9CA3AF" font-size="13" font-family="Inter,sans-serif">→</text>
+        <rect x="555" y="315" width="115" height="22" rx="4" fill="#fff" stroke="#E5E7EB" stroke-width="1" />
+        <text x="612" y="330" text-anchor="middle" fill="#374151" font-size="10.5" font-family="Inter,sans-serif">Davis</text>
 
-        <line x1="300" y1="285" x2="300" y2="305" stroke="#D1D5DB" stroke-width="2" />
-        <rect x="235" y="305" width="130" height="50" rx="8" fill="#fff" stroke="#E5E7EB" stroke-width="1.5" />
-        <text x="300" y="325" text-anchor="middle" fill="#374151" font-size="11" font-weight="600" font-family="Inter,sans-serif">Transcript ?</text>
-        <text x="300" y="345" text-anchor="middle" fill="#9CA3AF" font-size="10" font-family="Inter,sans-serif">+ survey (Q order shuffled)</text>
+        <!-- Row C -->
+        <text x="60" y="358" fill="#4F46E5" font-size="11" font-weight="700" font-family="Inter,sans-serif">Order C</text>
+        <rect x="135" y="345" width="115" height="22" rx="4" fill="#fff" stroke="#E5E7EB" stroke-width="1" />
+        <text x="192" y="360" text-anchor="middle" fill="#374151" font-size="10.5" font-family="Inter,sans-serif">Lorenze</text>
+        <text x="262" y="360" text-anchor="middle" fill="#9CA3AF" font-size="13" font-family="Inter,sans-serif">→</text>
+        <rect x="275" y="345" width="115" height="22" rx="4" fill="#fff" stroke="#E5E7EB" stroke-width="1" />
+        <text x="332" y="360" text-anchor="middle" fill="#374151" font-size="10.5" font-family="Inter,sans-serif">Feliciano</text>
+        <text x="402" y="360" text-anchor="middle" fill="#9CA3AF" font-size="13" font-family="Inter,sans-serif">→</text>
+        <rect x="415" y="345" width="115" height="22" rx="4" fill="#fff" stroke="#E5E7EB" stroke-width="1" />
+        <text x="472" y="360" text-anchor="middle" fill="#374151" font-size="10.5" font-family="Inter,sans-serif">Davis</text>
+        <text x="542" y="360" text-anchor="middle" fill="#9CA3AF" font-size="13" font-family="Inter,sans-serif">→</text>
+        <rect x="555" y="345" width="115" height="22" rx="4" fill="#fff" stroke="#E5E7EB" stroke-width="1" />
+        <text x="612" y="360" text-anchor="middle" fill="#374151" font-size="10.5" font-family="Inter,sans-serif">Bates</text>
 
-        <line x1="500" y1="285" x2="500" y2="305" stroke="#D1D5DB" stroke-width="2" />
-        <rect x="435" y="305" width="130" height="50" rx="8" fill="#fff" stroke="#E5E7EB" stroke-width="1.5" />
-        <text x="500" y="325" text-anchor="middle" fill="#374151" font-size="11" font-weight="600" font-family="Inter,sans-serif">Transcript ?</text>
-        <text x="500" y="345" text-anchor="middle" fill="#9CA3AF" font-size="10" font-family="Inter,sans-serif">+ survey (Q order shuffled)</text>
+        <!-- Row D -->
+        <text x="60" y="388" fill="#4F46E5" font-size="11" font-weight="700" font-family="Inter,sans-serif">Order D</text>
+        <rect x="135" y="375" width="115" height="22" rx="4" fill="#fff" stroke="#E5E7EB" stroke-width="1" />
+        <text x="192" y="390" text-anchor="middle" fill="#374151" font-size="10.5" font-family="Inter,sans-serif">Feliciano</text>
+        <text x="262" y="390" text-anchor="middle" fill="#9CA3AF" font-size="13" font-family="Inter,sans-serif">→</text>
+        <rect x="275" y="375" width="115" height="22" rx="4" fill="#fff" stroke="#E5E7EB" stroke-width="1" />
+        <text x="332" y="390" text-anchor="middle" fill="#374151" font-size="10.5" font-family="Inter,sans-serif">Davis</text>
+        <text x="402" y="390" text-anchor="middle" fill="#9CA3AF" font-size="13" font-family="Inter,sans-serif">→</text>
+        <rect x="415" y="375" width="115" height="22" rx="4" fill="#fff" stroke="#E5E7EB" stroke-width="1" />
+        <text x="472" y="390" text-anchor="middle" fill="#374151" font-size="10.5" font-family="Inter,sans-serif">Bates</text>
+        <text x="542" y="390" text-anchor="middle" fill="#9CA3AF" font-size="13" font-family="Inter,sans-serif">→</text>
+        <rect x="555" y="375" width="115" height="22" rx="4" fill="#fff" stroke="#E5E7EB" stroke-width="1" />
+        <text x="612" y="390" text-anchor="middle" fill="#374151" font-size="10.5" font-family="Inter,sans-serif">Lorenze</text>
 
-        <line x1="700" y1="285" x2="700" y2="305" stroke="#D1D5DB" stroke-width="2" />
-        <rect x="635" y="305" width="130" height="50" rx="8" fill="#fff" stroke="#E5E7EB" stroke-width="1.5" />
-        <text x="700" y="325" text-anchor="middle" fill="#374151" font-size="11" font-weight="600" font-family="Inter,sans-serif">Transcript ?</text>
-        <text x="700" y="345" text-anchor="middle" fill="#9CA3AF" font-size="10" font-family="Inter,sans-serif">+ survey (Q order shuffled)</text>
+        <line x1="400" y1="397" x2="400" y2="415" stroke="#D1D5DB" stroke-width="2" />
 
-        <!-- Arrows between transcripts -->
-        <text x="200" y="335" text-anchor="middle" fill="#D1D5DB" font-size="18" font-family="Inter,sans-serif">&rarr;</text>
-        <text x="400" y="335" text-anchor="middle" fill="#D1D5DB" font-size="18" font-family="Inter,sans-serif">&rarr;</text>
-        <text x="600" y="335" text-anchor="middle" fill="#D1D5DB" font-size="18" font-family="Inter,sans-serif">&rarr;</text>
-
-        <!-- Converge to end -->
-        <line x1="100" y1="355" x2="100" y2="375" stroke="#D1D5DB" stroke-width="2" />
-        <line x1="300" y1="355" x2="300" y2="375" stroke="#D1D5DB" stroke-width="2" />
-        <line x1="500" y1="355" x2="500" y2="375" stroke="#D1D5DB" stroke-width="2" />
-        <line x1="700" y1="355" x2="700" y2="375" stroke="#D1D5DB" stroke-width="2" />
-        <line x1="100" y1="375" x2="700" y2="375" stroke="#D1D5DB" stroke-width="2" />
-        <line x1="400" y1="375" x2="400" y2="395" stroke="#D1D5DB" stroke-width="2" />
-
-        <rect x="300" y="395" width="200" height="30" rx="6" fill="#059669" />
-        <text x="400" y="415" text-anchor="middle" fill="#fff" font-size="12" font-weight="600" font-family="Inter,sans-serif">Complete</text>
+        <rect x="300" y="415" width="200" height="30" rx="6" fill="#059669" />
+        <text x="400" y="435" text-anchor="middle" fill="#fff" font-size="12" font-weight="600" font-family="Inter,sans-serif">Complete</text>
       </svg>
 
-      <p style="color: #374151; font-size: 0.9rem; line-height: 1.7; margin: 0 0 12px;"><strong>Condition assignment:</strong> Each participant is randomly assigned to one of 5 between-subjects conditions (Verbatim, Non-Verbatim, Enhanced, Bullet Points, or SpeechSpectrum Demo). The condition determines how transcripts are presented throughout the entire session.</p>
+      <p style="color: #374151; font-size: 0.9rem; line-height: 1.7; margin: 0 0 12px;"><strong>Condition assignment (between-subjects):</strong> Each participant is randomly assigned to one of 5 conditions — <em>A: Verbatim</em>, <em>B: Non-Verbatim</em>, <em>C: Enhanced</em>, <em>D: Bullet Points</em>, or <em>E: SpeechSpectrum</em>. The condition determines how transcripts are presented throughout the entire session.</p>
 
-      <p style="color: #374151; font-size: 0.9rem; line-height: 1.7; margin: 0 0 12px;"><strong>Transcript order:</strong> All participants see all 4 transcripts (A, B, C, D) in a randomized order (Fisher-Yates shuffle). This is a within-subjects factor — every participant evaluates every transcript.</p>
+      <p style="color: #374151; font-size: 0.9rem; line-height: 1.7; margin: 0 0 12px;"><strong>Conversation order (within-subjects, 4×4 Latin square):</strong> All participants read all 4 parole hearings — <em>Davis</em>, <em>Bates</em>, <em>Lorenze</em>, and <em>Feliciano</em> — but the order is one of 4 fixed Latin-square permutations, randomly assigned. With 36 participants per condition and 4 orders, this gives 9 participants per (condition × order) cell.</p>
+
+      <p style="color: #374151; font-size: 0.9rem; line-height: 1.7; margin: 0 0 12px;"><strong>Primary test:</strong> 5 (condition) × 4 (transcript) mixed ANOVA on comprehension accuracy, with the within-between interaction as the focal effect. 8 questions per conversation × 4 conversations = 32 items per participant.</p>
 
       <p style="color: #374151; font-size: 0.9rem; line-height: 1.7; margin: 0 0 12px;"><strong>Question order:</strong> Multiple-choice questions are reshuffled for each transcript. Free-response questions always appear at the end. Question order is logged per transcript.</p>
 
@@ -251,38 +276,32 @@ body {
     </div>
   </div>
 <script>
-document.getElementById('test-btn').addEventListener('click', function(e) {
-  e.preventDefault();
+var LATIN_SQUARE_ORDERS = {
+  'A': ['TranscrA', 'TranscrB', 'TranscrC', 'TranscrD'],
+  'B': ['TranscrB', 'TranscrC', 'TranscrD', 'TranscrA'],
+  'C': ['TranscrC', 'TranscrD', 'TranscrA', 'TranscrB'],
+  'D': ['TranscrD', 'TranscrA', 'TranscrB', 'TranscrC']
+};
+var ORDER_KEYS = ['A', 'B', 'C', 'D'];
+
+function seedTestAssignmentAndGo(forcedStyle) {
   var pid = 'TEST' + Math.random().toString(36).substring(2, 10);
   var styles = ['verbatim', 'non-verbatim', 'enhanced', 'bullet-points', 'demo'];
-  var transcripts = ['TranscrA', 'TranscrB', 'TranscrC', 'TranscrD'];
-  var style = styles[Math.floor(Math.random() * styles.length)];
-  // Shuffle transcript order
-  var order = transcripts.slice();
-  for (var i = order.length - 1; i > 0; i--) {
-    var j = Math.floor(Math.random() * (i + 1));
-    var tmp = order[i]; order[i] = order[j]; order[j] = tmp;
-  }
-  sessionStorage.setItem('ss_prolific_id', pid);
-  sessionStorage.setItem('ss_condition', style + ' / ' + order.map(function(t){ return t.replace('Transcr',''); }).join(','));
-  sessionStorage.setItem('ss_transcript_order', JSON.stringify(order));
-  sessionStorage.setItem('ss_current_step', '0');
-  window.location.href = './task.html?pid=' + pid;
+  var style = forcedStyle || styles[Math.floor(Math.random() * styles.length)];
+  var orderKey = ORDER_KEYS[Math.floor(Math.random() * ORDER_KEYS.length)];
+  var order = LATIN_SQUARE_ORDERS[orderKey].slice();
+  // Pre-seed the assignment so study.html reuses it when the test PID is entered (or auto-filled from URL).
+  localStorage.setItem('ss_assignment_' + pid, JSON.stringify({ style: style, order: order, orderKey: orderKey }));
+  // Send to the full participant flow starting at consent.
+  window.location.href = './study.html?pid=' + encodeURIComponent(pid);
+}
+document.getElementById('test-btn').addEventListener('click', function(e) {
+  e.preventDefault();
+  seedTestAssignmentAndGo(null);
 });
 document.getElementById('test-demo-btn').addEventListener('click', function(e) {
   e.preventDefault();
-  var pid = 'TEST' + Math.random().toString(36).substring(2, 10);
-  var transcripts = ['TranscrA', 'TranscrB', 'TranscrC', 'TranscrD'];
-  var order = transcripts.slice();
-  for (var i = order.length - 1; i > 0; i--) {
-    var j = Math.floor(Math.random() * (i + 1));
-    var tmp = order[i]; order[i] = order[j]; order[j] = tmp;
-  }
-  sessionStorage.setItem('ss_prolific_id', pid);
-  sessionStorage.setItem('ss_condition', 'demo / ' + order.map(function(t){ return t.replace('Transcr',''); }).join(','));
-  sessionStorage.setItem('ss_transcript_order', JSON.stringify(order));
-  sessionStorage.setItem('ss_current_step', '0');
-  window.location.href = './task.html?pid=' + pid;
+  seedTestAssignmentAndGo('demo');
 });
 </script>
 
