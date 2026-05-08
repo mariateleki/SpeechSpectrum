@@ -738,21 +738,27 @@ body { padding-top: 72px; }
   <p>Your responses have been recorded. You may now return to Prolific and mark your submission as complete.</p>
 </div>
 
-<!-- Page 5: Post-Survey -->
+<!-- Page 5a: Comprehension check (last transcript only) -->
+<div class="debrief" id="post-comprehension" style="display:none;">
+  <h1>Last Transcript Recall</h1>
+  <p>You have now completed all four transcripts. Before we move on, please answer one quick question about the last one you read.</p>
+  <div class="demo-question" style="margin-top:18px;">
+    <p class="question-text">Briefly describe what happened in the <strong>last transcript</strong> you read. <span style="color:#DC2626; font-weight:400;">(Required)</span></p>
+    <textarea id="ps_last_transcript" name="ps_last_transcript" rows="5" placeholder="Required — describe what happened..." required></textarea>
+  </div>
+  <button class="btn-primary" id="post-comprehension-btn" style="margin-top:18px; padding: 14px 28px; background:#4F46E5; color:#fff; border:none; border-radius:10px; font-size:1rem; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif;">Continue</button>
+</div>
+
+<!-- Page 5b: Post-Survey (realism ratings + optional explanation) -->
 <div class="debrief" id="post-survey" style="display:none;">
   <h1>A Few Final Questions</h1>
-  <p>You have now completed all four transcripts. Before we finish, we have a few questions about the transcripts themselves.</p>
+  <p>Before we finish, we have a few questions about the transcripts themselves.</p>
   <form id="post-survey-form" style="margin-top:18px;">
     <div id="post-survey-realism"></div>
 
     <div class="demo-question" style="margin-top:24px;">
       <p class="question-text">If any transcript felt unrealistic, what specifically felt off? <span style="color:#9CA3AF; font-weight:400;">(Optional)</span></p>
       <textarea id="ps_realism_explanation" name="ps_realism_explanation" rows="3" placeholder="Optional — type here..."></textarea>
-    </div>
-
-    <div class="demo-question" style="margin-top:24px;">
-      <p class="question-text">Briefly describe what happened in the <strong>last transcript</strong> you read. <span style="color:#DC2626; font-weight:400;">(Required)</span></p>
-      <textarea id="ps_last_transcript" name="ps_last_transcript" rows="4" placeholder="Required — describe what happened..." required></textarea>
     </div>
   </form>
   <button class="btn-primary" id="post-survey-btn" style="margin-top:18px; padding: 14px 28px; background:#4F46E5; color:#fff; border:none; border-radius:10px; font-size:1rem; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif;">Submit and Finish</button>
@@ -765,7 +771,7 @@ body { padding-top: 72px; }
 
   <div style="background:#EEF2FF; border:1.5px solid #C7D2FE; border-radius:10px; padding:16px 20px; margin:18px 0;">
     <p style="margin:0 0 6px; color:#4F46E5; font-weight:600; font-size:0.9rem;">Your Prolific completion code:</p>
-    <p style="margin:0; font-family:'SFMono-Regular',Consolas,monospace; font-size:1.1rem; font-weight:700; color:#1F2937; letter-spacing:0.05em;" id="completion-code">[INSERT CODE]</p>
+    <p style="margin:0; font-family:'SFMono-Regular',Consolas,monospace; font-size:1.1rem; font-weight:700; color:#1F2937; letter-spacing:0.05em;" id="completion-code">CJ1Y2CQG</p>
     <p style="margin:8px 0 0; color:#6B7280; font-size:0.85rem;">Please copy this code and return to Prolific to submit your completion and receive payment.</p>
   </div>
 
@@ -1595,7 +1601,7 @@ body { padding-top: 72px; }
       document.getElementById('task-area').style.display = 'none';
       var ty = document.getElementById('thank-you'); if (ty) ty.style.display = 'none';
       logToSheets('study_complete', { extra: JSON.stringify({ total_transcripts: order.length, total_time_seconds: totalTimeSec }) });
-      showPostSurvey();
+      showPostComprehension();
       return;
     }
     // Show task area in case it was hidden
@@ -1644,7 +1650,36 @@ body { padding-top: 72px; }
     window.scrollTo(0, 0);
   };
 
-  // --- Page 5: Post-Survey ---
+  // --- Page 5a: Comprehension check (last transcript only) ---
+  function showPostComprehension() {
+    document.getElementById('post-comprehension').style.display = 'block';
+    window.scrollTo(0, 0);
+
+    // Auto-fill for TEST PIDs so internal testing skips quickly
+    if ((pid || '').toUpperCase().indexOf('TEST') === 0) {
+      document.getElementById('ps_last_transcript').value = '[TEST] Auto-filled comprehension response.';
+    }
+  }
+
+  document.getElementById('post-comprehension-btn').addEventListener('click', function() {
+    var lastTextEl = document.getElementById('ps_last_transcript');
+    var lastText = lastTextEl.value.trim();
+    if (!lastText) {
+      alert('Please briefly describe what happened in the last transcript you read.');
+      lastTextEl.focus();
+      return;
+    }
+    logToSheets('post_survey', {
+      question_id: 'ps_last_transcript',
+      question_text: 'Briefly describe what happened in the last transcript you read.',
+      response: lastText,
+      extra: 'comprehension_check'
+    });
+    document.getElementById('post-comprehension').style.display = 'none';
+    showPostSurvey();
+  });
+
+  // --- Page 5b: Post-Survey (realism + optional explanation) ---
   function showPostSurvey() {
     var container = document.getElementById('post-survey-realism');
     var html = '';
@@ -1673,24 +1708,16 @@ body { padding-top: 72px; }
     document.getElementById('post-survey').style.display = 'block';
     window.scrollTo(0, 0);
 
-    // Auto-fill for TEST PIDs so internal testing skips quickly
+    // Auto-fill realism ratings for TEST PIDs
     if ((pid || '').toUpperCase().indexOf('TEST') === 0) {
       for (var i = 0; i < order.length; i++) {
         var radios = document.querySelectorAll('input[name="ps_realism_' + i + '"]');
         if (radios.length) radios[Math.floor(Math.random() * radios.length)].checked = true;
       }
-      document.getElementById('ps_last_transcript').value = '[TEST] Auto-filled comprehension response.';
     }
   }
 
   document.getElementById('post-survey-btn').addEventListener('click', function() {
-    var lastTextEl = document.getElementById('ps_last_transcript');
-    var lastText = lastTextEl.value.trim();
-    if (!lastText) {
-      alert('Please briefly describe what happened in the last transcript you read.');
-      lastTextEl.focus();
-      return;
-    }
     // Validate realism ratings (one per transcript)
     for (var i = 0; i < order.length; i++) {
       if (!document.querySelector('input[name="ps_realism_' + i + '"]:checked')) {
@@ -1709,7 +1736,7 @@ body { padding-top: 72px; }
         extra: ''
       });
     });
-    // Open responses
+    // Optional explanation
     var explanation = document.getElementById('ps_realism_explanation').value.trim();
     if (explanation) {
       logToSheets('post_survey', {
@@ -1719,12 +1746,6 @@ body { padding-top: 72px; }
         extra: ''
       });
     }
-    logToSheets('post_survey', {
-      question_id: 'ps_last_transcript',
-      question_text: 'Briefly describe what happened in the last transcript you read.',
-      response: lastText,
-      extra: 'comprehension_check'
-    });
 
     // Show completion
     document.getElementById('post-survey').style.display = 'none';
