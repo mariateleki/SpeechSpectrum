@@ -182,7 +182,7 @@ textarea::placeholder {
   flex-shrink: 0;
 }
 .exit-study-bar button:hover { background: #B91C1C; }
-body { padding-top: 44px; }
+body { padding-top: 72px; }
 
 /* IRB consent page */
 .consent-doc {
@@ -448,6 +448,33 @@ body { padding-top: 44px; }
   var transcriptOrder = null;
   var assignedOrderKey = null;
 
+  // Page timing — record when each step entered, log duration on exit
+  var pageEntered = { consent: Date.now(), pid: null, demographics: null, content_ack: null };
+  function logPageDuration(name) {
+    if (!pageEntered[name]) return;
+    var sec = Math.round((Date.now() - pageEntered[name]) / 100) / 10;
+    navigator.sendBeacon(SHEETS_WEBHOOK_URL, JSON.stringify({
+      timestamp: new Date().toISOString(),
+      event_type: 'page_timing',
+      prolific_id: pid || '',
+      assigned_condition: (assignedStyle && transcriptOrder) ? (assignedStyle + ' / ' + transcriptOrder.map(function(t){return t.replace('Transcr','');}).join(',')) : '',
+      question_id: name,
+      question_text: 'time spent on ' + name + ' page',
+      response: String(sec),
+      extra: 'seconds'
+    }));
+  }
+
+  // Match body top padding to the warning bar's actual height (handles wraps on narrow screens)
+  function syncExitBarPadding() {
+    var bar = document.getElementById('exit-study-bar');
+    if (!bar) return;
+    document.body.style.paddingTop = (bar.offsetHeight + 16) + 'px';
+  }
+  window.addEventListener('load', syncExitBarPadding);
+  window.addEventListener('resize', syncExitBarPadding);
+  syncExitBarPadding();
+
   // Persistent exit button
   document.getElementById('exit-study-btn').addEventListener('click', function() {
     if (!confirm('Are you sure you want to exit the study? Your progress will not be saved and you can close this tab afterward.')) return;
@@ -472,6 +499,7 @@ body { padding-top: 44px; }
 
   // --- Step 0: IRB Consent ---
   document.getElementById('consent-agree-btn').addEventListener('click', function() {
+    logPageDuration('consent');
     try {
       navigator.sendBeacon(SHEETS_WEBHOOK_URL, JSON.stringify({
         timestamp: new Date().toISOString(),
@@ -486,10 +514,12 @@ body { padding-top: 44px; }
     } catch (e) {}
     document.getElementById('step-consent').style.display = 'none';
     document.getElementById('step-pid').style.display = 'block';
+    pageEntered.pid = Date.now();
     var inp = document.getElementById('prolific-id'); if (inp) inp.focus();
   });
 
   document.getElementById('consent-decline-btn').addEventListener('click', function() {
+    logPageDuration('consent');
     try {
       navigator.sendBeacon(SHEETS_WEBHOOK_URL, JSON.stringify({
         timestamp: new Date().toISOString(),
@@ -533,6 +563,7 @@ body { padding-top: 44px; }
     // Assign style condition + Latin-square order
     var storageKey = 'ss_assignment_' + pid;
     var existing = localStorage.getItem(storageKey);
+    var newAssignment = false;
     if (existing) {
       var saved = JSON.parse(existing);
       assignedStyle = saved.style;
@@ -543,7 +574,29 @@ body { padding-top: 44px; }
       assignedOrderKey = ORDER_KEYS[Math.floor(Math.random() * ORDER_KEYS.length)];
       transcriptOrder = LATIN_SQUARE_ORDERS[assignedOrderKey].slice();
       localStorage.setItem(storageKey, JSON.stringify({ style: assignedStyle, order: transcriptOrder, orderKey: assignedOrderKey }));
+      newAssignment = true;
     }
+
+    // Explicit condition_assignment log (so it's captured even if participant later drops out)
+    var conditionLabel = assignedStyle + ' / ' + transcriptOrder.map(function(t){ return t.replace('Transcr',''); }).join(',');
+    navigator.sendBeacon(SHEETS_WEBHOOK_URL, JSON.stringify({
+      timestamp: new Date().toISOString(),
+      event_type: 'condition_assignment',
+      prolific_id: pid,
+      assigned_condition: conditionLabel,
+      question_id: 'assignment',
+      question_text: 'random assignment to study condition + latin-square order',
+      response: assignedStyle + ' | order ' + assignedOrderKey,
+      extra: JSON.stringify({
+        style: assignedStyle,
+        latin_square_order: assignedOrderKey,
+        transcript_order: transcriptOrder,
+        first_assignment: newAssignment
+      })
+    }));
+
+    logPageDuration('pid');
+    pageEntered.demographics = Date.now();
 
     // Show demographics step
     document.getElementById('step-pid').style.display = 'none';
@@ -658,12 +711,15 @@ body { padding-top: 44px; }
       }));
     });
 
+    logPageDuration('demographics');
+    pageEntered.content_ack = Date.now();
     document.getElementById('step-demographics').style.display = 'none';
     document.getElementById('step-content-ack').style.display = 'block';
   });
 
   // --- Step 3: Content Acknowledgement ---
   document.getElementById('content-ack-agree-btn').addEventListener('click', function() {
+    logPageDuration('content_ack');
     var conditionLabel = assignedStyle + ' / ' + transcriptOrder.map(function(t){ return t.replace('Transcr',''); }).join(',');
 
     navigator.sendBeacon(SHEETS_WEBHOOK_URL, JSON.stringify({
@@ -691,6 +747,7 @@ body { padding-top: 44px; }
     sessionStorage.setItem('ss_prolific_id', pid);
     sessionStorage.setItem('ss_condition', conditionLabel);
     sessionStorage.setItem('ss_transcript_order', JSON.stringify(transcriptOrder));
+    sessionStorage.setItem('ss_latin_square_order', assignedOrderKey || '');
     sessionStorage.setItem('ss_current_step', '0');
 
     // Redirect to task page
@@ -698,6 +755,7 @@ body { padding-top: 44px; }
   });
 
   document.getElementById('content-ack-decline-btn').addEventListener('click', function() {
+    logPageDuration('content_ack');
     var conditionLabel = assignedStyle + ' / ' + transcriptOrder.map(function(t){ return t.replace('Transcr',''); }).join(',');
     navigator.sendBeacon(SHEETS_WEBHOOK_URL, JSON.stringify({
       timestamp: new Date().toISOString(),

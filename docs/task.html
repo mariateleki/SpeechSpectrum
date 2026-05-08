@@ -561,7 +561,7 @@ textarea::placeholder {
   font-family: 'Inter', sans-serif; cursor: pointer; flex-shrink: 0;
 }
 .exit-study-bar button:hover { background: #B91C1C; }
-body { padding-top: 44px; }
+body { padding-top: 72px; }
 </style>
 <body>
 
@@ -816,6 +816,16 @@ body { padding-top: 44px; }
 
   var transcriptsReady = loadAllTranscripts();
 
+  // Match body top padding to the warning bar's actual height (handles wraps on narrow screens)
+  function syncExitBarPadding() {
+    var bar = document.getElementById('exit-study-bar');
+    if (!bar) return;
+    document.body.style.paddingTop = (bar.offsetHeight + 16) + 'px';
+  }
+  window.addEventListener('load', syncExitBarPadding);
+  window.addEventListener('resize', syncExitBarPadding);
+  syncExitBarPadding();
+
   // Persistent exit-study button
   document.getElementById('exit-study-btn').addEventListener('click', function() {
     if (!confirm('Are you sure you want to exit the study? Your progress will not be saved and you can close this tab afterward.')) return;
@@ -838,6 +848,7 @@ body { padding-top: 44px; }
   var pid = sessionStorage.getItem('ss_prolific_id') || new URLSearchParams(window.location.search).get('pid') || '';
   var conditionLabel = sessionStorage.getItem('ss_condition') || '';
   var style = conditionLabel.split(' / ')[0]; // e.g. "enhanced" from "enhanced / A,C,B"
+  var latinSquareOrder = sessionStorage.getItem('ss_latin_square_order') || '';
   var order = JSON.parse(sessionStorage.getItem('ss_transcript_order') || '["TranscrA","TranscrB","TranscrC","TranscrD"]');
   var currentStep = parseInt(sessionStorage.getItem('ss_current_step') || '0', 10);
 
@@ -865,7 +876,8 @@ body { padding-top: 44px; }
       timestamp: new Date().toISOString(),
       event_type: eventType,
       prolific_id: pid,
-      assigned_condition: conditionLabel
+      assigned_condition: conditionLabel,
+      latin_square_order: latinSquareOrder
     }, data || {});
     navigator.sendBeacon(SHEETS_WEBHOOK_URL, JSON.stringify(payload));
   }
@@ -1617,8 +1629,9 @@ body { padding-top: 44px; }
 
     // Set instructions text
     if (isDemo) {
-      document.getElementById('instructions-text').textContent =
-        'Using an AI tool called SpeechSpectrum, we created four equivalent versions of the same transcript for you to use during this survey. Some versions might be more helpful for certain questions than others. Feel free to explore the transcripts by clicking the labels on the left, and answer the questions on the right however you think is best.';
+      document.getElementById('instructions-text').innerHTML =
+        'Using an AI tool called SpeechSpectrum, we created four equivalent versions of the same transcript for you to use during this survey. Some versions might be more helpful for certain questions than others. Feel free to explore the transcripts by clicking the labels on the left, and ' +
+        '<strong style="color:#4F46E5;">answer the questions and make the highlights as you think is best.</strong>';
     } else {
       document.getElementById('instructions-text').textContent =
         'Please read the transcript on the left, then answer the survey questions on the right based on your reading.';
