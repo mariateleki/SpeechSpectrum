@@ -1648,10 +1648,17 @@ body { padding-top: 72px; }
   function showPostSurvey() {
     var container = document.getElementById('post-survey-realism');
     var html = '';
+    var descriptions = {
+      TranscrA: 'second-degree assault (stabbing), risk of injury to a minor, probation violation',
+      TranscrB: 'a 1994 sexual assault plus a record of physical assaults',
+      TranscrC: 'a childhood sexual assault of his younger sister',
+      TranscrD: 'domestic violence including strangulation'
+    };
     order.forEach(function(t, i) {
-      var label = 'Transcript ' + (i + 1) + ' (' + t.replace('Transcr','') + ')';
+      var label = 'Transcript ' + (i + 1);
+      var desc = descriptions[t] || '';
       html += '<div class="demo-question" style="margin-top:18px;">';
-      html += '<p class="question-text">How realistic did <strong>' + label + '</strong> feel as a record of an actual legal proceeding?</p>';
+      html += '<p class="question-text">How realistic did <strong>' + label + '</strong>' + (desc ? ' <span style="color:#6B7280; font-weight:400;">(' + desc + ')</span>' : '') + ' feel as a record of an actual legal proceeding?</p>';
       html += '<div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center; font-size:0.85rem;">';
       var labels = ['1 — Does not feel real at all', '2', '3', '4', '5 — Feels authentic'];
       labels.forEach(function(lbl, j) {
