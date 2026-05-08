@@ -592,7 +592,7 @@ body { padding-top: 44px; }
       </div>
       <div class="tutorial-step">
         <div class="tutorial-step-num">3</div>
-        <p><strong>Select your answer</strong> from the options. If there isn't enough information in the transcript, select "Not enough information to answer this question" — no highlight is needed in that case.</p>
+        <p><strong>Select your answer</strong> from the options. If the interaction isn't shown in the transcript, choose option E — no highlight is needed in that case.</p>
       </div>
       <div class="tutorial-step">
         <div class="tutorial-step-num">4</div>
@@ -792,7 +792,7 @@ body { padding-top: 44px; }
   </details>
 </footer>
 
-<script src="./questions.js"></script>
+<script src="./questions.js?v=2"></script>
 <script>
 (function() {
   var CONTENT = { TranscrA: [null,null,null,null], TranscrB: [null,null,null,null], TranscrC: [null,null,null,null], TranscrD: [null,null,null,null] };
@@ -1050,9 +1050,12 @@ body { padding-top: 44px; }
     currentTranscriptKey = transcriptKey;
     currentQuestionIdx = 0;
 
+    // Per-transcript comprehension questions (fallback to global QUESTIONS)
+    var transcriptQs = (typeof QUESTIONS_BY_TRANSCRIPT !== 'undefined' && QUESTIONS_BY_TRANSCRIPT[transcriptKey])
+      ? QUESTIONS_BY_TRANSCRIPT[transcriptKey] : QUESTIONS;
     // Shuffle MC questions, keep free response at the end
-    var mcQuestions = QUESTIONS.filter(function(q) { return q.type === 'multiple_choice'; });
-    var frQuestions = QUESTIONS.filter(function(q) { return q.type === 'free_response'; });
+    var mcQuestions = transcriptQs.filter(function(q) { return q.type === 'multiple_choice'; });
+    var frQuestions = transcriptQs.filter(function(q) { return q.type === 'free_response'; });
     currentStepQuestions = shuffleArray(mcQuestions).concat(frQuestions);
     questionOrders[step] = currentStepQuestions.map(function(q) { return q.id; });
 
@@ -1109,13 +1112,14 @@ body { padding-top: 44px; }
       }
 
       var opts = q.options.slice();
-      opts.push('Not enough information to answer this question');
-      opts.forEach(function(opt) {
-        var inputId = q.id + '_' + opt.replace(/\s+/g, '_').toLowerCase();
+      opts.push('This interaction is not shown in the transcript / Not enough information to answer this question');
+      opts.forEach(function(opt, optIdx) {
+        var letter = String.fromCharCode(65 + optIdx); // A, B, C, D, E
+        var inputId = q.id + '_' + letter.toLowerCase();
         var checked = (answers[step] && answers[step][q.id] === opt) ? ' checked' : '';
         html += '<label class="option-label" for="' + inputId + '">';
         html += '<input type="radio" id="' + inputId + '" name="' + q.id + '" value="' + opt + '"' + checked + '>';
-        html += '<span class="option-text">' + opt + '</span>';
+        html += '<span class="option-text">' + letter + ') ' + opt + '</span>';
         html += '</label>';
       });
     } else if (q.type === 'free_response') {
@@ -1124,7 +1128,7 @@ body { padding-top: 44px; }
     }
 
     html += '</div>';
-    html += '<p class="validation-error" id="validation-error">Please select an answer and highlight relevant text (or select "Not enough information").</p>';
+    html += '<p class="validation-error" id="validation-error">Please select an answer and highlight relevant text (or select option E if the interaction isn\'t in the transcript).</p>';
 
     // Navigation buttons
     html += '<div class="question-nav">';
@@ -1234,7 +1238,7 @@ body { padding-top: 44px; }
       }
 
       // If "not enough info" selected, no highlight required
-      if (sel.value === 'Not enough information to answer this question') return true;
+      if (sel.value === 'This interaction is not shown in the transcript / Not enough information to answer this question') return true;
 
       // Otherwise, require at least one highlight (on current DOM or any stored style)
       var hasHighlight = false;
