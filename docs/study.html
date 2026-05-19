@@ -444,8 +444,20 @@ body { padding-top: 72px; }
 (function() {
   var SHEETS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxby0V4A5pWc4VZGkJyVYBFx2OHJXDmIKOGaD6J4ePap51s1uWz-jHafIFYtJlJLu7Gbg/exec';
 
-  // 5 style-level conditions
-  var styles = ['verbatim', 'non-verbatim', 'enhanced', 'bullet-points', 'demo'];
+  // 5 style-level conditions (full study). A pilot run can restrict this set
+  // by passing ?conditions=verbatim,bullet-points (etc.) in the URL.
+  var ALL_STYLES = ['verbatim', 'non-verbatim', 'enhanced', 'bullet-points', 'demo'];
+  var urlConditionsParam = (new URLSearchParams(window.location.search)).get('conditions');
+  var styles = ALL_STYLES.slice();
+  var pilotLabel = '';
+  if (urlConditionsParam) {
+    var requested = urlConditionsParam.split(',').map(function(s){ return s.trim().toLowerCase(); }).filter(Boolean);
+    var filtered = requested.filter(function(s){ return ALL_STYLES.indexOf(s) !== -1; });
+    if (filtered.length) {
+      styles = filtered;
+      pilotLabel = 'pilot:' + filtered.join('+');
+    }
+  }
   // Conversations: TranscrA = Davis, TranscrB = Bates, TranscrC = Lorenze, TranscrD = Feliciano
   // Conversation order is a 4x4 Latin square. Each participant gets one of the 4 orders.
   var LATIN_SQUARE_ORDERS = {
@@ -604,7 +616,9 @@ body { padding-top: 72px; }
         style: assignedStyle,
         latin_square_order: assignedOrderKey,
         transcript_order: transcriptOrder,
-        first_assignment: newAssignment
+        first_assignment: newAssignment,
+        pilot: pilotLabel || null,
+        condition_pool: styles
       })
     }));
 
