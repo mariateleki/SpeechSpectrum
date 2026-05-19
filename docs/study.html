@@ -132,6 +132,19 @@ body {
   width: 200px;
 }
 .self-describe-input:disabled { background: #F9FAFB; color: #9CA3AF; }
+.demo-select {
+  width: 100%;
+  max-width: 320px;
+  padding: 10px 12px;
+  border: 1.5px solid #D1D5DB;
+  border-radius: 8px;
+  background: #fff;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  color: #111827;
+  cursor: pointer;
+}
+.demo-select:focus { border-color: #4F46E5; outline: none; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
 textarea {
   width: 100%;
   padding: 12px 14px;
@@ -426,7 +439,7 @@ body { padding-top: 72px; }
 
 </div>
 
-<script src="./demographics.js?v=2"></script>
+<script src="./demographics.js?v=4"></script>
 <script>
 (function() {
   var SHEETS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxby0V4A5pWc4VZGkJyVYBFx2OHJXDmIKOGaD6J4ePap51s1uWz-jHafIFYtJlJLu7Gbg/exec';
@@ -610,6 +623,15 @@ body { padding-top: 72px; }
 
   function prefillTestDemographics() {
     DEMOGRAPHICS.forEach(function(q) {
+      if (q.type === 'dropdown') {
+        var sel = document.querySelector('select[name="' + q.id + '"]');
+        if (sel && sel.options.length > 1) {
+          // Skip the disabled placeholder at index 0
+          var pickIdx = 1 + Math.floor(Math.random() * (sel.options.length - 1));
+          sel.selectedIndex = pickIdx;
+        }
+        return;
+      }
       var inputs = document.querySelectorAll('input[name="' + q.id + '"]');
       // Skip the self-describe options when picking defaults to avoid extra typing
       var pickable = [];
@@ -640,6 +662,18 @@ body { padding-top: 72px; }
   DEMOGRAPHICS.forEach(function(q, idx) {
     formHtml += '<div class="demo-question">';
     formHtml += '<p class="question-text"><span class="question-num">' + (idx + 1) + '.</span> ' + escapeHtml(q.text) + '</p>';
+
+    if (q.type === 'dropdown') {
+      formHtml += '<select name="' + q.id + '" class="demo-select" data-question="' + q.id + '">';
+      formHtml += '<option value="" selected disabled>— Select —</option>';
+      q.options.forEach(function(opt) {
+        var val = optValue(opt);
+        formHtml += '<option value="' + escapeHtml(val) + '">' + escapeHtml(val) + '</option>';
+      });
+      formHtml += '</select>';
+      formHtml += '</div>';
+      return;
+    }
 
     var inputType = (q.type === 'multi_select' || q.type === 'multi_select_with_other') ? 'checkbox' : 'radio';
     q.options.forEach(function(opt, i) {
@@ -676,8 +710,13 @@ body { padding-top: 72px; }
     var form = document.getElementById('demo-form');
     var allAnswered = true;
     DEMOGRAPHICS.forEach(function(q) {
-      var hasAny = !!form.querySelector('input[name="' + q.id + '"]:checked');
-      if (!hasAny) allAnswered = false;
+      if (q.type === 'dropdown') {
+        var sel = form.querySelector('select[name="' + q.id + '"]');
+        if (!sel || !sel.value) allAnswered = false;
+      } else {
+        var hasAny = !!form.querySelector('input[name="' + q.id + '"]:checked');
+        if (!hasAny) allAnswered = false;
+      }
     });
     if (!allAnswered) {
       alert('Please answer every question.');
@@ -687,17 +726,22 @@ body { padding-top: 72px; }
     var conditionLabel = assignedStyle + ' / ' + transcriptOrder.map(function(t){ return t.replace('Transcr',''); }).join(',');
 
     DEMOGRAPHICS.forEach(function(q) {
-      var checked = form.querySelectorAll('input[name="' + q.id + '"]:checked');
       var values = [];
-      checked.forEach(function(el) {
-        var v = el.value;
-        if (el.dataset.selfDescribe) {
-          var t = el.closest('.option-label').querySelector('.self-describe-input');
-          var typed = t ? t.value.trim() : '';
-          if (typed) v = v + ': ' + typed;
-        }
-        values.push(v);
-      });
+      if (q.type === 'dropdown') {
+        var sel = form.querySelector('select[name="' + q.id + '"]');
+        if (sel && sel.value) values.push(sel.value);
+      } else {
+        var checked = form.querySelectorAll('input[name="' + q.id + '"]:checked');
+        checked.forEach(function(el) {
+          var v = el.value;
+          if (el.dataset.selfDescribe) {
+            var t = el.closest('.option-label').querySelector('.self-describe-input');
+            var typed = t ? t.value.trim() : '';
+            if (typed) v = v + ': ' + typed;
+          }
+          values.push(v);
+        });
+      }
 
       navigator.sendBeacon(SHEETS_WEBHOOK_URL, JSON.stringify({
         timestamp: new Date().toISOString(),

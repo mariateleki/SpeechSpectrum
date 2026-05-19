@@ -86,5 +86,41 @@ const DEMOGRAPHICS = [
       "5 — Highly accurate",
       "I don't use voice technology"
     ]
+  },
+  {
+    id: "demo_parole_experience",
+    type: "multi_select",
+    text: "Do you have any prior experience with parole or pardon hearings? (Select all that apply)",
+    options: [
+      "Yes — as a defendant, applicant, or someone with a hearing of my own",
+      "Yes — as a family member, friend, or supporter of someone with a hearing",
+      "Yes — as a victim or affected party in a hearing",
+      "Yes — through jury duty or as a court observer",
+      "Yes — as part of my work (e.g., legal, corrections, advocacy, research)",
+      "Yes — through news coverage, podcasts, or documentaries",
+      "No — I have no prior experience with parole or pardon hearings",
+      "Prefer not to say"
+    ]
+  },
+  {
+    id: "demo_us_state",
+    type: "dropdown",
+    text: "Which U.S. state or territory do you currently live in?",
+    options: [
+      "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado",
+      "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho",
+      "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana",
+      "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota",
+      "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada",
+      "New Hampshire", "New Jersey", "New Mexico", "New York",
+      "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon",
+      "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota",
+      "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington",
+      "West Virginia", "Wisconsin", "Wyoming",
+      "District of Columbia", "American Samoa", "Guam",
+      "Northern Mariana Islands", "Puerto Rico", "U.S. Virgin Islands",
+      "I do not live in the United States",
+      "Prefer not to say"
+    ]
   }
 ];
