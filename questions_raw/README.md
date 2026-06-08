@@ -38,9 +38,3 @@ B) Four years
 ✅C) Six years
 D) Eight years
 ```
-
-`TranscrA_Davis.txt` is filled in as a reference example. Just paste your raw text into the other three files using the same shape.
-
-## Next step
-
-Once these files are filled in we'll write a small script under `scripts/` to convert them into `docs/questions.js` so the website renders them in the survey panel.

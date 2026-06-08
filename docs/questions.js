@@ -65,10 +65,10 @@ const QUESTIONS_BY_TRANSCRIPT = {
       "type": "multiple_choice",
       "text": "Palmieri says ‘So it was recommended –’ and Davis immediately continues the sentence. Who ends up deciding how the therapy gets prescribed?",
       "options": [
-        "Palmieri, because she introduced the term \"self-referral\" and Davis accepted it",
-        "Davis, because she explicitly rejected Palmieri's characterization as \"recommended\"",
+        "Palmieri, because she introduced the term 'self-referral' and Davis accepted it",
+        "Davis, because she explicitly rejected Palmieri's characterization as 'recommended'",
         "Neither — they reached a genuine shared understanding through discussion",
-        "Both of them: Palmieri provides the word \"recommended\" and Davis finishes the sentence in a way that works better for herself"
+        "Both of them: Palmieri provides the word 'recommended' and Davis finishes the sentence in a way that works better for herself"
       ],
       "correct_index": 3,
       "correct_letter": "D"
@@ -193,10 +193,10 @@ const QUESTIONS_BY_TRANSCRIPT = {
       "type": "multiple_choice",
       "text": "After Cizauskas describes the serious violence in the record, she immediately says ‘But I do hear the change in your voice.’ What is ‘But’ doing here, and why does the chair say ‘voice’ specifically?",
       "options": [
-        "\"But\" is a routine conversational transition and \"voice\" is a general reference to Bates's overall demeanor in the hearing",
-        "\"But\" acknowledges the serious record and then sets it aside; saying \"voice\" specifically means Cizauskas is pointing to something that can't be faked or prepared — how Bates sounds, not just what he says",
+        "'But' is a routine conversational transition and 'voice' is a general reference to Bates's overall demeanor in the hearing",
+        "'But' acknowledges the serious record and then sets it aside; saying 'voice' specifically means Cizauskas is pointing to something that can't be faked or prepared — how Bates sounds, not just what he says",
         "Cizauskas is signaling that she is torn about how to weigh the serious record against Bates's apparent change",
-        "\"But\" transitions to the barber training topic and \"voice\" acknowledges that Bates sounds professional"
+        "'But' transitions to the barber training topic and 'voice' acknowledges that Bates sounds professional"
       ],
       "correct_index": 1,
       "correct_letter": "B"
@@ -280,7 +280,7 @@ const QUESTIONS_BY_TRANSCRIPT = {
       "text": "The victim's letter includes: 'Please overlook the extreme, stilted, and awkward language of this letter.' What does this comment about the letter's own language reveal about it?",
       "options": [
         "The victim is signaling that the board shouldn't read too much into her exact wording since she is uncertain about her own conclusions",
-        "This comment actually makes the letter more believable — someone writing strategically to get a specific outcome wouldn't call their own letter \"stilted and awkward.\" It shows she was genuinely struggling to write it, not calculating the effect",
+        "This comment actually makes the letter more believable — someone writing strategically to get a specific outcome wouldn't call their own letter 'stilted and awkward.' It shows she was genuinely struggling to write it, not calculating the effect",
         "The victim is not well-educated and is apologizing for poor writing skills so the board will evaluate the letter's content rather than its form",
         "The victim is bad at writing, and is self-aware of her skill level"
       ],
@@ -335,10 +335,10 @@ const QUESTIONS_BY_TRANSCRIPT = {
       "type": "multiple_choice",
       "text": "The chair says 'I'm sure that act of grace is not lost on you' and then 'And you do appreciate the parameters she offers it in.' What does the word 'parameters' do, and why does the chair need Lorenze to confirm them out loud?",
       "options": [
-        "\"Parameters\" turns an emotional moment into an official transaction with stated limits — getting Lorenze to confirm them on the record protects the board if anyone later claims the pardon was just about family reconciliation",
-        "\"Parameters\" is the chair acknowledging the conditions of the victim's support while making sure Lorenze understands the board found it persuasive",
-        "\"Parameters\" is a neutral closing word and the confirmation is just a courtesy gesture",
-        "\"Parameters\" refers to the legal constraints on how a pardon affects the sex offender registry grace into documented consent."
+        "'Parameters' turns an emotional moment into an official transaction with stated limits — getting Lorenze to confirm them on the record protects the board if anyone later claims the pardon was just about family reconciliation",
+        "'Parameters' is the chair acknowledging the conditions of the victim's support while making sure Lorenze understands the board found it persuasive",
+        "'Parameters' is a neutral closing word and the confirmation is just a courtesy gesture",
+        "'Parameters' refers to the legal constraints on how a pardon affects the sex offender registry grace into documented consent."
       ],
       "correct_index": 0,
       "correct_letter": "A"
@@ -394,7 +394,7 @@ const QUESTIONS_BY_TRANSCRIPT = {
       "text": "Feliciano says 'that's maybe where it came from... I don't — I'm not sure — but maybe that could be why.' What does this pattern of repeatedly qualifying his answer reveal?",
       "options": [
         "Feliciano genuinely does not know why alcohol became a problem for him",
-        "Saying \"maybe\" and \"I'm not sure\" repeatedly shows Feliciano knows this explanation might sound like he's making excuses; he is protecting himself in advance, not because he is genuinely unsure",
+        "Saying 'maybe' and 'I'm not sure' repeatedly shows Feliciano knows this explanation might sound like he's making excuses; he is protecting himself in advance, not because he is genuinely unsure",
         "Feliciano is being deliberately vague to avoid a follow-up question about his father",
         "Feliciano is appropriately deferring to what he learned in treatment programs rather than guessing about his own psychology"
       ],

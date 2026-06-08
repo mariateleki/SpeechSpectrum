@@ -1,5 +1,5 @@
 // Google Sheets webhook URL — replace with your deployed Apps Script URL
-var SHEETS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxby0V4A5pWc4VZGkJyVYBFx2OHJXDmIKOGaD6J4ePap51s1uWz-jHafIFYtJlJLu7Gbg/exec';
+var SHEETS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxZ66N6Z3Wifrh3v8Pc_8C-jYCctLYiYfCj0XW01fFtyqgh7rKy0vsHcWyqzlLkRN8eaw/exec';
 
 (function() {
   // Read Prolific ID and condition from URL params or sessionStorage

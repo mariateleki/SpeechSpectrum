@@ -21,7 +21,7 @@ body {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   display: flex;
-  align-items: center;
+  align-items: flex-start;   /* was 'center' — kept the top off-screen on tall pages */
   justify-content: center;
   min-height: 100vh;
 }
@@ -348,10 +348,12 @@ body { padding-top: 72px; }
       <p>If you agree to participate, you will:</p>
       <ul>
         <li>Answer a few brief background questions (about 3–4 minutes)</li>
-        <li>Read four transcripts of legal proceedings and answer 8 multiple-choice questions about each one (about 30–38 minutes)</li>
+        <li>Read four transcripts of legal proceedings and answer 8 multiple-choice questions about each one (about 40 minutes)</li>
         <li>Rate how realistic the transcripts felt and answer one open-ended question at the end (about 3–4 minutes)</li>
       </ul>
-      <p>Total time: approximately 35–45 minutes in a single session. Please do not begin if you cannot complete the study in one sitting.</p>
+      <p>Total time: approximately 50 minutes in a single session. Please do not begin if you cannot complete the study in one sitting.</p>
+
+      <p><strong>Payment:</strong> $13.00 (paid through Prolific upon completion).</p>
 
       <div class="content-warning-box">
         <p>The transcripts in this study are drawn from real public legal proceedings and contain detailed descriptions of violent criminal offenses, including domestic violence and sexual assault. On the next screen you will be given a full description of the content. You may exit the study at that point and receive partial payment if you prefer not to continue.</p>
@@ -439,10 +441,15 @@ body { padding-top: 72px; }
 
 </div>
 
-<script src="./demographics.js?v=4"></script>
+<script src="./logging.js?v=1"></script>
+<script src="./demographics.js?v=7"></script>
 <script>
 (function() {
-  var SHEETS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxby0V4A5pWc4VZGkJyVYBFx2OHJXDmIKOGaD6J4ePap51s1uWz-jHafIFYtJlJLu7Gbg/exec';
+  var SHEETS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxZ66N6Z3Wifrh3v8Pc_8C-jYCctLYiYfCj0XW01fFtyqgh7rKy0vsHcWyqzlLkRN8eaw/exec';
+
+  // Log initial page load + first page_view (consent)
+  try { window.ssLogStudyVisit && window.ssLogStudyVisit(); } catch (e) {}
+  try { window.ssLogPageView && window.ssLogPageView('consent'); } catch (e) {}
 
   // 5 style-level conditions (full study). A pilot run can restrict this set
   // by passing ?conditions=verbatim,bullet-points (etc.) in the URL.
@@ -540,6 +547,7 @@ body { padding-top: 72px; }
     document.getElementById('step-consent').style.display = 'none';
     document.getElementById('step-pid').style.display = 'block';
     pageEntered.pid = Date.now();
+    try { window.ssLogPageView && window.ssLogPageView('pid'); } catch (e) {}
     var inp = document.getElementById('prolific-id'); if (inp) inp.focus();
   });
 
@@ -624,6 +632,9 @@ body { padding-top: 72px; }
 
     logPageDuration('pid');
     pageEntered.demographics = Date.now();
+    window.__ssPid = pid;
+    window.__ssCondition = conditionLabel;
+    try { window.ssLogPageView && window.ssLogPageView('demographics'); } catch (e) {}
 
     // Show demographics step
     document.getElementById('step-pid').style.display = 'none';
@@ -773,6 +784,7 @@ body { padding-top: 72px; }
     pageEntered.content_ack = Date.now();
     document.getElementById('step-demographics').style.display = 'none';
     document.getElementById('step-content-ack').style.display = 'block';
+    try { window.ssLogPageView && window.ssLogPageView('content_ack'); } catch (e) {}
   });
 
   // --- Step 3: Content Acknowledgement ---

@@ -19,3 +19,8 @@ venv/
 .claude/
 
 .env
+
+# Participant data — never commit (contains Prolific IDs)
+data/*.csv
+data/pilot*-prolific*.csv
+data/speechspectrum-study-logging*.csv

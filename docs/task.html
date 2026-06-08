@@ -783,7 +783,7 @@ body { padding-top: 72px; }
 
   <div style="background:#EEF2FF; border:1.5px solid #C7D2FE; border-radius:10px; padding:16px 20px; margin:18px 0;">
     <p style="margin:0 0 6px; color:#4F46E5; font-weight:600; font-size:0.9rem;">Your Prolific completion code:</p>
-    <p style="margin:0; font-family:'SFMono-Regular',Consolas,monospace; font-size:1.1rem; font-weight:700; color:#1F2937; letter-spacing:0.05em;" id="completion-code">CJ1Y2CQG</p>
+    <p style="margin:0; font-family:'SFMono-Regular',Consolas,monospace; font-size:1.1rem; font-weight:700; color:#1F2937; letter-spacing:0.05em;" id="completion-code">1BBVWTQW</p>
     <p style="margin:8px 0 0; color:#6B7280; font-size:0.85rem;">Please copy this code and return to Prolific to submit your completion and receive payment.</p>
   </div>
 
@@ -810,7 +810,8 @@ body { padding-top: 72px; }
   </details>
 </footer>
 
-<script src="./questions.js?v=2"></script>
+<script src="./logging.js?v=1"></script>
+<script src="./questions.js?v=3"></script>
 <script>
 (function() {
   var CONTENT = { TranscrA: [null,null,null,null], TranscrB: [null,null,null,null], TranscrC: [null,null,null,null], TranscrD: [null,null,null,null] };
@@ -830,7 +831,7 @@ body { padding-top: 72px; }
     return Promise.all(promises);
   }
 
-  var SHEETS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxby0V4A5pWc4VZGkJyVYBFx2OHJXDmIKOGaD6J4ePap51s1uWz-jHafIFYtJlJLu7Gbg/exec';
+  var SHEETS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxZ66N6Z3Wifrh3v8Pc_8C-jYCctLYiYfCj0XW01fFtyqgh7rKy0vsHcWyqzlLkRN8eaw/exec';
 
   var transcriptsReady = loadAllTranscripts();
 
@@ -864,6 +865,10 @@ body { padding-top: 72px; }
 
   // Read session data
   var pid = sessionStorage.getItem('ss_prolific_id') || new URLSearchParams(window.location.search).get('pid') || '';
+  window.__ssPid = pid;
+  window.__ssCondition = sessionStorage.getItem('ss_condition') || '';
+  // Log entry to tutorial as soon as the page loads
+  try { window.ssLogPageView && window.ssLogPageView('tutorial'); } catch (e) {}
   var conditionLabel = sessionStorage.getItem('ss_condition') || '';
   var style = conditionLabel.split(' / ')[0]; // e.g. "enhanced" from "enhanced / A,C,B"
   var latinSquareOrder = sessionStorage.getItem('ss_latin_square_order') || '';
@@ -888,6 +893,85 @@ body { padding-top: 72px; }
   var styleVisitLog = {};
   // Global switch counter
   var styleSwitchCounter = 0;
+
+  // Transcript scroll-depth tracker
+  // Tracks the furthest fraction of #text-content that has crossed above the
+  // viewport's bottom (i.e. been "read past"), the timeline of progress, and
+  // the final summary when the participant leaves the transcript.
+  var scrollMaxPercent = 0;
+  var scrollMaxPixels = 0;
+  var scrollSampleTimer = null;
+  var scrollProgressLog = [];   // [{t_ms_since_load, percent}, ...]
+  var transcriptScrollStart = Date.now();
+  var transcriptScrollLogged = false;
+
+  function currentScrollDepthPercent() {
+    var el = document.getElementById('text-content');
+    if (!el || !el.innerHTML) return { percent: 0, pixels: 0, height: 0 };
+    var rect = el.getBoundingClientRect();
+    var height = el.scrollHeight || el.offsetHeight || rect.height || 0;
+    if (height <= 0) return { percent: 0, pixels: 0, height: 0 };
+    // How many pixels above the viewport bottom = how far the participant has read.
+    var readPx = window.innerHeight - rect.top;
+    readPx = Math.max(0, Math.min(height, readPx));
+    return { percent: Math.round((readPx / height) * 100), pixels: readPx, height: height };
+  }
+
+  function recordScrollSample() {
+    var s = currentScrollDepthPercent();
+    if (s.percent > scrollMaxPercent) {
+      scrollMaxPercent = s.percent;
+      scrollMaxPixels = s.pixels;
+    }
+    // Sample timeline (keep small — one entry every ~250ms tops)
+    var t = Date.now() - transcriptScrollStart;
+    var last = scrollProgressLog[scrollProgressLog.length - 1];
+    if (!last || (t - last.t) >= 250 || s.percent !== last.percent) {
+      scrollProgressLog.push({ t: t, percent: s.percent });
+      if (scrollProgressLog.length > 400) scrollProgressLog.shift();
+    }
+  }
+
+  function onTranscriptScroll() {
+    if (scrollSampleTimer) return;
+    scrollSampleTimer = requestAnimationFrame(function () {
+      scrollSampleTimer = null;
+      recordScrollSample();
+    });
+  }
+
+  function logTranscriptScrollSummary(transcriptKey) {
+    if (transcriptScrollLogged || !transcriptKey) return;
+    transcriptScrollLogged = true;
+    // Final sample so the max reflects whatever's visible at exit
+    recordScrollSample();
+    var dwellSec = Math.round((Date.now() - transcriptScrollStart) / 100) / 10;
+    logToSheets('transcript_scroll_summary', {
+      question_id: transcriptKey,
+      question_text: 'furthest scroll depth reached on this transcript',
+      response: String(scrollMaxPercent),
+      extra: JSON.stringify({
+        transcript: transcriptKey,
+        step: currentStep + 1,
+        max_scroll_percent: scrollMaxPercent,
+        max_scroll_pixels: scrollMaxPixels,
+        dwell_seconds: dwellSec,
+        progress_timeline: scrollProgressLog
+      })
+    });
+  }
+
+  function resetTranscriptScrollState() {
+    scrollMaxPercent = 0;
+    scrollMaxPixels = 0;
+    scrollProgressLog = [];
+    transcriptScrollStart = Date.now();
+    transcriptScrollLogged = false;
+    recordScrollSample();  // initial sample so the timeline starts at 0
+  }
+
+  window.addEventListener('scroll', onTranscriptScroll, { passive: true });
+  window.addEventListener('resize', onTranscriptScroll);
 
   function logToSheets(eventType, data) {
     var payload = Object.assign({
@@ -1147,10 +1231,13 @@ body { padding-top: 72px; }
       opts.forEach(function(opt, optIdx) {
         var letter = String.fromCharCode(65 + optIdx); // A, B, C, D, E
         var inputId = q.id + '_' + letter.toLowerCase();
-        var checked = (answers[step] && answers[step][q.id] === opt) ? ' checked' : '';
+        // Saved value includes the letter prefix so the log column is
+        // self-describing (e.g. "A) Some answer text...").
+        var labelled = letter + ') ' + opt;
+        var checked = (answers[step] && answers[step][q.id] === labelled) ? ' checked' : '';
         html += '<label class="option-label" for="' + inputId + '">';
-        html += '<input type="radio" id="' + inputId + '" name="' + q.id + '" value="' + opt + '"' + checked + '>';
-        html += '<span class="option-text">' + letter + ') ' + opt + '</span>';
+        html += '<input type="radio" id="' + inputId + '" name="' + q.id + '" value="' + labelled + '"' + checked + '>';
+        html += '<span class="option-text">' + labelled + '</span>';
         html += '</label>';
       });
     } else if (q.type === 'free_response') {
@@ -1269,7 +1356,8 @@ body { padding-top: 72px; }
       }
 
       // If "not enough info" selected, no highlight required
-      if (sel.value === 'This interaction is not shown in the transcript / Not enough information to answer this question') return true;
+      // Option E ("not in transcript") — saved value starts with "E) ".
+      if (sel.value.indexOf('E) ') === 0) return true;
 
       // Otherwise, require at least one highlight (on current DOM or any stored style)
       var hasHighlight = false;
@@ -1425,10 +1513,12 @@ body { padding-top: 72px; }
       document.getElementById('tutorial-area').style.display = 'none';
       if (isDemo) {
         document.getElementById('demo-explore').style.display = 'block';
+        try { window.ssLogPageView && window.ssLogPageView('demo_explore'); } catch (e) {}
         setupExploreScreen();
       } else {
         document.getElementById('task-area').style.display = 'block';
         studyStartTime = Date.now();
+        try { window.ssLogPageView && window.ssLogPageView('task'); } catch (e) {}
         loadStep(currentStep);
       }
     });
@@ -1610,15 +1700,41 @@ body { padding-top: 72px; }
   var origLoadStep = loadStep;
   loadStep = function(step) {
     if (step >= order.length) {
+      // Log final transcript's scroll depth before tearing down the task area
+      try { logTranscriptScrollSummary(order[order.length - 1]); } catch (e) {}
+
       var totalTimeSec = Math.round((Date.now() - studyStartTime) / 100) / 10;
       document.getElementById('task-area').style.display = 'none';
       var ty = document.getElementById('thank-you'); if (ty) ty.style.display = 'none';
+      // Use fetch+keepalive for study_complete — one Pilot-1 participant lost
+      // this via sendBeacon. Also send via the regular sendBeacon as a backup.
+      try {
+        if (window.ssLogTerminal) {
+          window.ssLogTerminal({
+            timestamp: new Date().toISOString(),
+            event_type: 'study_complete',
+            prolific_id: pid,
+            assigned_condition: conditionLabel,
+            latin_square_order: latinSquareOrder,
+            question_id: '',
+            question_text: '',
+            response: '',
+            extra: JSON.stringify({ total_transcripts: order.length, total_time_seconds: totalTimeSec })
+          });
+        }
+      } catch (e) {}
       logToSheets('study_complete', { extra: JSON.stringify({ total_transcripts: order.length, total_time_seconds: totalTimeSec }) });
       showPostComprehension();
       return;
     }
     // Show task area in case it was hidden
     document.getElementById('task-area').style.display = 'block';
+
+    // If we're transitioning away from a previous transcript, log how far the
+    // participant scrolled it before resetting state for the new one.
+    if (step > 0) {
+      try { logTranscriptScrollSummary(order[step - 1]); } catch (e) {}
+    }
 
     var transcriptKey = order[step];
     currentStep = step;
@@ -1645,6 +1761,7 @@ body { padding-top: 72px; }
       var idx = styleIndex[style];
       document.getElementById('text-content').innerHTML = CONTENT[transcriptKey][idx];
     }
+    resetTranscriptScrollState();
 
     // Set instructions text
     if (isDemo) {
@@ -1666,6 +1783,7 @@ body { padding-top: 72px; }
   // --- Page 5a: Comprehension check (last transcript only) ---
   function showPostComprehension() {
     document.getElementById('post-comprehension').style.display = 'block';
+    try { window.ssLogPageView && window.ssLogPageView('post_comprehension'); } catch (e) {}
     window.scrollTo(0, 0);
 
     // Auto-fill for TEST PIDs so internal testing skips quickly
@@ -1719,6 +1837,7 @@ body { padding-top: 72px; }
     });
     container.innerHTML = html;
     document.getElementById('post-survey').style.display = 'block';
+    try { window.ssLogPageView && window.ssLogPageView('post_survey'); } catch (e) {}
     window.scrollTo(0, 0);
 
     // Auto-fill realism ratings for TEST PIDs
@@ -1763,6 +1882,7 @@ body { padding-top: 72px; }
     // Show completion
     document.getElementById('post-survey').style.display = 'none';
     document.getElementById('completion').style.display = 'block';
+    try { window.ssLogPageView && window.ssLogPageView('completion'); } catch (e) {}
     var bar = document.getElementById('exit-study-bar'); if (bar) bar.remove();
     document.body.style.paddingTop = '0';
     window.scrollTo(0, 0);

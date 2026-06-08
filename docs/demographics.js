@@ -43,29 +43,48 @@ const DEMOGRAPHICS = [
   {
     id: "demo_occupation",
     type: "multiple_choice",
-    text: "Which occupation domain most closely matches your current work?",
+    // Options mirror Prolific's `employment-sector` filter (21 choices) so we
+    // can join responses across the two sources later. See
+    // notebooks/prolific_filters_explorer.ipynb to refresh.
+    text: "Which of the following best describes the sector you primarily work in?",
     options: [
+      "Agriculture, Food and Natural Resources",
+      "Architecture and Construction",
+      "Arts",
+      "Business Management & Administration",
+      "Education & Training",
+      "Finance",
+      "Government & Public Administration",
+      "Medicine",
+      "Hospitality & Tourism",
+      "Information Technology",
       "Legal",
-      "Technology or Engineering",
-      "Healthcare or Medical",
-      "Business or Management",
-      "Other"
+      "Policing",
+      "Military",
+      "Manufacturing",
+      "Marketing & Sales",
+      "Retail",
+      "Science, Technology, Engineering & Mathematics",
+      "Social Sciences",
+      "Transportation, Distribution & Logistics",
+      "Other",
+      "Rather not say"
     ]
   },
   {
     id: "demo_transcripts_in_work",
     type: "multiple_choice",
-    text: "Does your work regularly involve reading transcripts or written records of spoken interaction? (e.g. meeting minutes, deposition transcripts, clinical notes, call logs)",
+    text: "In your work, do you ever read written records of conversations or spoken exchanges in order to make a judgment or decision about what happened or what was said?",
     options: [
-      "Yes, it's a core part of my job",
-      "Occasionally — a few times a month or less",
+      "Yes, regularly — it's a part of my professional role",
+      "Yes, occasionally — as part of research, annotation, or other tasks",
       "Rarely or never"
     ]
   },
   {
     id: "demo_voice_tech_frequency",
     type: "multiple_choice",
-    text: "How often do you use voice or speech technology in your daily life or work? (e.g. voice assistants, dictation, auto-captions)",
+    text: "How often do you use automatic speech or voice features — for example, Siri, Google Assistant, Zoom auto-captions, or phone voice commands — in your daily life or work?",
     options: [
       "Multiple times a day",
       "About once a day",
