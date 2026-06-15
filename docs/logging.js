@@ -12,7 +12,7 @@
  */
 (function () {
   var SHEETS_WEBHOOK_URL =
-    'https://script.google.com/macros/s/AKfycbxZ66N6Z3Wifrh3v8Pc_8C-jYCctLYiYfCj0XW01fFtyqgh7rKy0vsHcWyqzlLkRN8eaw/exec';
+    'https://script.google.com/macros/s/AKfycbzfwr4PmlCy5MWiQB1Lk52V2eq61QKkiSU9x74LC9C5m8SzeBEKrRiu1Vnb-vD1ovlRkA/exec';
   var QUEUE_KEY = 'ss_log_queue';
   var SESSION_KEY = 'ss_session_id';
 
