@@ -106,8 +106,8 @@ and the required comprehension free-text. Pilot 2 splits it:
 
 ### New completion code
 
-`CJ1Y2CQG` → **`1BBVWTQW`**. Set this on Prolific too so completion
-submissions get matched.
+Reusing **`CJ1Y2CQG`** (same as Pilot 1). Make sure Prolific is set to
+the same code so completion submissions get matched.
 
 ---
 
