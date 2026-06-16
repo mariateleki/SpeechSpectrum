@@ -894,6 +894,18 @@ body { padding-top: 72px; }
   // Global switch counter
   var styleSwitchCounter = 0;
 
+  // Unwrap a <mark> element: replace it with its child nodes (preserving
+  // <br> line breaks and other inline elements). Using textContent would
+  // collapse everything into a single text node and lose newlines.
+  function unwrapMark(m) {
+    if (!m || !m.parentNode) return;
+    var frag = document.createDocumentFragment();
+    while (m.firstChild) frag.appendChild(m.firstChild);
+    var parent = m.parentNode;
+    m.replaceWith(frag);
+    parent.normalize();
+  }
+
   // Transcript scroll-depth tracker
   // Tracks the furthest fraction of #text-content that has crossed above the
   // viewport's bottom (i.e. been "read past"), the timeline of progress, and
@@ -1074,10 +1086,7 @@ body { padding-top: 72px; }
   function applyHighlights(highlightArr) {
     // Clear existing marks
     var card = document.getElementById('text-content');
-    card.querySelectorAll('mark').forEach(function(m) {
-      m.replaceWith(document.createTextNode(m.textContent));
-    });
-    card.normalize();
+    card.querySelectorAll('mark').forEach(unwrapMark);
     if (!highlightArr || highlightArr.length === 0) return;
 
     // Apply each highlight by finding the text in text nodes
@@ -1097,10 +1106,7 @@ body { padding-top: 72px; }
         range.setEnd(node, idx + searchText.length);
         var mark = document.createElement('mark');
         range.surroundContents(mark);
-        mark.addEventListener('click', function() {
-          this.replaceWith(document.createTextNode(this.textContent));
-          root.normalize();
-        });
+        mark.addEventListener('click', function() { unwrapMark(this); });
         return;
       }
     }
@@ -1122,21 +1128,14 @@ body { padding-top: 72px; }
       try {
         var mark = document.createElement('mark');
         range.surroundContents(mark);
-        mark.addEventListener('click', function() {
-          this.replaceWith(document.createTextNode(this.textContent));
-          card.normalize();
-        });
+        mark.addEventListener('click', function() { unwrapMark(this); });
       } catch (e) {
         // Selection spans elements — extract and wrap
         var fragment = range.extractContents();
         var mark = document.createElement('mark');
         mark.appendChild(fragment);
         range.insertNode(mark);
-        mark.addEventListener('click', function() {
-          while (this.firstChild) this.parentNode.insertBefore(this.firstChild, this);
-          this.parentNode.removeChild(this);
-          card.normalize();
-        });
+        mark.addEventListener('click', function() { unwrapMark(this); });
       }
 
       sel.removeAllRanges();
@@ -1579,20 +1578,13 @@ body { padding-top: 72px; }
       try {
         var mark = document.createElement('mark');
         range.surroundContents(mark);
-        mark.addEventListener('click', function() {
-          this.replaceWith(document.createTextNode(this.textContent));
-          card.normalize();
-        });
+        mark.addEventListener('click', function() { unwrapMark(this); });
       } catch (e) {
         var fragment = range.extractContents();
         var mark = document.createElement('mark');
         mark.appendChild(fragment);
         range.insertNode(mark);
-        mark.addEventListener('click', function() {
-          while (this.firstChild) this.parentNode.insertBefore(this.firstChild, this);
-          this.parentNode.removeChild(this);
-          card.normalize();
-        });
+        mark.addEventListener('click', function() { unwrapMark(this); });
       }
       sel.removeAllRanges();
     });
