@@ -509,7 +509,7 @@ body { padding-top: 72px; }
 
   // Persistent exit button
   document.getElementById('exit-study-btn').addEventListener('click', function() {
-    if (!confirm('Are you sure you want to exit the study? Your progress will not be saved and you can close this tab afterward.')) return;
+    if (!confirm('Confirm that you want to exit. You may exit at any time without affecting your standing on Prolific. Your data will not be used. Contact sc2359@cornell.edu for partial payment.')) return;
     try {
       navigator.sendBeacon(SHEETS_WEBHOOK_URL, JSON.stringify({
         timestamp: new Date().toISOString(),
