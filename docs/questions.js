@@ -103,7 +103,7 @@ const QUESTIONS_BY_TRANSCRIPT = {
     },
     {
       "id": "TranscrA_q8",
-      "level": "-",
+      "level": "L4",
       "type": "multiple_choice",
       "text": "Cizauskas interrupts Davis three times during the church/volunteer section ('My pastor —' cut off; 'Just a part of the service coordination. Just —' cut off). What is the overall effect of these interruptions on what gets recorded about Davis’s community involvement?",
       "options": [
